@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_term_sheet_document">
+			<t t-call="web.basic_layout">
+				<div class="page">
+					<style>
+                        *{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;}
+					</style>
+					<link rel="stylesheet" href="/itsys_real_estate/static/src/css/report-style.css"/>
+
+					<div class="row pb-3 mb-3" style="border-bottom: 1px solid #007bff;">
+						<div class="col-2" style="display: flex; align-items: center;">
+							<img style="width: 125px;" t-if="user.company_id.logo" t-att-src="image_data_uri(user.company_id.logo)" alt="Logo"/>
+						</div>
+						<div class="col-8 text-center">
+							<div>
+								<h4 class="text-primary" t-esc="user.company_id.name"/>
+							</div>
+							<div>
+								<t t-if="user.company_id.street"><span t-esc="user.company_id.street"/>,</t>
+								<t t-if="user.company_id.street2"><span t-esc="user.company_id.street2"/>,</t>
+								<t t-if="user.company_id.city"><span t-esc="user.company_id.city"/>,</t>
+								<t t-if="user.company_id.state_id"><span t-esc="user.company_id.state_id.name"/>,</t>
+								<t t-if="user.company_id.country_id"><span t-esc="user.company_id.country_id.name"/></t>
+								<t t-if="user.company_id.zip">- <span t-esc="user.company_id.zip"/></t>
+							</div>
+                            <div>
+                                <t t-if="user.company_id.phone">Phone: <span t-esc="user.company_id.phone"/></t>
+                                <t t-if="user.company_id.email">Email: <span t-esc="user.company_id.email"/></t>
+                            </div>
+                            <div>
+                                GSTIN: <span t-esc="user.company_id.vat"/>
+                            </div>
+						</div>
+                        <div class="col-2"/>
+					</div>
+
+<!--                    <div class="text-center">-->
+<!--						<h4>Term Sheet</h4>-->
+<!--					</div>-->
+
+					<table class="gridtable">
+<!--						<tr>-->
+<!--							<td align="left" width="20%"><strong>Name of Developer</strong></td>-->
+<!--							<td align="left" width="30%"><span t-field="o.developer_id"/></td>-->
+<!--							<td align="left" width="20%"><strong>Project Name</strong></td>-->
+<!--							<td align="left" width="30%"><span t-field="o.name"/></td>-->
+<!--						</tr>-->
+<!--                        <tr>-->
+<!--							<td align="left"><strong>Address</strong></td>-->
+<!--							<td align="left">-->
+<!--                                <div t-field="o.street"/>-->
+<!--                                <div t-field="o.street2"/>-->
+<!--                                <div>-->
+<!--                                    <t t-if="o.city"><span t-field="o.city"/>,</t>-->
+<!--                                    <t t-if="o.state_id"><span t-field="o.state_id"/>,</t>-->
+<!--                                    <span t-field="o.zip"/>-->
+<!--                                </div>-->
+<!--                                <div t-field="o.country_id"/>-->
+<!--                            </td>-->
+<!--							<td align="left"><strong>Project Site Address</strong></td>-->
+<!--							<td align="left"><span t-field="o.site_address"/></td>-->
+<!--						</tr>-->
+<!--						<tr>-->
+<!--							<td align="left"><strong>Promoter</strong></td>-->
+<!--							<td align="left"><span t-field="o.promoter"/></td>-->
+<!--							<td align="left"><strong>Date</strong></td>-->
+<!--							<td align="left"><span t-field="o.date"/></td>-->
+<!--						</tr>-->
+<!--						<tr>-->
+<!--							<td align="left"><strong>Average Price</strong></td>-->
+<!--							<td align="left"><span t-esc="'{:.2f}'.format(o.average_price)"/></td>-->
+<!--							<td align="left"><strong>Signing Amount</strong></td>-->
+<!--							<td align="left"><span t-esc="'{:.2f}'.format(o.signing_amount)"/></td>-->
+<!--						</tr>-->
+<!--						<tr>-->
+<!--							<td align="left"><strong>Retainer Fee</strong></td>-->
+<!--							<td align="left"><span t-esc="'{:.2f}'.format(o.retainer_fee)"/></td>-->
+<!--							<td align="left"><strong>Duration</strong></td>-->
+<!--							<td align="left"><span t-field="o.duration"/></td>-->
+<!--						</tr>-->
+                        <tr>
+                            <td colspan="4">
+								<style>
+									.term_sheet_header{
+									text-align: center;
+									}
+								</style>
+								<div t-esc="o.template_head" class="d-none"/>
+								<div t-field="o.template"/>
+							</td>
+                        </tr>
+                        <tr>
+							<td align="left" width="10%"><strong>Director (JUSTO)	</strong></td>
+							<td align="left" width="40%"><span t-field="o.director_justo"/></td>
+							<td align="left" width="10%"><strong>Director (Developer)</strong></td>
+							<td align="left" width="40%"><span t-field="o.director_developer"/></td>
+						</tr>
+					</table>
+				</div>
+			</t>
+		</template>
+
+		<template id="report_term_sheet">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="real_estate_sheets.report_term_sheet_document"/>
+				</t>
+			</t>
+		</template>
+        <record id="term_sheet_paper_format" model="report.paperformat">
+            <field name="name">Reservation</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">5</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">95</field>
+        </record>
+
+        <record id="report_term_sheet_action" model="ir.actions.report">
+            <field name="name">Term Sheet</field>
+            <field name="model">term.sheet</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">real_estate_sheets.report_term_sheet</field>
+            <field name="report_file">real_estate_sheets.report_term_sheet</field>
+            <field name="binding_model_id" ref="model_term_sheet"/>
+            <field name="paperformat_id" ref="term_sheet_paper_format"/>
+        </record>
+	</data>
+</odoo>

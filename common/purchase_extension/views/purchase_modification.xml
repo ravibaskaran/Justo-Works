@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ♦ ▼ Inherited 'Purchase Form View'. ▼ ♦ -->
+        <record id="purchase_modification" model="ir.ui.view">
+            <field name="name">purchase_modification</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <!-- ▼  Added a context and filter to show and create only suppler ▼ -->
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="context">{'default_supplier_rank':1}</attribute>
+                    <attribute name="domain">[('supplier_rank','&gt;=', 1)]</attribute>
+                    <attribute name="attrs">{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))],'readonly':[('state','not in',('draft'))],'required':[('move_type','in',('out_invoice','out_refund','in_invoice','in_refund'))]}</attribute>
+                </xpath>
+
+                <!--    ▼ Bill reference removed ▼      -->
+                <xpath expr="//field[@name='ref']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//label[@for='ref']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//div[@class='oe_title']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('move_type','in',('in_invoice','in_refund'))]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/control" position="replace">
+                    <control>
+                        <create name="add_line_control" string="Add a line"/>
+                    </control>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_open':True}</attribute>
+                </xpath>
+
+
+
+<!--                <div class="oe_title">-->
+<!--                    &lt;!&ndash; Invoice draft header &ndash;&gt;-->
+<!--                    <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>-->
+<!--                    <h1 attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', '/')]}">-->
+<!--                        <span>Draft</span>-->
+<!--                    </h1>-->
+
+<!--                    &lt;!&ndash; Number &ndash;&gt;-->
+<!--                    <span class="text-warning" attrs="{'invisible': [('show_name_warning', '=', False)]}">The current highest number is <field name="highest_name"/>. You might want to put a higher number here.</span>-->
+<!--                    <h1 class="mt0" attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False)]}">-->
+<!--                        <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}" placeholder="JRNL/2016/00001"/>-->
+<!--                    </h1>-->
+
+<!--                </div>-->
+
+
+                <!-- ▼ Payment reference removed ▼-->
+                <xpath expr="//field[@name='payment_reference']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- Direct Print -->
+                 <xpath expr="//header" position="inside">
+                     <button name="print" attrs="{'invisible':[('move_type','not in',['in_invoice','in_refund'])]}" states="posted" string="Print" type="object"  class="oe_highlight" />
+                </xpath>
+
+                <!-- ▼ Action Post removed ▼-->
+                <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//label[@for='journal_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//div[@name='journal_div']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- ▼ Partner Bank ID removed ▼-->
+                <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- ▼ Gst Treatment Remove ▼ -->
+                <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- ▼ Auto Compute removed ▼-->
+                <xpath expr="//field[@name='purchase_vendor_bill_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                  <!-- ▼ Accounting Date removed ▼-->
+                <xpath expr="//group[@id='header_right_group']/field[@name='date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+                <xpath expr="//label[@for='purchase_vendor_bill_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- ▼  Added Bill Number ▼ -->
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="bill_number" attrs="{'readonly':[('state','not in',('draft'))],'invisible':[('move_type','not in',('in_invoice','in_refund'))],'required':[('move_type','in',('in_invoice','in_refund'))]}" />
+                </xpath>
+
+                <!-- ▼ Added Purchase Order ▼ -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="purchase_order" widget="many2many_tags" options="{'no_open':True,'no_quick_create':True,'no_create':True}" domain="[('partner_id','=',partner_id),('state','=','purchase')]" attrs="{'invisible':[('move_type','!=','in_invoice')],'readonly':[('state','not in',('draft'))]}"/>
+                    <field name="purchase_bill_no" widget="many2many_tags" options="{'no_open':True,'no_quick_create':True,'no_create':True}" attrs="{'invisible':[('move_type','!=','in_refund')],'readonly':[('state','not in',('draft'))]}"/>
+
+
+                </xpath>
+
+                 <xpath expr="//group[1]/group[1]" position="attributes">
+                     <attribute name="style">width:33.3%</attribute>
+                 </xpath>
+
+                <xpath expr="//group[1]/group[2]" position="attributes">
+                     <attribute name="style">width:33.3%</attribute>
+                 </xpath>
+                <xpath expr="//group[1]/group[2]" position="after">
+                    <group name="additional_group" style="width:33.3%">
+                        <label for="name" string="Vendor Bill No." attrs="{'invisible':[('move_type','not in',('in_invoice','in_refund'))]}" />
+                        <field name="name" nolabel="1" attrs="{'invisible': ['|',('move_type','not in',('in_invoice','in_refund')),'&amp;',('state', '=', 'draft'), ('name', '=', '/')]}" readonly="1" force_save="1" string="Invoice Number"/>
+                        <field name="date" string="Accounting Date" attrs="{'invisible': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))],'readonly': [('state', '!=', 'draft')]}"/>
+<!--                        <xpath expr="//group[@id='header_right_group']/field[@name='date']" position="move"/>-->
+                        <field name="is_asset_purchase" attrs="{'readonly':[('state','!=','draft')],'invisible': [('move_type', 'not in',('in_invoice', 'in_refund'))]}"  force_save="1"/>
+                    </group>
+                </xpath>
+
+                <!-- ▼  Added Serial Number in Max Seq ▼ -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="max_line_sequence" invisible="1"/>
+                </xpath>
+
+
+                <!-- ▼ Added Context in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
+                    <attribute name="context">{'default_move_type':context.get('default_move_type'),'journal_id':journal_id,'default_partner_id':commercial_partner_id,'default_currency_id':currency_id or company_currency_id,'default_sequence': max_line_sequence}</attribute>
+                    <attribute name="class">invoice_line_ids_child</attribute>
+                </xpath>
+
+                <!-- ▼  Added Serial Number in invoice_line_ids and in line_ids ▼ -->
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="sl_no" string="Sno." readonly="1" force_save="1" attrs="{'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="sl_no" string="Sno." readonly="1" force_save="1" attrs="{'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                </xpath>
+
+                <!-- ▼ Product Id is required ▼ -->
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('parent.state','not in',('draft'))],'required':[('parent.move_type','in',('out_invoice','out_refund','in_invoice','in_refund'))]}</attribute>
+                    <attribute name="context">{'default_detailed_type':'product','default_tracking':'lot','default_purchase_method':'purchase'}</attribute>
+                    <attribute name="options">{'no_quick_create':True,'no_open':True}</attribute>
+                    <attribute name="widget">advance_search_many2one</attribute>
+                    <attribute name="adv_fields">{"barcode":["Barcode","l"],"qty_available":["Stock","r"],"uom_id":["Unit","l"],"standard_price":["Cost","r"],"list_price":["Price","r"]}</attribute>
+                </xpath>
+
+                <!-- ▼  Added Barcode and HSN in invoice_line_ids and in line_ids and rearranged some field position▼ -->
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
+                    <xpath expr="//field[@name='asset_category_id']" position="move"/>
+                    <field name="barcode_scan" string="Barcode" optional="hide" attrs="{'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                    <field name="hsn_code" string="HSN Code" readonly="1" force_save="1" attrs="{'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                    <xpath expr="//field[@name='lot_name']" position="move"/>
+                    <xpath expr="//field[@name='lot_id']" position="move"/>
+                    <field name="expiry" groups="purchase_extension.group_expiry" force_save="1" attrs="{'required': [('parent.move_type','in',('in_invoice','in_refund'))], 'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                    <xpath expr="//field[@name='quantity']" position="move"/>
+                    <field attrs="{'column_invisible': [('parent.move_type', 'not in', ('in_invoice', 'in_refund'))]}" name="free_qty" optional="show"/>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_uom_id']" position="move"/>
+                    <xpath expr="//field[@name='price_unit']" position="move"/>
+                    <xpath expr="//field[@name='discount']" position="move"/>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="move"/>
+                </xpath>
+
+                <xpath expr="//field[@name='lot_id']" position="attributes">
+                    <attribute name="widget">advance_search_many2one</attribute>
+                    <attribute name="adv_fields">{"product_qty":["Stock","r"],"sales_rate":["S.Rate","r"],"p_rate":["P.Rate","r"]}</attribute>
+                </xpath>
+
+                <!-- Remove Quick create and Open From UOM -->
+                <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_quick_create':True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="after">
+                    <field name="barcode_scan" string="Barcode" attrs="{'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                    <field name="hsn_code" string="HSN Code" readonly="1" force_save="1" attrs="{'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}"/>
+                    <field name="expiry" groups="purchase_extension.group_expiry" force_save="1" attrs="{'required': [('parent.move_type','in',('in_invoice','in_refund'))], 'column_invisible':[('parent.move_type','not in',('in_invoice','in_refund'))]}" />
+                    <field attrs="{'column_invisible': [('parent.move_type', 'not in', ('in_invoice', 'in_refund'))]}" name="free_qty" optional="show"/>
+
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'required':[('parent.move_type','in',('in_invoice', 'in_refund'))]}</attribute>
+                </xpath>
+
+
+                <!-- ▼ Remove Asset Category in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='asset_category_id']" position="attributes">
+                    <attribute name="attrs">{'column_invisible': [('parent.is_asset_purchase', '!=', True)]}</attribute>
+                    <attribute name="options">{'no_quick_create': True}</attribute>
+                </xpath>
+
+                <!-- ▼ Rename the lot_name to batch in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='lot_name']" position="attributes">
+                    <attribute name="string">Batch</attribute>
+                </xpath>
+
+                 <!-- ▼ Rename the lot_name to Quantity in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='quantity']" position="attributes">
+                    <attribute name="string">Qty</attribute>
+                </xpath>
+
+                 <!-- ▼ Rename the lot_name to Free Qty in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='free_qty']" position="attributes">
+                    <attribute name="string">FQty</attribute>
+                </xpath>
+
+                <!-- ▼ discount in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='discount']" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </xpath>
+
+                <!-- ▼ Tax Ids in invoice_line_ids ▼ -->
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+
+                <!-- ▼ Added Other Charges and  Tax Description ▼ -->
+                <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                    <group attrs="{'invisible': [('move_type','not in',('in_invoice','in_refund'))]}" style="width:100%;margin-top: -20px;">
+                        <group string="Tax Description" style="width:50%;">
+                            <field name="tax_summary_ids" nolabel="1" class="tax_summary_design" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}">
+                                <tree create="false" edit="false" delete="false" editable="bottom">
+                                    <field name="tax_id" readonly="1" force_save="1"/>
+                                    <field name="total_excluded" readonly="1" force_save="1"/>
+                                    <field name="cgst" readonly="1" force_save="1"/>
+                                    <field name="sgst" readonly="1" force_save="1"/>
+                                    <field name="igst" readonly="1" force_save="1"/>
+                                    <field name="total_included" readonly="1" force_save="1"/>
+                                    <field name="move_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Other Charges" style="width:50%;" attrs="{'invisible':[('move_type','not in',['in_invoice', 'in_refund'])]}">
+                            <field name="freight_charge_ids" force_save="1" nolabel="1" class="other_charges_design">
+                                <tree editable="bottom">
+                                    <field name="account_id" width="1.5" options="{'no_create':True,'no_open':True}" domain="[('internal_type', '!=', 'receivable')]"/>
+                                    <field name="amount" width="1"/>
+                                    <field name="name" width="1.5"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                    <style>
+                        .other_charges_design .o_list_table.table.table-sm.table-hover.table-striped.o_list_table_ungrouped {
+                            display: block !important;
+                            width: max-content !important;
+                            min-width: 100% !important;
+                            height: 149px !important;
+                            overflow-y: scroll !important;
+                            overflow:auto !important;
+                        }
+                        .other_charges_design thead{
+                            position:sticky !important;
+                            top: 0;
+                        }
+                        .other_charges_design tfoot{
+                            position:sticky !important;
+                            bottom: 0;
+                        }
+                        .other_charges_design table thead th:nth-child(1){
+                            width: 90% !important;
+                        }
+                        .tax_summary_design table.o_list_table.table.table-sm.table-hover.table-striped.o_list_table_ungrouped{
+                            display: block !important;
+                            width: max-content !important;
+                            min-width: 100% !important;
+                            height: 149px !important;
+                            overflow-y: scroll !important;
+                            overflow:auto !important;
+                        }
+                        .tax_summary_design table th:nth-child(1){
+                            width: 42% !important;
+                        }
+                        .tax_summary_design thead{
+                            position:sticky !important;
+                            top: 0;
+                        }
+                        .tax_summary_design tfoot{
+                            position:sticky !important;
+                            bottom: 0;
+                        }
+                    </style>
+                </xpath>
+
+                <!-- Form Style -->
+                <xpath expr="//form/sheet" position="after">
+                        <style>
+
+                            .adv_search_autocomplete_dropdown.product_id .ui-menu-item &gt; a:nth-child(1)
+                            {
+                                width: 150px;
+                            }
+
+                            .adv_search_autocomplete_dropdown.lot_id .ui-menu-item &gt; a:nth-child(1)
+                            {
+                                width: 100px;
+                            }
+
+                            .adv_search_autocomplete_dropdown.lot_id .ui-menu-item &gt; a:nth-child(2)
+                            {
+                                width: 100px;
+                            }
+
+                            .adv_search_autocomplete_dropdown.lot_id .ui-menu-item &gt; a:nth-child(3)
+                            {
+                                width: 100px;
+                            }
+
+                            .o_form_view .o_group .oe_right .o_td_label + td {
+                                padding: unset;
+                            }
+
+                        </style>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ♦ ▼ Inherited 'Account Move to hide Other Charges'. ▼ ♦ -->
+        <record id="removed_freight_charges_from_purchase" model="ir.ui.view">
+            <field name="name">removed_freight_charges_from_purchase</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="inexoft_freight_charges.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <!-- ▼ Removed Empty Group from the view and replaced with Tax Description in the above form ▼ -->
+                <xpath expr="//group[@name='tax_description']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- ▼ Removed and replaced other charges and rearranged side to side to tax description in the above form ▼ -->
+                <xpath expr="//group[@name='other_charges']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+
+            </field>
+        </record>
+
+
+        <!-- Update account invoice search view!-->
+        <record id="account_invoice_groupby_today_inherit" model="ir.ui.view">
+            <field name="name">account.move.groupby.today</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <filter name="today" string="Today" domain="[('invoice_date', '=', context_today().strftime('%Y-%m-%d'))]" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inexoft_direct_sales_purchase.action_direct_move_outgoing" model="ir.actions.act_window">
+            <field name="context">{'default_move_type': 'in_invoice','default_direct_move_type' : 'incoming', 'purchase_ok':False,'search_default_today':1}</field>
+        </record>
+
+        <record id="inexoft_direct_sales_purchase.action_direct_move_outgoing_return" model="ir.actions.act_window">
+            <field name="context">{'default_move_type': 'in_refund', 'default_direct_move_type':'incoming','search_default_today':1}</field>
+        </record>
+
+    </data>
+</odoo>

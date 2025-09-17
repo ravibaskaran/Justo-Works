@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="action_jupiter_dashboard_optima" model="ir.actions.client">
+            <field name="name">Dashboard</field>
+            <field name="tag">jupiter_dashboard_optima</field>
+        </record>
+
+        <menuitem name="Dashboard-Finance" id="menu_jupiter_dashboard_optima"
+                  web_icon="jupiter_dashboard_optima,static/description/icon.png"
+                  sequence="10"
+                  groups="jupiter_dashboard_optima.group_jupiter_dashboard_optima"
+                  action="jupiter_dashboard_optima.action_jupiter_dashboard_optima"/>
+    </data>
+</odoo>

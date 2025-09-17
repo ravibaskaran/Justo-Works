@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="term_sheet_header_template">
+            <div class="mb-0">
+<!--                <div class="w-100 text-center term_sheet_header row pb-5">-->
+<!--                    <strong class="col-12">TERM SHEET</strong>-->
+<!--                </div>-->
+                <center class="pb-5 pt-3"><strong>TERM SHEET</strong></center>
+                <div class="row mx-0 pb-5">
+                    The purpose of this Term Sheet <strong>(“Term Sheet”)</strong> is to set forth the
+                    proposed terms and conditions subject to which
+                    <strong> Justo Realfintech Private Limited </strong>
+                    (“Sales and Marketing Partner”) shall be enabling the sales of unsold Apartments
+                    (“Inventory”) in the project
+                    <t t-esc="o.name or '______________________'"/>
+                    by the
+                    Developer:
+                    <t t-esc="o.developer_id.name or '______________________'"/>
+                    as stated herein below. The parties to the Term Sheet would be jointly referred to as “Parties”.
+                </div>
+                <table class="table table-bordered mb-0">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>1</strong>
+                            </td>
+                            <td>
+                                <strong>Sales and Marketing Partner</strong>
+                            </td>
+                            <td>
+                                <strong>Justo Realfintech Private Limited</strong>, having its Corporate Office at 8th
+                                Floor , EL TARA ,
+                                Orchard Avenue , Hiranandani Gardens , Powai , Mumbai - 400076
+                                CIN U67190MH2019PTC323318, GSTN : 27AAECJ5136D1ZS, RERA No. : A51900020277
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>2</strong>
+                            </td>
+                            <td>
+                                <strong>Promoters of the Sales and Marketing Partner</strong>
+                            </td>
+                            <td>
+                                Promoters shall mean collectively Mr. Pushpamitra Das and Mr. Rahul Pande
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>3</strong>
+                            </td>
+                            <td>
+                                <strong>Developer</strong>
+                            </td>
+                            <td>
+                                Developer(s) / Builder Entity :
+                                <t t-esc="o.developer_id.name or '______________________'"/>
+                                PAN:
+                                <t t-esc="o.developer_id.pan_number or '______________________'"/>
+                                ,
+                                <strong>GST No.</strong>
+                                <t t-esc="o.developer_id.vat or '______________________'"/>
+                                Developer(s) / Builder(s) Entity Address :
+                                <t t-if="o.street"><t t-esc="o.street"/>,
+                                </t>
+                                <t t-if="o.street2"><t t-esc="o.street2"/>,
+                                </t>
+                                <t t-if="o.zip"><t t-esc="o.zip"/>,
+                                </t>
+                                <t t-if="o.city"><t t-esc="o.city"/>,
+                                </t>
+                                <t t-if="o.state_id"><t t-esc="o.state_id.name"/>,
+                                </t>
+                                <t t-if="o.country_id">
+                                    <t t-esc="o.country_id.name"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>4</strong>
+                            </td>
+                            <td>
+                                <strong>Promoters of the Developer</strong>
+                            </td>
+                            <td>
+                                <strong>Mr.</strong> <t t-esc="o.promoter or '______________________'"/> Group
+                                Address: ______________________
+                                ______________________________
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>5</strong>
+                            </td>
+                            <td>
+                                <strong>Project Name and Address</strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    <strong t-esc="o.name or '______________________'"/>
+                                </strong>
+                                <br/>
+                                <strong>
+                                    <strong t-esc="o.site_address or '______________________'"/>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>6</strong>
+                            </td>
+                            <td>
+                                <strong>Transaction Scope</strong>
+                            </td>
+                            <td>
+                                The Developer is developing a property located at <t t-esc="o.site_address or '______________________'"/> spread over ____ Acres located
+                                at <t t-esc="o.site_address or '______________________'"/>
+                                The Sales and Marketing Partner will get exclusive mandate to provide strategic sales
+                                and marketing services on principal-to-principal basis to sell around ----Units having a
+                                total Saleable area (with _____% Loading on Carpet Area) of _______ Sq. ft. as detailed
+                                in Annexure 1.
+                                The Sales Partner will liquidate the Inventory offered during the mandate tenure of <t t-esc="o.tenure or '______________________'"/>
+                                months, extendable by another ---- months or higher period, as may be mutually agreed
+                                between the Parties.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <record id="term_sheet_template_form_view" model="ir.ui.view">
+            <field name="name">term_sheet_template.form</field>
+            <field name="model">term.sheet.template</field>
+            <field name="arch" type="xml">
+                <form string="ModelTitle">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                        </group>
+                        <field name="template"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="term_sheet_template_tree_view" model="ir.ui.view">
+            <field name="name">term_sheet_template.tree</field>
+            <field name="model">term.sheet.template</field>
+            <field name="arch" type="xml">
+                <tree string="Term Sheet Template">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        <record id="term_sheet_template_action" model="ir.actions.act_window">
+            <field name="name">Term Sheet Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">term.sheet.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

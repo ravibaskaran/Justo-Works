@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <template id="layout" name="Web layout" inherit_id="web.layout">
+            <xpath expr="//title" position="replace">
+                <title t-esc="title or 'Inexoft Technologies'"/>
+            </xpath>
+        </template>
+
+        <template id="login_layout" name="Login Layout" inherit_id="web.login_layout">
+            <xpath expr="//t[@t-if='not disable_database_manager']" position="replace">
+            </xpath>
+            <xpath expr="//a[@target='_blank']" position="replace">
+                <a href="http://www.inexoft.com" target="_blank">Powered by
+                    <span>Inexoft</span>
+                </a>
+            </xpath>
+        </template>
+
+        <!--  removing powered by odoo from invoice preview  -->
+        <template id="invoice_preview_inherit" name="My Portal Record Sidebar Inherit"
+                  inherit_id="portal.portal_record_sidebar">
+            <xpath expr="//div[hasclass('card-footer')]" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+        </template>
+        <template id="brand_promotion_message" name="Brand Promotion Message" inherit_id="web.brand_promotion_message">
+            <xpath expr="//t[2]" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//t[3]" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

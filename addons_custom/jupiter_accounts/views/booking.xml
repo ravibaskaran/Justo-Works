@@ -1,0 +1,40 @@
+<odoo>
+    <!-- Booking form inherited -->
+    <record id="unit_reservation_form_view_jupiter_accounts" model="ir.ui.view">
+        <field name="name">unit_reservation_form_view_jupiter_accounts</field>
+        <field name="model">unit.reservation</field>
+        <field name="inherit_id" ref="itsys_real_estate.unit_reservation_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='developer_id']" position="after">
+                <field name="developer_commission_percentage" attrs="{'readonly': [('state','!=','draft')]}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="spot_booking_invoice_id" invisible="1"/>
+                <field name="cp_brokerage_invoice_id" invisible="1"/>
+                <button name="view_spot_booking_invoice" string="Spot Booking Voucher" type="object" icon="fa-clipboard"
+                        class="oe_stat_button" attrs="{'invisible' : [('spot_booking_invoice_id', '=', False)]}"/>
+                <button name="view_cp_brokerage_invoice" string="CP Brokerage Voucher" type="object" icon="fa-files-o"
+                        class="oe_stat_button" attrs="{'invisible' : [('cp_brokerage_invoice_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" attrs="{'invisible': [('registration_status', '!=', 'registered')]}"
+                        name="view_registration" icon="fa-bars" string="Registration"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="after">
+                <field name="registration_status" invisible="1"/>
+                <widget name="web_ribbon" title="Registered" bg_color="bg-success" attrs="{'invisible': [('registration_status', '!=', 'registered')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="unit_reservation_tree_view_jupiter_accounts" model="ir.ui.view">
+        <field name="name">unit_reservation_tree_view_jupiter_accounts</field>
+        <field name="model">unit.reservation</field>
+        <field name="inherit_id" ref="itsys_real_estate.unit_reservation_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="registration_status" widget="badge" attrs="{'invisible': [('registration_status', '!=', 'registered')]}" decoration-success="registration_status == 'registered'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

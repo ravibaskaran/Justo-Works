@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="action_jupiter_dashboard" model="ir.actions.client">
+            <field name="name">Dashboard</field>
+            <field name="tag">jupiter_dashboard</field>
+        </record>
+
+        <menuitem name="Dashboard" id="menu_jupiter_dashboard"
+                  web_icon="jupiter_dashboard,static/description/icon.png"
+                  sequence="10"
+                  groups="jupiter_dashboard.group_jupiter_dashboard"
+                  action="jupiter_dashboard.action_jupiter_dashboard"/>
+    </data>
+</odoo>

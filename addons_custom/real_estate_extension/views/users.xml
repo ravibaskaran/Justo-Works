@@ -1,0 +1,193 @@
+<odoo>
+    <record id="action_res_users_simple" model="ir.actions.act_window">
+        <field name="name">Users</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.users</field>
+        <field name="target">current</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_normal_user', '=', True)]</field>
+        <field name="context">{'default_is_normal_user': True}</field>
+    </record>
+    <record id="action_res_users_simple_view1" model="ir.actions.act_window.view">
+        <field eval="10" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="base.view_users_tree"/>
+        <field name="act_window_id" ref="action_res_users_simple"/>
+    </record>
+    <record id="action_res_users_simple_view" model="ir.actions.act_window.view">
+        <field eval="20" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_users_simple_form"/>
+        <field name="act_window_id" ref="action_res_users_simple"/>
+    </record>
+    <menuitem id="menu_res_users_simple" name="Users" groups="real_estate_extension.group_user_menu" web_icon="real_estate_extension,static/description/users.png" action="action_res_users_simple"/>
+
+    <record id="view_users_simple_form_real_estate_extension" model="ir.ui.view">
+        <field name="name">view_users_simple_form_real_estate_extension</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='groups_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[field[@name='groups_id']]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='phone_numbers']" position="after">
+                <group string="Access Control" class="access_control_group">
+                    <group>
+                        <field name="allow_booking_confirm_backdate"/>
+                        <field name="show_booking_cancel"/>
+                        <field name="show_booking_reset_to_draft_in_confirm_state"/>
+                        <field name="booking_cancel_anytime"/>
+                        <field name="dashboard_3"/>
+                        <field name="show_ctc_btn"/>
+                    </group>
+                    <group>
+                        <field name="show_booking_reset_to_draft"/>
+                        <field name="show_evaluation_sheet_term_sheet_budgeting_confirm_button"/>
+                        <field name="all_projects_access"/>
+                        <field name="booking_by_region"/>
+                        <field name="booking_confirm_anytime"/>
+                        <field name="project_configurations"/>
+                    </group>
+                </group>
+                <group string="Hide Menus" class="hide_menu_group ">
+                    <field name="enable_menu_hide"/>
+                </group>
+                <group class="hide_menu_group" attrs="{'invisible': [('enable_menu_hide', '=', False)]}">
+                    <group>
+                        <field name="menu_project"/>
+                        <label for="menu_property_masters" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_property_masters" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <label for="menu_masters" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_masters" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <label for="menu_transactions" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_transactions" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+
+                        <label for="menu_project_evaluation_sheet" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_project_evaluation_sheet" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_competition_sheet" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_competition_sheet" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_term_sheet" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_term_sheet" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_retention_receipt_voucher" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_retention_receipt_voucher" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_project_assigning" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_project_assigning" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_loan_status_marking" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_loan_status_marking" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_registration" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_registration" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_budgeting" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_budgeting" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_project_employee_assigning" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_project_employee_assigning" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_project_target" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_project_target" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <label for="menu_incentive_generation" class="step_2" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+                        <field name="menu_incentive_generation" nolabel="1" attrs="{'invisible': [('menu_transactions', '=', False)]}"/>
+
+                        <label for="menu_property_booking" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_property_booking" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <label for="menu_invoices" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_invoices" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <label for="menu_config" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_config" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <label for="menu_settings" class="step_1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                        <field name="menu_settings" nolabel="1" attrs="{'invisible': [('menu_project', '=', False)]}"/>
+                    </group>
+                    <group>
+                        <field name="menu_accounting"/>
+                        <field name="menu_gst"/>
+                        <field name="menu_dashboard_1" invisible="1"/>
+                        <field name="menu_dashboard_2" invisible="1"/>
+                        <field name="menu_employees"/>
+                        <field name="menu_reports"/>
+                        <label for="menu_purchase_reports" class="step_1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <field name="menu_purchase_reports" nolabel="1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <label for="menu_inventory_reports" class="step_1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <field name="menu_inventory_reports" nolabel="1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <label for="menu_invoice_reports" class="step_1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <field name="menu_invoice_reports" nolabel="1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <label for="menu_project_reports" class="step_1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                        <field name="menu_project_reports" nolabel="1" attrs="{'invisible': [('menu_reports', '=', False)]}"/>
+                    </group>
+                </group>
+                <style>
+                    .access_control_group td.o_td_label,
+                    .hide_menu_group td.o_td_label{
+                    min-width: 320px !important;
+                    }
+                    .step_1{
+                    padding-left: 1.5rem;
+                    }
+                    .hide_menu_group label.step_1.o_form_label:before {
+                    position: absolute;
+                    top: -23px;
+                    bottom: 25px;
+                    left: -3px;
+                    display: block;
+                    width: 0;
+                    border-left: 1px solid #777;
+                    content: "";
+                    }
+                    .hide_menu_group label.step_1.o_form_label:after {
+                    position: absolute;
+                    top: 3px;
+                    left: -3px;
+                    display: block;
+                    height: 0.5em;
+                    width: 16px;
+                    border-bottom: 1px solid #777;
+                    border-left: 1px solid #777;
+                    border-radius: 0 0 0 .3em;
+                    content: '';
+                    }
+                    .hide_menu_group .o_td_label{
+                    position: relative;
+                    }
+
+                    .step_2{
+                    padding-left: 2.5rem;
+                    }
+                    .hide_menu_group label.step_2.o_form_label:before {
+                    position: absolute;
+                    top: -24px;
+                    bottom: 25px;
+                    left: 13px;
+                    display: block;
+                    width: 0;
+                    border-left: 1px solid #777;
+                    content: "";
+                    }
+                    .hide_menu_group label.step_2.o_form_label:after {
+                    position: absolute;
+                    top: 3px;
+                    left: 13px;
+                    display: block;
+                    height: 0.5em;
+                    width: 1em;
+                    border-bottom: 1px solid #777;
+                    border-left: 1px solid #777;
+                    border-radius: 0 0 0 .3em;
+                    content: '';
+                    }
+                </style>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_form_real_estate_extension" model="ir.ui.view">
+        <field name="name">view_users_form_real_estate_extension</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']/group" position="inside">
+                <group string="Configurations">
+                    <field name="is_normal_user"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

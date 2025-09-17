@@ -1,0 +1,21 @@
+<odoo>
+    <menuitem id="project_assigning_menu" parent="itsys_real_estate.project_transaction_main_menu"
+              action="project_transactions.project_assigning_action" sequence="60"/>
+
+    <menuitem id="loan_status_marking_menu" parent="itsys_real_estate.project_transaction_main_menu"
+              action="project_transactions.loan_status_marking_action" sequence="70"/>
+
+    <menuitem id="project_registration_menu" parent="itsys_real_estate.project_transaction_main_menu"
+              action="project_transactions.project_registration_action" sequence="80"/>
+
+    <menuitem id="project_employee_assigning_menu" parent="itsys_real_estate.project_transaction_main_menu"
+              action="project_transactions.project_employee_assigning_action" sequence="90"/>
+
+    <menuitem id="project_target_menu" parent="itsys_real_estate.project_transaction_main_menu"
+              action="project_transactions.project_target_action" sequence="100"/>
+
+    <record id="itsys_real_estate.real_estate_report_menu" model="ir.ui.menu">
+        <field name="parent_id" ref="reports_menu.report_menu"/>
+        <field name="name">Project</field>
+    </record>
+</odoo>

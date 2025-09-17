@@ -1,0 +1,258 @@
+<odoo>
+    <data>
+        <record id="sales_tax_report_view_form" model="ir.ui.view">  <!--CHANGE THIS-->
+            <field name="name">sales_tax_report_view_form</field>  <!--CHANGE THIS-->
+            <field name="model">beta.sales.tax.report</field>  <!--CHANGE THIS-->
+            <field name="arch" type="xml">
+                <form string="sales_tax_report_form">
+<!--                    <field name="new_logic" invisible="1"/>-->
+                    <div class="beta_main_panel" report="Sales Tax Report">  <!--CHANGE THIS-->
+                        <div class="m-0 row report_panel">
+                            <div class="report-btn-panel col-12 col-lg-3 my-auto text-center">
+                                <a role="button" style="color: #FFFFFF; border-radius:6px; padding: .6rem;"
+                                   title="Download Excel" id="beta_excel_print"
+                                   class="btn btn-primary btn-prints fa fa-file-excel-o mr-1 col-2 col-lg-3">
+                                    Excel
+                                </a>
+                                <a role="button" style="color: #FFFFFF; border-radius:6px; padding: .6rem;"
+                                   title="Print" class="btn btn-primary btn-prints fa fa-print mr-1 col-2 col-lg-3" type="button"
+                                   id="beta_direct_print">
+                                    Print
+                                </a>
+                                <button style="color: #FFFFFF; border-radius:6px; padding: .6rem;"
+                                        name="beta_pdf_print" type="object"
+                                        class="btn btn-primary btn-prints fa fa-file-pdf-o col-2 col-lg-3">
+                                    PDF
+                                </button>
+                                <span style="padding-top: 3px;" class="get_report_div col-2 col-lg-12 p-0">
+                                    <button name="get_html" type="object"
+                                            style="color: #FFFFFF; border-radius:6px; padding: .6rem 2rem;"
+                                            class="btn btn-primary o_panel_get_report_beta mt-2">
+                                        Get Report
+                                    </button>
+                                </span>
+                            </div>
+                            <field name="report_id" invisible="1"/>
+                            <div class="col-12 col-lg-9 pt-2">
+                                <div class="row mr-3">
+                                    <div class="col-12 col-lg-4">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Date From</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="date_from" required="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Date To</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="date_to" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-4">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Report Type</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="report_type" required="1"/>
+                                            </div>
+                                        </div>
+<!--                                            <div class="col-12 col-lg-4">-->
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Report Order</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="report_order" required="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Tax Filter</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="tax_filter"/>
+                                            </div>
+                                        </div>
+<!--                                    </div>-->
+<!--                                        </div>-->
+                                    </div>
+
+
+                                    <div class="col-12 col-lg-4">
+                                        <div class="row">
+                                            <div class="col-4" attrs="{'invisible': [('tax_filter', '!=', True)]}">
+                                                <strong>Taxes</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="tax_ids" widget="many2many_tags"
+                                                       options="{'no_open': True, 'no_quick_create': True, 'no_create': True}"
+                                                       attrs="{'invisible': [('tax_filter', '!=', True)]}"/>
+<!--                                                       attrs="{'required': [('tax_filter', '=', True)]}"-->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 template_div">
+                            <div class="beta_template_area"/>
+                            <field name="template_area" class="d-none"/>
+                        </div>
+                        <script>
+                            $(document).ready(function(){
+                            $('.beta_template_area').append($('[name="template_area"]').val())
+                            $('span[name="date_from"]').click();
+                            })
+                        </script>
+                        <style>
+                            table th,td{
+                            overflow-wrap: break-word;
+                            }
+                            #tableId{
+                            width: max-content !important;
+                            }
+                            #tableId td {
+                                padding-left: .5rem !important;
+                                padding-right: .5rem !important;
+                            }
+                            html .o_web_client > .o_action_manager > .o_action > .o_content{
+                            overflow: overlay;
+                            }
+                            .o_form_view {
+                            padding: 0 0 14px 0px !important;
+                            background: #f9f9f9;
+                            }
+                            .report_panel{
+                            padding-bottom: 1rem;
+                            box-shadow: 0px 6px 7px #0000003b;
+                            padding-top: 14px;
+                            background: white;
+                            position: fixed;
+                            width: 95%;
+                            z-index: 1;
+                            top: 46px;
+                            left: 64px;
+                            max-height: 150px;
+                            border-radius: 14px;
+                            }
+                            .template_div{
+                            padding-top: 8rem;
+                            }
+                            .o_field_widget.o_field_many2manytags .o_tag_color_0{
+                            box-shadow: inset 0 0 0 1px #777777;
+                            }
+                            .o_field_many2manytags {
+                            max-height: 70px;
+                            height: 70px;
+                            overflow-y: auto;
+                            width: 100%;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge {
+                            font-size: 11px;
+                            max-width: 95%;
+                            height: 18px;
+                            }
+                            .o_form_view .o_datepicker {
+                            width: 100% !important;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge .o_badge_text{
+                            text-overflow: ellipsis;
+                            width: 90%;
+                            }
+                            .template_div .table thead{
+                            top: 95px;
+                            position: sticky;
+                            background: white;
+                            }
+                            [name='branch_id'] select {
+                            display: none;
+                            }
+                            @media only screen and (max-width: 990px) {
+                                .report_panel{
+                                    left: 0px;
+                                    width: 100%;
+                                }
+                                .o_panel_get_report_beta{
+                                    margin-top: 0 !important;
+                                }
+                                table{
+                                    table-layout: unset !important;
+                                }
+                                .report_panel{
+                                    max-height: unset;
+                                }
+                                table td, table th{
+                                    white-space: nowrap;
+                                }
+                                .report-btn-panel{
+                                    position: fixed;
+                                    bottom: 8px;
+                                }
+                            }
+                            @media only screen and (max-width: 369px) {
+                                .o_panel_get_report_beta{
+                                    padding: 1.2rem !important;
+                                }
+                                .btn-prints{
+                                padding: 0.375rem 0.75rem !important;
+                                }
+                            }
+                        </style>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <template id="beta_reports_pdf">
+            <main/>
+            <t t-call="web.basic_layout">
+                <t t-raw="template_area"/>
+            </t>
+        </template>
+
+        <record id="beta_sales_paper_format_landscape" model="report.paperformat">
+            <field name="name">Beta sales Reports Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A2</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">5</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">28</field>
+            <field name="dpi">99</field>
+        </record>
+
+        <!--CHANGE THIS-->
+        <record id="sales_tax_reports_pdf_action" model="ir.actions.report">
+            <field name="name">Sales Tax Report</field>
+            <field name="model">beta.sales.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sales_tax_report.beta_reports_pdf</field>
+            <field name="report_file">sales_tax_report.beta_reports_pdf</field>
+            <field name="binding_model_id" ref="booking_report.model_beta_booking_report"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="beta_sales_paper_format_landscape"/>
+        </record>
+        <record id="sales_tax_report_action" model="ir.actions.act_window">  <!--CHANGE THIS-->
+            <field name="name">Sales Tax Report</field>  <!--CHANGE THIS-->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">beta.sales.tax.report</field>  <!--CHANGE THIS-->
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context"
+                   eval="{'default_report_id': ref('sales_tax_report.sales_tax_reports_pdf_action')}"/>  <!--CHANGE THIS-->
+        </record>
+<!--        <menuitem id="sales_tax_menu" name="Sales Tax Report" parent="" action="sales_tax_report_action"/>-->
+    </data>
+</odoo>

@@ -1,0 +1,343 @@
+<odoo>
+    <template id="report_voucher_document">
+        <t t-set="roundoff" t-value="0"/>
+        <t t-set="o" t-value="o.with_context(lang=lang)"/>
+
+        <t t-set="address" t-if="False">
+            <address t-field="o.partner_id"
+                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+            <div t-if="o.partner_id.vat" class="mt16">
+                <t t-if="o.company_id.country_id.vat_label" t-esc="o.company_id.country_id.vat_label"
+                   id="inv_tax_id_label"/>
+                <t t-else="">Tax ID</t>:
+                <span t-field="o.partner_id.vat"/>
+            </div>
+        </t>
+        <t t-if="o.direct_journal_entry_inx">
+            <div style="border:1px solid black;" class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
+                <t t-if="res_company">
+                    <div style="margin-top:8px">
+                        <div class="row">
+                            <div style="float:left;padding-left:20px;padding-top:3px;" class="col-2 mb4">
+                                <img style="width: 120px;" t-if="res_company.logo"
+                                     t-att-src="image_data_uri(res_company.logo)" alt="Logo"/>
+                            </div>
+                            <div class="col-8 mb4 text-center">
+                                <h4 style="margin:0;color:#1155cc;font-size: 1.2rem;">
+                                    <span t-esc="res_company.name"/>
+                                </h4>
+                                <p style="margin-bottom:0;">
+                                    <span t-esc="res_company.street"/>,
+                                    <span t-esc="res_company.street2"/>,
+                                    <span t-esc="res_company.city"/>,
+                                    <span t-esc="res_company.state_id.name"/>,
+                                    <span t-esc="res_company.country_id.name"/>-
+                                    <span t-esc="res_company.zip"/>
+                                </p>
+                                <p style="margin-bottom:0;">
+                                    <span style="padding-right:15px">Phone :
+                                        <span t-esc="res_company.phone"/>
+                                    </span>
+                                    Email :
+                                    <span t-esc="res_company.email"/>
+                                </p>
+                                <p>
+                                    <span class="list-inline-item d-inline">
+                                        GSTIN
+                                        :
+                                    </span>
+                                    <span t-esc="res_company.vat"/>
+                                </p>
+                            </div>
+                            <div class="col-2 mb4"/>
+                        </div>
+                        <div class="row zero_min_height">
+                            <div class="col-12">
+                                <div style="border-bottom: 1px solid #000;"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <img style="position: absolute;left: 22%; transform: translateX(-22%);" t-if="o.state == 'cancel'" src="/inexoft_account_voucher/static/img/cancel.png" alt="cancel"/>
+                <img style="position: absolute;left: 32%; transform: translateX(-32%);" t-if="o.state == 'draft'" src="/inexoft_account_voucher/static/img/draft.png" alt="draft"/>
+                <div style="padding:0px;" class="page">
+                    <t t-if="o.direct_journal_type_inx in ['payment','receipt','receipt_reverse','payment_reverse']">
+                        <div style="margin-top: 5px;margin-bottom:-10px;">
+                            <span t-if="o.direct_journal_type_inx == 'receipt'">
+                                <h4 style="font-size: 26px;" class="text-center">Receipt Voucher</h4>
+                            </span>
+                            <span t-if="o.direct_journal_type_inx == 'payment'">
+                                <h4 style="font-size: 26px;" class="text-center">Payment Voucher</h4>
+                            </span>
+                        </div>
+                        <table style="width: 100%;margin-bottom:-25px;">
+                            <thead>
+                                <tr>
+                                    <th width="50%"/>
+                                    <th width="50%"/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding-left: 20px;" class="text-left">Vr No. :
+                                        <t t-esc="o.name if o.name != '/' else 'Draft'"/>
+                                    </td>
+                                    <td style="padding-right: 20px;" class="text-right">Date :
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <table width="100%" class=" table-sm o_main_table" style="margin-bottom: 0;">
+                            <t t-set="bank_voucher" t-value="False"/>
+                            <t t-if="o.direct_journal_id_inx.type != 'cash'">
+                                <t t-set="bank_vc" t-value="True"/>
+                            </t>
+                            <thead>
+                                <tr style="border-top:1px solid black;border-bottom:1px solid black;">
+                                    <th colspan="2" style="padding-left: 20px;" class="text-left">
+                                        <span>Description</span>
+                                    </th>
+                                    <th style="padding-right: 20px;" class="text-right"
+                                        t-if="o.direct_journal_type_inx == 'receipt' or bank_vc">
+                                        <span>Receipt</span>
+                                    </th>
+                                    <th style="padding-right: 20px;" class="text-right"
+                                        t-if="o.direct_journal_type_inx == 'payment' or bank_vc">
+                                        <span>Payment</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="voucher_receipt_total" t-value="0"/>
+                                <t t-set="voucher_payment_total" t-value="0"/>
+                                <t t-foreach="o.direct_journal_item_ids" t-as="line">
+                                    <tr style="border-bottom: solid 1px #dee2e6;">
+                                        <td colspan="2" style="padding-left: 20px;" class="text-left">
+                                            <t t-esc="line.account_id.name"/>
+                                            <t t-if='line.partner_id'>
+                                                -
+                                                <t t-esc="line.partner_id.name"/>
+                                            </t>
+                                        </td>
+                                        <td style="padding-right: 20px;" class="text-right"
+                                            t-if="o.direct_journal_type_inx == 'receipt' or bank_vc">
+                                            <t t-esc="'{:.2f}'.format(line.receipt_amount)"/>
+                                            <t t-set="voucher_receipt_total"
+                                               t-value="voucher_receipt_total + line.receipt_amount"/>
+                                        </td>
+                                        <td style="padding-right: 20px;" class="text-right"
+                                            t-if="o.direct_journal_type_inx == 'payment' or bank_vc">
+                                            <t t-esc="'{:.2f}'.format(line.payment_amount)"/>
+                                            <t t-set="voucher_payment_total"
+                                               t-value="voucher_payment_total + line.payment_amount"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="line.name" style="border-bottom: solid 1px #dee2e6;">
+                                        <td class="text-left" style="padding-left:35px" colspan="4">(<t
+                                                t-esc="line.name"/>)
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr style="border-bottom: solid 1px #dee2e6;" t-if="bank_vc">
+                                    <td style="padding-left: 20px;" colspan="2">
+                                        <t t-esc="o.direct_journal_id_inx.name"/>
+                                    </td>
+                                    <td style="padding-right: 20px;" class="text-right">
+                                        <t t-esc="'{:.2f}'.format(voucher_payment_total)"/>
+                                    </td>
+                                    <td style="padding-right: 20px;" class="text-right">
+                                        <t t-esc="'{:.2f}'.format(voucher_receipt_total)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="100%" style=" border-bottom: solid 1px black;   margin-top: 100px;width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="padding-left: 20px;">
+                                        Total(In words) :
+                                        <t t-if="o.direct_journal_type_inx == 'payment'">
+                                            <t t-esc="o.currency_id.amount_to_text(voucher_payment_total)"/>
+                                            Only
+                                        </t>
+                                        <t t-if="o.direct_journal_type_inx == 'receipt'">
+                                            <t t-esc="o.currency_id.amount_to_text(voucher_receipt_total)"/>
+                                            Only
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td style="text-align:right;padding-right: 20px;">
+                                        <t class="text-right"
+                                           t-if="o.direct_journal_type_inx == 'receipt'">
+                                            <strong>
+                                                <t t-esc="'{:.2f}'.format(voucher_receipt_total + voucher_payment_total)"/>
+                                            </strong>
+                                        </t>
+                                        <t class="text-right"
+                                           t-if="o.direct_journal_type_inx == 'payment'">
+                                            <strong>
+                                                <t t-esc="'{:.2f}'.format(voucher_payment_total + voucher_receipt_total)"/>
+                                            </strong>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-else="">
+                        <div style="margin-top: 5px;margin-bottom:-10px;">
+                            <span t-if="o.direct_journal_entry_inx == True">
+                                <h4 style="font-size: 26px;" class="text-center">Journal Voucher</h4>
+                            </span>
+                        </div>
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="50%"/>
+                                    <th width="50%"/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding-left: 20px;" class="text-left">Vr No. :
+                                        <t t-esc="o.name if o.name != '/' else 'Draft'"/>
+                                    </td>
+                                    <td style="padding-right: 20px;" class="text-right">Date :
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="100%" class=" table-sm o_main_table">
+                            <thead>
+                                <tr style="border-top:1px solid black;border-bottom:1px solid black;">
+                                    <th style="padding-left: 20px;" class="text-left">
+                                        <span>Description</span>
+                                    </th>
+                                    <th style="padding-right: 20px;" class="text-right">
+                                        <span>Receipt</span>
+                                    </th>
+                                    <th style="padding-right: 20px;" class="text-right">
+                                        <span>Payment</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="journal_receipt_total" t-value="0"/>
+                                <t t-set="journal_payment_total" t-value="0"/>
+                                <t t-foreach="o.line_ids" t-as="line">
+                                    <tr style="border-bottom: solid 1px #dee2e6;">
+                                        <td style="padding-left: 20px;" class="text-left">
+                                            <t t-esc="line.account_id.name"/>
+                                        </td>
+                                        <td style="padding-right: 20px;" class="text-right">
+                                            <t t-esc="'{:.2f}'.format(line.debit)"/>
+                                            <t t-set="journal_receipt_total"
+                                               t-value="journal_receipt_total + line.debit"/>
+                                        </td>
+                                        <td style="padding-right: 20px;" class="text-right">
+                                            <t t-esc="'{:.2f}'.format(line.credit)"/>
+                                            <t t-set="journal_payment_total"
+                                               t-value="journal_payment_total + line.credit"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="line.name" style="border-bottom: solid 1px #dee2e6;">
+                                        <td class="text-left" style="padding-left:35px" colspan="3">(<t
+                                                t-esc="line.name"/>)
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <table style=" margin-top: 100px;" width="100%">
+                            <tbody>
+                                <tr style="border-bottom: solid 1px black;  ">
+                                    <td style="text-align:center;padding-left: 20px;" class="">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td style="padding-right: 20px;" class="text-right">
+                                        <strong>
+                                            <t t-esc="'{:.2f}'.format(journal_receipt_total)"/>
+                                        </strong>
+                                    </td>
+                                    <td style="padding-right: 20px;width:25%" class="text-right">
+                                        <strong>
+                                            <t t-esc="'{:.2f}'.format(journal_payment_total)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <div style="width:100%;padding-top:60px; padding-bottom:15px;">
+                        <table width="100%">
+                            <tr>
+                                <td style="width:33.33%;text-align:center;line-height:1;">
+                                    <div>
+                                        ----------------------
+                                        <br/>
+                                        Prepared By
+                                    </div>
+                                </td>
+                                <td style="width:33.33%;text-align:center;line-height:1;">
+                                    <div>
+                                        ----------------------
+                                        <br/>
+                                        Authorised By
+                                    </div>
+                                </td>
+                                <td style="width:33.33%;text-align:center;line-height:1;">
+                                    <div>
+                                        ----------------------
+                                        <br/>
+                                        Signature
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="report_voucher">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang"
+                   t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                <t t-call="inexoft_account_voucher.report_voucher_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="voucher_reports_paper_format" model="report.paperformat">
+        <field name="name">Voucher Reports Paper Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">28</field>
+        <field name="dpi">99</field>
+    </record>
+
+    <report id="account_voucher_report"
+            model="account.move"
+            string="Voucher Print"
+            report_type="qweb-pdf"
+            name="inexoft_account_voucher.report_voucher"
+            file="inexoft_account_voucher.report_voucher"
+            attachment="(object.state == 'posted') and ((object.name or 'VOUCHER').replace('/','_')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            menu="True"
+            paperformat="voucher_reports_paper_format"/>
+</odoo>

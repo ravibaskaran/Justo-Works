@@ -1,0 +1,45 @@
+Documentation - CP Creation API
+-------------------------------
+
+url :   /cp/fetch_channel_partner_id
+methode:  POST
+
+Body(json):
+
+#################################################################
+
+{
+    "params": {
+        "login": "api",
+        "password": "bc57eec2fea8a11e3ea7ddee722ae24927fa3c12",
+        "record": {
+            "cp_id": "CP0247",
+            "name": "Samples",
+            "state_code": "KL",
+            "country_code": "IN",
+            "owner_name": "Owner",
+            "street": "Street",
+            "street2": "Street2",
+            "city": "City",
+            "zip": "600066",
+            "gstin": "",
+            "rera_number": "001",
+            "pan": "00045",
+            "aadhar": "000005",
+            "phone": "234234",
+            "mobile": "234234",
+            "email": "sample@sample.com",
+            "website": "sample.com",
+            "bank": "Sample Bank",
+            "ifsc": "000001",
+            "account_number": "000002"
+        }
+    }
+}
+
+#################################################################
+Channel Partner creation
+
+name, state_code, country_code, mobile - required
+
+if cp_id given updates else creates

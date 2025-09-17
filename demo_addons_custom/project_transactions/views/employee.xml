@@ -1,0 +1,34 @@
+<odoo>
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">view_employee_form_inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                 <style>
+                    .o_field_many2manytags[name="region_ids"] {
+                        max-height: 70px;
+                        min-height: 50px;
+                        overflow-y: auto;
+                        width: 100%;
+                    }
+                     .o_field_widget.o_field_many2manytags[name="region_ids"] .badge {
+                        height: 19px;
+                        }
+                </style>
+            </xpath>
+            <xpath expr="//group[field[@name='mobile_phone']]" position="inside">
+                <field name="role" required="1"/>
+                <field name="parent_domain" invisible="1"/>
+                <field name="is_default_site_head" groups="base.group_system"/>
+                <field name="is_rom" attrs="{'invisible': [('role', 'not in', ('sourcing_tl', 'sourcing_manager'))]}"/>
+                <field name="region_ids" widget="many2many_tags" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="domain">parent_domain</attribute>
+                <attribute name="force_save">1</attribute>
+                <attribute name="attrs">{'required': [('role', 'in', ('closing_tl', 'closing_manager', 'sourcing_tl', 'sourcing_manager', 'marketing', 'site_head', 'cluster_head', 'sourcing_head', 'closing_head', 'admin', 'crm_head', 'crm_team_lead'))], 'readonly': [('role', 'not in', ('closing_tl', 'closing_manager', 'sourcing_tl', 'sourcing_manager', 'marketing', 'site_head', 'cluster_head', 'sourcing_head', 'closing_head', 'admin', 'crm_head', 'crm_team_lead'))]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Building Unit Reservation -->
+        <record id="unit_reservation_tree_view" model="ir.ui.view">
+            <field name="name">unit.reservation.tree</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="building"/>
+                    <field name="flat_state" invisible="1"/>
+                    <field name="building_unit" decoration-danger="flat_state == 'rtb'"/>
+                    <field name="flat_cost"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state =='canceled'" decoration-success="state == 'confirmed'"/>
+                </tree>
+            </field>
+        </record>
+        <record id="unit_reservation_form_view" model="ir.ui.view">
+            <field name="name">unit.reservation.form</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Building Unit Reservation">
+                    <header>
+                        <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('once_confirmed', '=', True)]}" string="Confirm" type="object"/>
+                        <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('once_confirmed', '=', False)]}" groups="itsys_real_estate.group_booking_confirm_anytime" string="Confirm" type="object"/>
+                        <button name="action_cancel" groups="itsys_real_estate.group_booking_cancel" attrs="{'invisible': [('state', '!=', 'confirmed')]}" string="Cancel" type="object"/>
+                        <!-- reset button after cancel -->
+                        <button name="action_draft" groups="itsys_real_estate.group_booking_reset_to_draft" attrs="{'invisible': [('state', '!=', 'canceled')]}" string="Reset to Draft" type="object"/>
+                        <!-- reset button in confirmed state -->
+                        <button name="action_draft" groups="itsys_real_estate.group_booking_reset_to_draft_confirmed" attrs="{'invisible': [('state', '!=', 'confirmed')]}" string="Reset to Draft" type="object"/>
+                        <field name="state"
+                               widget="statusbar"
+                               statusbar_visible="draft,confirmed"/>
+                    </header>
+                    <sheet>
+                        <field name="once_confirmed" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="date" attrs="{'readonly': [('state','!=','draft')]}" required="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="building" options="{'no_create': True, 'no_open': True}" required="1"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="flat_type" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="carpet_area" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="parking" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="rom" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="source_of_booking" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="direct_type_id" attrs="{'invisible': [('source_of_booking', '!=', 'direct')], 'readonly': [('state','!=','draft')]}"/>
+                                <field name="referral_partner_mobile" attrs="{'invisible': [('source_of_booking', '!=', 'referral_partner')], 'readonly': [('state','!=','draft')]}"/>
+                                <field name="cp_brokerage" attrs="{'invisible': [('source_of_booking', '!=', 'cp')], 'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="flat_state" invisible="1"/>
+                                <field name="building_unit" options="{'no_create': True, 'no_open': True}"
+                                       domain="[('building_id', '=', building), ('state', '=', 'free'), ('is_property', '=', True)]"
+                                       attrs="{'readonly': [('state','!=','draft')], 'invisible': [('flat_state', '=', 'rtb')]}"/>
+                                <field name="building_unit" class="text-danger" options="{'no_create': True, 'no_open': True}"
+                                       domain="[('building_id', '=', building), ('state', '=', 'free'), ('is_property', '=', True)]"
+                                       attrs="{'readonly': [('state','!=','draft')], 'invisible': [('flat_state', '!=', 'rtb')]}"/>
+                                <field name="balcony_area" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="total_saleable_area" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="sq_ft_rate" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="rom_domain" invisible="1"/>
+                                <field name="rom_id" invisible="1"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="rom_domain" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('rom', '=', False)]}"/>
+                                <field name="flat_cost_real" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="source_of_booking_type" attrs="{'readonly': [('state','!=','draft')], 'invisible': [('source_of_booking', '!=', 'cp')]}"/>
+                                <field name="referral_amount" attrs="{'invisible': [('source_of_booking', '!=', 'direct')], 'readonly': [('state','!=','draft')]}"/>
+                                <field name="referred_person" attrs="{'invisible': [('source_of_booking', '!=', 'direct')], 'readonly': [('state','!=','draft')]}" context="{'default_is_referrer': True}"/>
+                                <field name="referral_partner_name" attrs="{'invisible': [('source_of_booking', '!=', 'referral_partner')], 'readonly': [('state','!=','draft')]}"/>
+                                <field name="referral_partner_email" attrs="{'invisible': [('source_of_booking', '!=', 'referral_partner')], 'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="partner_id" context="{'default_is_tenant': True}" options="{'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}" required="1"/>
+                                <label for="street" string="Address &amp; Personal Information"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State"
+                                           attrs="{'readonly': [('state','!=','draft')]}"
+                                           options="{'no_open': True, 'no_quick_create': True}"
+                                           context="{'default_country_id': country_id}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country"
+                                           attrs="{'readonly': [('state','!=','draft')]}"
+                                           options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                            </group>
+                            <group style="width: 48% !important;">
+                                <field name="attach_line" widget="section_and_note_one2many" class="file_attach_line_with_view">
+                                    <tree editable="bottom" delete="false">
+                                        <control attrs="{'invisible': [('parent.state','!=','draft')]}">
+                                            <create name="add_line_control" string="Add a line" attrs="{'invisible': [('parent.state','!=','draft')]}"/>
+                                        </control>
+                                        <field name="name" attrs="{'readonly': [('editable', '=', False)]}" force_save="1"/>
+                                        <field name="file" attrs="{'readonly': [('editable', '=', False)]}" force_save="1"/>
+                                        <button name="download_file" type="object" string=" "
+                                                class="oe-highlight fa fa-download"/>
+                                        <field name="view_file_toggle" widget="view_file_toggle" nolabel="1"/>
+                                        <field name="editable" invisible="1"/>
+                                        <button name="unlink"
+                                                string=" "
+                                                type="object"
+                                                class="text-dark pl-0"
+                                                attrs="{'invisible': [('editable', '=', False)]}"
+                                                icon="fa-trash-o"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="co_partner_id" context="{'default_is_tenant': True}" options="{'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <label for="co_street" string="Address &amp; Personal Information"/>
+                                <div class="o_address_format">
+                                    <field name="co_street" placeholder="Street..." class="o_address_street"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="co_street2" placeholder="Street 2..." class="o_address_street"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="co_city" placeholder="City" class="o_address_city"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="co_state_id" class="o_address_state" placeholder="State"
+                                           attrs="{'readonly': [('state','!=','draft')]}"
+                                           options="{'no_open': True, 'no_quick_create': True}"
+                                           context="{'default_country_id': co_country_id}"/>
+                                    <field name="co_zip" placeholder="ZIP" class="o_address_zip"
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="co_country_id" placeholder="Country" class="o_address_country"
+                                           attrs="{'readonly': [('state','!=','draft')]}"
+                                           options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                            </group>
+
+                            <group style="width: 48%;">
+                                <field name="co_attach_line" class="file_attach_line_with_view">
+                                    <tree editable="bottom" delete="false">
+                                        <field name="name" attrs="{'readonly': [('editable', '=', False)]}" force_save="1"/>
+                                        <field name="file" attrs="{'readonly': [('editable', '=', False)]}" force_save="1"/>
+                                        <button name="download_file" type="object" string=" "
+                                                class="oe-highlight fa fa-download"/>
+                                        <field name="view_file_toggle" widget="view_file_toggle" nolabel="1"/>
+                                        <field name="editable" invisible="1"/>
+                                        <button name="unlink"
+                                                string=" "
+                                                type="object"
+                                                class="text-dark pl-0"
+                                                attrs="{'invisible': [('editable', '=', False)]}"
+                                                icon="fa-trash-o"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="closing_manager_domain" invisible="1"/>
+                            <field name="sourcing_manager_domain" invisible="1"/>
+                            <field name="closing_tl_domain" invisible="1"/>
+                            <field name="sourcing_tl_domain" invisible="1"/>
+                            <field name="crm_domain" invisible="1"/>
+                            <field name="marketing_domain" invisible="1"/>
+                            <group>
+                                <field name="closing_manager_id"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="closing_manager_domain" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="sourcing_manager_id"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="sourcing_manager_domain" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="closing_tl_id"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="closing_tl_domain" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="sourcing_tl_id"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="sourcing_tl_domain" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="crm_id"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="crm_domain" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="marketing_id"
+                                       options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"
+                                       domain="marketing_domain" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="cp_employee_id" context="{'default_is_channel_employee': True}" attrs="{'readonly': ['|', ('state','!=','draft'), ('source_of_booking', '=', 'direct')], 'required': [('spot_booking', '=', True)]}"/>
+                                <field name="cp_id" attrs="{'readonly': ['|', ('state','!=','draft'), ('source_of_booking', '=', 'direct')], 'required': [('source_of_booking', '=', 'cp')]}"/>
+                            </group>
+                            <group>
+                                <field name="rera_no" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="developer_id" context="{'default_is_owner': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spot_booking" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+<!--                            <group style="width: 33%;">-->
+<!--                                <field name="spot_percentage"-->
+<!--                                       attrs="{'invisible': [('spot_booking', '!=', True)], 'readonly': [('state','!=','draft')]}"/>-->
+<!--                            </group>-->
+                            <group>
+                                <field name="spot_amount"
+                                       attrs="{'invisible': [('spot_booking', '!=', True)], 'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="infra_charge" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="other_charges" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="flat_cost" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <label for="stamp_duty" string="Stamp Duty"/>
+                                <table style="margin: 0 !important;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="30%">
+                                                <field name="stamp_duty_percentage" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                            </td>
+                                            <td class="pb-2 pr-4">
+                                                %
+                                            </td>
+                                            <td>
+                                                <field name="stamp_duty"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <label for="legal_charge" string="GST"/>
+                                <table style="margin: 0 !important;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="30%">
+                                                <field name="gst_legal_charge" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                            </td>
+                                            <td class="pb-2 pr-4">
+                                                %
+                                            </td>
+                                            <td>
+                                                <field name="legal_charge"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <field name="registration_charge" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="net_amount"/>
+                            </group>
+                            <group>
+                                <field name="advance_amount" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="payment_mode" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="payment_type" attrs="{'readonly': ['|', ('state','!=','draft'), ('payment_mode', '!=', 'bank')]}"/>
+                                <field name="document_number" attrs="{'readonly': ['|', ('state','!=','draft'), ('payment_mode', '!=', 'bank')]}"/>
+                                <field name="document_date" attrs="{'readonly': ['|', ('state','!=','draft'), ('payment_mode', '!=', 'bank')]}"/>
+                            </group>
+                        </group>
+                        <group class="mb-0">
+                            <group>
+                                <div class="o_horizontal_separator m-0">Payment Schedule</div>
+                            </group>
+                            <group>
+                                <field name="payment_template_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <field name="payment_schedule_ids">
+                            <tree editable="bottom" create="0" edit="0" delete="0">
+                                <field name="percentage" readonly="1" force_save="1"/>
+                                <field name="payment_schedule" readonly="1" force_save="1"/>
+                                <field name="installment" readonly="1" force_save="1" sum="Total"/>
+                                <field name="tds" readonly="1" force_save="1" sum="Total"/>
+                                <field name="gst" readonly="1" force_save="1" sum="Total"/>
+                                <field name="net_amount" readonly="1" force_save="1" sum="Total"/>
+                                <field name="payment_date"/>
+                            </tree>
+                        </field>
+                        <div class="row">
+                            <span class="o_horizontal_separator col-8 mx-0">Payment Schedule Monitoring</span>
+                            <div class="col-4 pt-3">
+                                <span class="float-right pr-5">
+                                    <strong class="pr-5 border-right mr-2">Agreement Value</strong>
+                                    <field name="flat_cost" readonly="1" force_save="1"/>
+                                </span>
+                            </div>
+                        </div>
+                        <field name="payment_schedule_monitoring_ids">
+                            <tree editable="bottom">
+                                <field name="date"/>
+                                <field name="mode" required="1"/>
+                                <field name="description"/>
+                                <field name="ocr" sum="Total"/>
+                                <field name="bank_payment" sum="Total"/>
+                                <field name="gst" sum="Total"/>
+                                <field name="amount_total" sum="Total"/>
+                                <field name="balance" readonly="1" force_save="1"/>
+                            </tree>
+                        </field>
+                        <group class="mb-0">
+                            <group>
+                                <field name="if_loan"/>
+                            </group>
+                        </group>
+                        <group class="mt-0" attrs="{'invisible': [('if_loan', '!=', True)]}">
+                            <group>
+                                <field name="preferred_bank"/>
+                                <field name="required_amount"/>
+                            </group>
+                            <group>
+                                <field name="bank_person"/>
+                                <field name="mobile"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="if_offer"/>
+                            </group>
+                            <group>
+                                <field name="offer_details" attrs="{'invisible': [('if_offer', '!=', True)]}"/>
+                            </group>
+                        </group>
+                        <separator string="Check List" colspan="4"/>
+                        <group class="check_list_group">
+                            <group>
+                                <field name="booking_form_signed" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="cost_sheet_signed" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="received_photos" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="self_attested_pan_card" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="self_attested_aadhaar_card"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="stamp_duty_collected"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <div class="row" attrs="{'invisible': [('state', '!=', 'canceled')]}">
+                            <div class="col-6"/>
+                            <div class="col-6">
+                                <div class="row">
+                                    <strong class="col-4 cancellation-label">Cancellation Reason</strong>
+                                    <div class="col-6 cancellation-field">
+                                        <field name="cancellation_reason" readonly="1" force_save="1"/>
+                                        <field name="cancellation_notes" readonly="1" force_save="1"/>
+                                        <field name="cancellation_date" readonly="1" force_save="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
+                    <script>
+                        $("input.o_field_number ").on("click", function() {
+                            $(this).select();
+                        });
+                        $("input.o_field_number ").on("change", function() {
+                            var value = $(this).val()
+                            if(value != '' &amp;&amp; String(parseFloat(value)) != 'NaN'){
+                                $(this).val(parseFloat(value));
+                            }
+                        });
+<!--                        $(document).ready(function(){-->
+<!--                            if($('button[data-value="draft"]').attr('title') != 'Current state'){-->
+<!--                                $('.file_attach_line_with_view .o_field_x2many_list_row_add').remove()-->
+<!--                            }-->
+<!--                        })-->
+                    </script>
+                    <style>
+                        .text-orange input{
+                            color: #d23f3a !important;
+                        }
+                        .cancellation-label{
+                            border: 1px solid red;
+                            padding: 1rem;
+                            border-top-left-radius: 10px;
+                            border-bottom-left-radius: 10px;
+                            background: #ff00002b;
+                            color: black;
+                        }
+                        .cancellation-field{
+                            border-top: 1px solid red;
+                            padding: 1rem;
+                            border-right: 1px solid red;
+                            border-bottom: 1px solid red;
+                            border-top-right-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                        }
+                        [name="cancellation_date"]{
+                            float: right;
+                        }
+                        div[name='payment_schedule_ids'] .o_list_table {
+                            table-layout: auto !important;
+                        }
+                        .check_list_group .o_form_label {
+                            min-width: 200px;
+                        }
+                        .file_attach_line_with_view th{
+                            pointer-events: none;
+                        }
+                        th[data-name='mode'] {
+                            width: 100px !important;
+                            min-width: 100px !important;
+                            max-width: 100px !important;
+                        }
+                        th[data-name='bank_payment'] {
+                            width: 120px !important;
+                            min-width: 120px !important;
+                            max-width: 120px !important;
+                        }
+                    </style>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="unit_reservation_form_filter" model="ir.ui.view">
+            <field name="name">unit.reservation.search</field>
+            <field name="model">unit.reservation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Top Search">
+                    <group>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="building"/>
+                        <field name="building_unit"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter name="building_filter" string="Project" domain="[]"  context="{'group_by':'building'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="unit_reservation_form_action" model="ir.actions.act_window">
+            <field name="name">Booking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">unit.reservation</field>
+<!--            <field name="context">{'search_default_building_filter': 1, 'create': 0}</field>-->
+            <field name="context">{'search_default_building_filter': 1}</field>
+            <field name="view_id" ref="unit_reservation_tree_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Unit Reservation
+                </p>
+            </field>
+        </record>
+
+        <record id="booking_cancellation_reason_view_form" model="ir.ui.view">
+            <field name="name">booking_cancellation_reason_view_form</field>
+            <field name="model">booking.cancellation.popup</field>
+            <field name="arch" type="xml">
+                <form string="booking_cancel_reason_form">
+                    <sheet>
+                        <group>
+                            <field name="reason" required="1"/>
+                            <field name="notes"/>
+                            <field name="booking_id" invisible="1"/>
+                            <field name="date" required="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_booking_cancel" type="object" data-hotkey="c" string="Cancel Booking"/>
+                        <button special="cancel" data-hotkey="d" string="Discard" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.cron" id="auto_cancel_reservation_sync">
+            <field name="name">Auto Cancel Unit Reservation</field>
+            <field name="model_id" ref="model_unit_reservation"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_cancel_reservation()</field>
+            <field name="active" eval="False"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <menuitem
+                id="menu_reservation_main"
+                name="Property Booking"
+                parent="itsys_real_estate.menu_itsys_real_estate"
+                action="unit_reservation_form_action"
+                sequence="40"/>
+
+    </data>
+</odoo>

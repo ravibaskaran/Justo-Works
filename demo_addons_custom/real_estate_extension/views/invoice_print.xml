@@ -1,0 +1,308 @@
+<odoo>
+    <template id="invoice_print_document">
+        <t t-call="web.basic_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <style>
+                *{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;}
+                .blue_bg{
+                background: #004589;
+                }
+                .blue_bdr{
+                border: 1px solid #004589;
+                }
+                .blue_bdr_r{
+                border-right: 1px solid #004589;
+                }
+                .blue_bdr_l{
+                border-left: 1px solid #004589;
+                }
+                .blue_bdr_b{
+                border-bottom: 1px solid #004589;
+                }
+                .blue_bdr_t{
+                border-top: 1px solid #004589;
+                }
+                .bottom-absolute{
+                position: absolute;
+                bottom: .5rem;
+                left: 2.5rem;
+                }
+                .bottom-right{
+                position: absolute;
+                bottom: 1rem;
+                right: 1.3rem;
+                }
+                .page-break {page-break-before: always;}
+                .invoice_info{
+                max-height: 180px;
+                min-height: 180px;
+                }
+            </style>
+            <t t-set="address">
+                <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+            </t>
+            <t t-foreach="book" t-as="page_number">
+                <t t-set="page" t-value="book[page_number]"/>
+                <t t-if="res_company">
+                    <div class="blue_bdr" style="margin-top:8px">
+                        <div class="row m-4">
+                            <div style="float:left;" class="col-2 pl-0">
+                                <img style="width: 120px;" t-if="res_company.logo"
+                                     t-att-src="image_data_uri(res_company.logo)" alt="Logo"/>
+                            </div>
+                            <div class="col-8 mb4 text-center">
+                                <h4 style="margin:0;color:#1155cc;font-size: 1.2rem;">
+                                    <span t-esc="res_company.name"/>
+                                </h4>
+                                <p style="margin-bottom:0;">
+                                    <span t-esc="res_company.street"/>,
+                                    <span t-esc="res_company.street2"/>,
+                                    <span t-esc="res_company.city"/>,
+                                    <span t-esc="res_company.state_id.name"/>,
+                                    <span t-esc="res_company.country_id.name"/>-
+                                    <span t-esc="res_company.zip"/>
+                                </p>
+                                <p style="margin-bottom:0;">
+                                    <span style="padding-right:15px">Phone :
+                                        <span t-esc="res_company.phone"/>
+                                    </span>
+                                    Email :
+                                    <span t-esc="res_company.email"/>
+                                </p>
+                                <p>
+                                    <span class="list-inline-item d-inline">
+                                        GSTIN
+                                        :
+                                    </span>
+                                    <span t-esc="res_company.vat"/>
+                                </p>
+                            </div>
+                            <div class="col-2 mb4"/>
+                        </div>
+                    </div>
+                </t>
+                <div class="py-3 pl-4 blue_bdr_l blue_bdr_r invoice_info">
+                    <div class="row">
+                        <div class="col-2">
+<!--                            <strong t-if="o.move_type in ('in_invoice', 'in_refund')">Supplier</strong>-->
+<!--                            <strong t-else="">Customer</strong>-->
+                            <strong>Partner</strong>
+                        </div>
+                        <div class="col-4">
+                            <span t-esc="address"/>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Invoice Number</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span t-field="o.name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Invoice Date</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span t-field="o.invoice_date"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table-sm w-100 blue_bdr">
+                    <thead class="text-white blue_bg">
+                        <tr>
+                            <th width="44%" class="pl-4">Description</th>
+                            <th width="10%" class="text-right">Quantity</th>
+                            <th width="18%" class="text-right">Unit Price</th>
+                            <th width="10%" class="pl-3">Taxes</th>
+                            <th width="18%" class="text-right pr-4">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="page" t-as="lines">
+                            <t t-set="line" t-value="lines['line']"/>
+                            <td class="pl-4">
+                                <span t-field="line.product_id"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.quantity"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.price_unit"/>
+                            </td>
+                            <td class="pl-3">
+                                <span t-field="line.tax_ids"/>
+                            </td>
+                            <td class="text-right pr-4">
+                                <span t-field="line.price_subtotal"/>
+                            </td>
+                        </tr>
+                        <tr t-foreach="range(line_limit - len(page))" t-as="filler">
+                            <td>
+                                <span class="text-white">.</span>
+                            </td>
+                            <td colspan="4"/>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="clearfix blue_bdr_l blue_bdr_r">
+                    <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                    <div id="total" class="row">
+                        <div class="col-6">
+                            <div class="bottom-absolute">
+                                <strong>
+                                    Total(In Words):
+                                </strong>
+                                <span t-esc="o.convert_number_to_words(o.amount_total)"/>
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <table class="table-sm blue_bdr_l w-100" style="page-break-inside: avoid;">
+
+                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                    <tr class="border-bottom">
+                                        <td class="pl-4">
+                                            <strong t-esc="subtotal['name']"/>
+                                        </td>
+                                        <td class="text-right pr-4">
+                                            <span t-att-class="oe_subtotal_footer_separator"
+                                                  t-esc="subtotal['formatted_amount']"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                                    <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]"
+                                       t-as="amount_by_group">
+                                        <tr class="border-bottom">
+                                            <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1 or (tax_totals['amount_untaxed'] != amount_by_group['tax_group_base_amount'])">
+                                                <td class="pl-4">
+                                                    <span t-esc="amount_by_group['tax_group_name']"/>
+                                                </td>
+                                                <td class="text-right o_price_total pr-4">
+                                                    <span class="text-nowrap"
+                                                          t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td class="pl-4">
+                                                    <span class="text-nowrap"
+                                                          t-esc="amount_by_group['tax_group_name']"/>
+                                                </td>
+                                                <td class="text-right o_price_total pr-4">
+                                                    <span class="text-nowrap"
+                                                          t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr class="blue_bg text-white">
+                                    <td class="pl-4">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td class="text-right pr-4">
+                                        <span t-esc="tax_totals['formatted_amount_total']"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row blue_bdr m-0">
+                    <div class="col-6 pl-4 py-3">
+                        <strong>
+                            <u>Bank Details</u>
+                        </strong>
+                        <div class="row mx-0 mt-2">
+                            <div class="col-3 p-0">
+                                <span>Name</span>
+                            </div>
+                            <div class="col-9">:
+                                <span t-esc="bank.name"/>
+                            </div>
+                        </div>
+                        <div class="row mx-0">
+                            <div class="col-3 p-0">
+                                <span>Account No.</span>
+                            </div>
+                            <div class="col-9">:
+                                <span t-esc="bank.account_number"/>
+                            </div>
+                        </div>
+                        <div class="row mx-0">
+                            <div class="col-3 p-0">
+                                <span>IFSC Code</span>
+                            </div>
+                            <div class="col-9">:
+                                <span t-esc="bank.bic"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 py-3 blue_bdr_r">
+                        <strong>
+                            <u>Scan here</u>
+                        </strong>
+                        <div class="row">
+                            <img class="m-auto" style="height: 100px;margin: auto;" t-if="bank.qr_code" t-att-src="image_data_uri(bank.qr_code)" alt="QR Code"/>
+                        </div>
+                    </div>
+                    <div class="col-4 pr-4 py-3">
+                        <b class="float-right">
+                            <span>For</span>
+                            <span t-esc="res_company.name"/>
+                        </b>
+                        <small class="bottom-right">Authorised Signatory  </small>
+                    </div>
+                </div>
+                <div t-if="len(book) > 1" class="page-break"/>
+            </t>
+        </t>
+    </template>
+    <template id="invoice_print">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="real_estate_extension.invoice_print_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+    <record id="invoice_print_paper_format" model="report.paperformat">
+        <field name="name">Invoice Print Paper Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">28</field>
+        <field name="dpi">93</field>
+    </record>
+    <record id="account_invoice_print_action" model="ir.actions.report">
+        <field name="name">Print</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">real_estate_extension.invoice_print</field>
+        <field name="report_file">real_estate_extension.invoice_print</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="invoice_print_paper_format"/>
+    </record>
+    <record id="account.account_invoices" model="ir.actions.report">
+        <field name="binding_model_id"/>
+    </record>
+    <record id="account.account_invoices_without_payment" model="ir.actions.report">
+        <field name="binding_model_id"/>
+    </record>
+    <record id="base_accounting_kit.report_multiple_invoice_copies" model="ir.actions.report">
+        <field name="binding_model_id"/>
+    </record>
+</odoo>

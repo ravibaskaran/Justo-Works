@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_all_projects" model="res.groups">
+        <field name="name">All Projects Access</field>
+    </record>
+
+    <record id="view_registration_delete" model="res.groups">
+        <field name="name">Registration Delete Access</field>
+    </record>
+    <record id="group_region_booking_user" model="res.groups">
+        <field name="name">Booking By Region</field>
+    </record>
+</odoo>

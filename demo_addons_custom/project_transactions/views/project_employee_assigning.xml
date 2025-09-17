@@ -1,0 +1,553 @@
+<odoo>
+    <record id="project_employee_assigning_view_form" model="ir.ui.view">
+        <field name="name">project_employee_assigning_view_form</field>
+        <field name="model">project.employee.assigning</field>
+        <field name="arch" type="xml">
+            <form string="project_employee_assigning_form">
+                <header>
+                    <button name="action_assign" string="Assign"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"
+                            type="object" class="btn-secondary"
+                            data-hotkey="a"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id" required="1"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="region_id"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                            <field name="cluster_id"/>
+                            <field name="merge_role" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <div class="row pb-4">
+                        <div class="col-12 col-sm-6 col-lg-4 px-1">
+                            <separator string="CRM" class="mb-1" colspan="4"/>
+                            <field name="crm_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'crm'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </tree>
+                                <form>
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'crm'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </form>
+                            </field>
+                        </div>
+<!--                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">-->
+<!--                            <separator string="CLOSING TL" class="mb-1" colspan="4"/>-->
+<!--                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped closing_sourcing_tls"-->
+<!--                                   style="table-layout: fixed;">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th class="o_column_sortable o_list_number_th text-left">-->
+<!--                                            Employee-->
+<!--                                        </th>-->
+<!--                                        <th class="o_column_sortable o_list_number_th text-left">-->
+<!--                                            Date Upto-->
+<!--                                        </th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody class="ui-sortable">-->
+<!--                                    <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left ptb-1px">-->
+<!--                                            <field name="closing_tl_id" required="1"-->
+<!--                                                   domain="[('role', '=', 'closing_tl'), ('active_status', '=', True)]"-->
+<!--                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"-->
+<!--                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>-->
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left ptb-1px">-->
+<!--                                            <field name="closing_tl_date"-->
+<!--                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                     <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left" style="height: 28px;">-->
+
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </tbody>-->
+<!--                                <tfoot>-->
+<!--                                    <tr>-->
+<!--                                        <td/>-->
+<!--                                        <td/>-->
+<!--                                    </tr>-->
+<!--                                </tfoot>-->
+<!--                            </table>-->
+<!--                        </div>-->
+                        <div class="col-12 col-sm-6 col-lg-4 px-1">
+                        <separator string="CLOSING TL" class="mb-1" colspan="4"/>
+                            <field name="closing_tl_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'closing_tl'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </tree>
+                                <form>
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'closing_tl'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </form>
+                            </field>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 px-1">
+                            <separator string="CLOSING MANAGER" class="mb-1" colspan="4"/>
+                            <field name="closing_manager_ids" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                   nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="cm_domain" invisible="1"/>
+                                    <field name="employee_id" required="1" domain="cm_domain"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </tree>
+                                <form>
+                                    <field name="cm_domain" invisible="1"/>
+                                    <field name="employee_id" required="1" domain="cm_domain"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </form>
+                            </field>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 px-1">
+                            <separator string="SOURCING TL " class="mb-1" colspan="4"/>
+                            <field name="sourcing_tl_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'sourcing_tl'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </tree>
+                                <form>
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'sourcing_tl'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </form>
+                            </field>
+                        </div>
+<!--                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">-->
+<!--                            <separator string="SOURCING TL" class="mb-1" colspan="4"/>-->
+<!--                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped closing_sourcing_tls"-->
+<!--                                   style="table-layout: fixed;">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th class="o_column_sortable o_list_number_th text-left">-->
+<!--                                            Employee-->
+<!--                                        </th>-->
+<!--                                        <th class="o_column_sortable o_list_number_th text-left">-->
+<!--                                            Date Upto-->
+<!--                                        </th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody class="ui-sortable">-->
+<!--                                    <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left ptb-1px">-->
+<!--                                            <field name="sourcing_tl_id" required="1"-->
+<!--                                                   domain="[('role', '=', 'sourcing_tl'), ('active_status', '=', True)]"-->
+<!--                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"-->
+<!--                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>-->
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left ptb-1px">-->
+<!--                                            <field name="sourcing_tl_date"-->
+<!--                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                     <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr class="o_data_row">-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left" style="height: 28px;">-->
+
+<!--                                        </td>-->
+<!--                                        <td class="o_data_cell o_field_cell o_list_number text-left">-->
+
+<!--                                        </td>-->
+<!--                                    </tr>-->
+
+
+<!--                                </tbody>-->
+<!--                                <tfoot>-->
+<!--                                    <tr>-->
+<!--                                        <td/>-->
+<!--                                        <td/>-->
+<!--                                    </tr>-->
+<!--                                </tfoot>-->
+<!--                            </table>-->
+
+<!--                        </div>-->
+                        <div class="col-12 col-sm-6 col-lg-4 px-1">
+                            <separator string="SOURCING MANAGER" class="mb-1" colspan="4"/>
+                            <field name="sourcing_manager_ids" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                   nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="sm_domain" invisible="1"/>
+                                    <field name="employee_id" required="1" domain="sm_domain"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </tree>
+                                <form>
+                                    <field name="sm_domain" invisible="1"/>
+                                    <field name="employee_id" required="1" domain="sm_domain"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </form>
+                            </field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4 px-1">
+                            <separator string="MARKETING" class="mb-1" colspan="4"/>
+                            <field name="marketing_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'marketing'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </tree>
+                                <form>
+                                    <field name="employee_id" required="1" domain="[('role', '=', 'marketing'), ('active_status', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="date"/>
+                                </form>
+                            </field>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">
+                            <separator string="BUSINESS HEAD" class="mb-1" colspan="4"/>
+                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                   style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Employee
+                                        </th>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Date Upto
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable">
+                                    <tr class="o_data_row">
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="business_head_id"
+                                                   domain="[('role', '=', 'business_head'), ('active_status', '=', True)]"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </td>
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="business_head_date"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">
+                            <separator string="SITE HEAD" class="mb-1" colspan="4"/>
+                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                   style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Employee
+                                        </th>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Date Upto
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable">
+                                    <tr class="o_data_row">
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="site_head_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                                   domain="[('role', '=', 'site_head'), ('active_status', '=', True)]"
+                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </td>
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="site_head_date"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">
+                            <separator string="CLUSTER HEAD" class="mb-1" colspan="4"/>
+                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                   style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Employee
+                                        </th>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Date Upto
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable">
+                                    <tr class="o_data_row">
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="cluster_head_id"
+                                                   domain="[('role', '=', 'cluster_head'), ('active_status', '=', True)]"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </td>
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="cluster_head_date"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">
+                            <separator string="SOURCING HEAD" class="mb-1" colspan="4"/>
+                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                   style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Employee
+                                        </th>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Date Upto
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable">
+                                    <tr class="o_data_row">
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="sourcing_head_id"
+                                                   domain="[('role', '=', 'sourcing_head'), ('active_status', '=', True)]"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </td>
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="sourcing_head_date"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">
+                            <separator string="CRM HEAD" class="mb-1" colspan="4"/>
+                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                   style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Employee
+                                        </th>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Date Upto
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable">
+                                    <tr class="o_data_row">
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="crm_head_id"
+                                                   domain="[('role', '=', 'crm_head'), ('active_status', '=', True)]"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </td>
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="crm_head_date"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4 px-1 o_list_view">
+                            <separator string="CRM TEAM LEAD" class="mb-1" colspan="4"/>
+                            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                   style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Employee
+                                        </th>
+                                        <th class="o_column_sortable o_list_number_th text-left">
+                                            Date Upto
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable">
+                                    <tr class="o_data_row">
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="crm_team_lead_id"
+                                                   domain="[('role', '=', 'crm_team_lead'), ('active_status', '=', True)]"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                                   options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                                        </td>
+                                        <td class="o_data_cell o_field_cell o_list_number text-left">
+                                            <field name="crm_team_lead_date"
+                                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+<!--                    <div class="col-12 col-sm-6 col-lg-4 px-1 d-none" groups="base.group_system">-->
+<!--                        <separator string="CLOSING TL OLD " class="mb-1" colspan="4"/>-->
+<!--                            <field name="closing_tl_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" nolabel="1">-->
+<!--                                <tree editable="bottom">-->
+<!--                                    <field name="employee_id" required="1" domain="[('role', '=', 'closing_tl'), ('active_status', '=', True)]"-->
+<!--                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>-->
+<!--                                    <field name="date"/>-->
+<!--                                </tree>-->
+<!--                                <form>-->
+<!--                                    <field name="employee_id" required="1" domain="[('role', '=', 'closing_tl'), ('active_status', '=', True)]"-->
+<!--                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>-->
+<!--                                    <field name="date"/>-->
+<!--                                </form>-->
+<!--                            </field>-->
+<!--                    </div>-->
+<!--                    <div class="col-12 col-sm-6 col-lg-4 px-1 d-none" groups="base.group_system">-->
+<!--                        <separator string="SOURCING TL OLD " class="mb-1" colspan="4"/>-->
+<!--                        <field name="sourcing_tl_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" nolabel="1">-->
+<!--                                <tree editable="bottom">-->
+<!--                                    <field name="employee_id" required="1" domain="[('role', '=', 'sourcing_tl'), ('active_status', '=', True)]"-->
+<!--                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>-->
+<!--                                    <field name="date"/>-->
+<!--                                </tree>-->
+<!--                                <form>-->
+<!--                                    <field name="employee_id" required="1" domain="[('role', '=', 'sourcing_tl'), ('active_status', '=', True)]"-->
+<!--                                           options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>-->
+<!--                                    <field name="date"/>-->
+<!--                                </form>-->
+<!--                            </field>-->
+<!--                    </div>-->
+                </sheet>
+                <style>
+                    td.o_data_cell.o_field_cell.o_list_number.text-left {
+                        height: 26px;
+                    }
+                    [name="sourcing_tl_ids"] .table-responsive,
+                    [name="closing_tl_ids"] .table-responsive,
+                    [name="sourcing_manager_ids"] .table-responsive,
+                    [name="closing_manager_ids"] .table-responsive,
+                    [name="marketing_ids"] .table-responsive{
+                        max-height: 148.5px;
+                        overflow-x: hidden;
+                        border-bottom: 9px solid #eeeeee;
+                    }
+                    [name="sourcing_tl_ids"] .table-responsive tfoot,
+                    [name="closing_tl_ids"] .table-responsive tfoot,
+                    [name="sourcing_manager_ids"] .table-responsive tfoot,
+                    [name="closing_manager_ids"] .table-responsive tfoot,
+                    [name="marketing_ids"] .table-responsive tfoot{
+                        display: none;
+                    }
+                    .closing_sourcing_tls input{
+                        border: none !important;
+                    }
+                    .ptb-1px{
+                        padding-top: 3px !important;
+                        padding-bottom: 3px !important;
+                        height: 30px !important;
+                    }
+                </style>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="project_employee_assigning_view_tree" model="ir.ui.view">
+        <field name="name">project_employee_assigning_view_tree</field>
+        <field name="model">project.employee.assigning</field>
+        <field name="arch" type="xml">
+            <tree string="project_employee_assigning_tree">
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'assigned'"/>
+            </tree>
+        </field>
+    </record>
+    <record id="project_employee_assigning_action" model="ir.actions.act_window">
+        <field name="name">Project Employee Assigning</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.employee.assigning</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<odoo>
+    <record id="purchase_order_modification_real_estate_extension" model="ir.ui.view">
+        <field name="name">purchase_order_modification_real_estate_extension</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_extension.purchase_order_modification"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_vendor', '=', True)]</attribute>
+                <attribute name="context">{'default_supplier_rank': 1, 'default_is_vendor': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase_order_form_inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/control/create[@name='add_section_control']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/control/create[@name='add_note_control']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('is_property', '=', False), ('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('is_property', '=', False), ('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="purchase.action_accrued_expense_entry" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+    <record id="purchase.action_purchase_send_reminder" model="ir.actions.server">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+</odoo>

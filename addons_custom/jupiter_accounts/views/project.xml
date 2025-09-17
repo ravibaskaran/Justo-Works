@@ -1,0 +1,26 @@
+<odoo>
+    <!-- Configurations in Project Form -->
+    <record id="building_base_pages_form_jupiter_accounts" model="ir.ui.view">
+        <field name="name">building_base_pages_form_jupiter_accounts</field>
+        <field name="model">building</field>
+        <field name="inherit_id" ref="itsys_real_estate.building_base_pages_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[9]" position="after">
+                <page name="accounts_configurations" string="Configurations" groups="jupiter_accounts.group_project_configurations">
+                    <group>
+                        <group>
+                            <field name="spot_booking_amount"/>
+                            <field name="cp_brokerage_accountable"/>
+                            <field name="cp_brokerage_percentage"/>
+                        </group>
+                        <group>
+                            <field name="incentive_type" readonly="1" force_save="1"/>
+                            <field name="developer_commission_percentage"/>
+                            <field name="minimum_advance_percentage"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

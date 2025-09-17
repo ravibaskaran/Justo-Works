@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_beta_payroll_report,beta_reports_base.beta_payroll_report,model_beta_payroll_report,,1,1,1,1

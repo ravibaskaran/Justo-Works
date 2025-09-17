@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_account_payment_tree_jupiter_accounts" model="ir.ui.view">
+        <field name="name">view_account_payment_tree_jupiter_accounts</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Partner</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form_inherited_jupiter_accounts" model="ir.ui.view">
+        <field name="name">view_account_payment_form_inherited_jupiter_accounts</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account_check_printing.view_account_payment_form_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_amount_in_words']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

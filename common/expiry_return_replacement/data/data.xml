@@ -1,0 +1,18 @@
+<odoo>
+    <data noupdate="1">
+
+         <record id="Expiry_Return" model="account.journal">
+             <field name="name">Expiry Return</field>
+             <field name="code">EXP</field>
+             <field name="type">purchase</field>
+             <field name='refund_sequence' eval="False"/>
+         </record>
+
+         <record id="Expiry_Replacement" model="account.journal">
+            <field name="name">Expiry Replacement</field>
+            <field name="code">EXPR</field>
+            <field name="type">purchase</field>
+            <field name='refund_sequence' eval="False"/>
+        </record>
+    </data>
+</odoo>

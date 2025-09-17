@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+
+        <!-- List (Tree) view for the 'dashboard.configuration' model -->
+        <record id="view_dashboard_configuration_tree" model="ir.ui.view">
+            <field name="name">dashboard.configuration.tree</field>
+            <field name="model">dashboard.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Dashboard Configuration">
+                    <field name="role"/>
+                    <field name="region"/>
+                    <field name="cluster"/>
+                    <field name="project"/>
+                    <field name="limit_dashboard_pt"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for the 'dashboard.configuration' model -->
+        <record id="view_dashboard_configuration_form" model="ir.ui.view">
+            <field name="name">dashboard.configuration.form</field>
+            <field name="model">dashboard.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Configuration">
+                    <sheet>
+                        <group>
+                            <field name="role"/>
+                            <field name="region"/>
+                            <field name="cluster"/>
+                            <field name="project"/>
+                            <field name="limit_dashboard_pt" attrs="{'invisible': ['|', '|',
+                                                ('project','=',False),
+                                                ('cluster','=',True),
+                                                ('region','=',True)]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action to open the views (form and list) -->
+        <record id="action_dashboard_configuration" model="ir.actions.act_window">
+            <field name="name">Dashboard Configuration</field>
+            <field name="res_model">dashboard.configuration</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dashboard_configuration_tree"/>  <!-- Default view -->
+            <field name="target">current</field>
+        </record>
+
+        <!-- Menu item to access the configuration views (list and form) -->
+        <menuitem id="menu_dashboard_configuration"
+                  name="Dashboard"
+                  parent="hr.menu_human_resources_configuration"
+                  action="action_dashboard_configuration"
+                  sequence="3"/>
+    </data>
+</odoo>

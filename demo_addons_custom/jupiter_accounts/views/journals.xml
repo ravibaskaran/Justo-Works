@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_journal_form_inherit_l10n_in_jupiter_accounts" model="ir.ui.view">
+        <field name="name">view_account_journal_form_inherit_l10n_in_jupiter_accounts</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="l10n_in.view_account_journal_form_inherit_l10n_in"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='profit_account_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '&amp;', ('country_code', '!=', 'IN'), ('type', '!=', 'cash'), '&amp;', ('country_code', '=', 'IN'), ('type', 'not in', ['bank', 'cash', 'sale', 'purchase', 'cp_brokerage', 'spot_booking'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='loss_account_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '&amp;', ('country_code', '!=', 'IN'), ('type', '!=', 'cash'), '&amp;', ('country_code', '=', 'IN'), ('type', 'not in', ['bank', 'cash', 'sale', 'purchase', 'cp_brokerage', 'spot_booking'])]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <data noupdate="1">
+        <record id="sequence_cp_brokerage" model="ir.sequence">
+            <field name="name">CP Brokerage Sequence</field>
+            <field name="code">cp.brokerage.sequence</field>
+            <field name="prefix">CPB/%(fyear_range)s/</field>
+            <field name="number_next_actual">001</field>
+             <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="journal_cp_brokerage" model="account.journal">
+            <field name="name">CP Brokerage Journal</field>
+            <field name="code">CPB</field>
+            <field name="type">cp_brokerage</field>
+            <field name="sequence_id" ref="jupiter_accounts.sequence_cp_brokerage"/>
+        </record>
+
+        <record id="sequence_spot_booking" model="ir.sequence">
+            <field name="name">Spot Booking Sequence</field>
+            <field name="code">spot.booking.sequence</field>
+            <field name="prefix">SPB/%(fyear_range)s/</field>
+            <field name="number_next_actual">001</field>
+             <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="journal_spot_booking" model="account.journal">
+            <field name="name">Spot Booking Journal</field>
+            <field name="code">SPB</field>
+            <field name="type">spot_booking</field>
+            <field name="sequence_id" ref="jupiter_accounts.sequence_spot_booking"/>
+        </record>
+    </data>
+</odoo>

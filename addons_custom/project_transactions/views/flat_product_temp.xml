@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="building_unit_form_view_inherited" model="ir.ui.view">
+            <field name="name">building.unit.form.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="itsys_real_estate.building_unit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='rel_anyletec_prop']" position="after">
+                    <field name="on_hold"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

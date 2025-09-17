@@ -1,0 +1,49 @@
+Documentation - CP Employee Creation API
+-------------------------------
+
+url :   /project/cp_employee_create
+methode:  POST
+
+Body(json):
+
+#################################################################
+
+{
+    "params": {
+        "login": "api",
+        "password": "63ff93a9db1a79196b68b787d2009ecec9f90f4a",
+        "record": {
+            "cp_employee_id": "CPE0301",
+            "name": "Samplefffdfffs",
+            "state_code": "KL",
+            "country_code": "IN",
+            "street": "Street",
+            "street2": "Street2",
+            "city": "City",
+            "zip": "600066",
+            "gstin": "",
+            "rera_number": "001",
+            "pan": "000hdd45",
+            "aadhar": "00d0dh055",
+            "occupation": "test",
+            "phone": "234234",
+            "mobile": "234234",
+            "email": "sample@sample.com",
+            "website": "sample.com",
+            "bank": "Sample Bank",
+            "ifsc": "000001",
+            "account_number": "000002",
+            "gender": "M",
+            "date_of_birth": "03/04/1998",
+            "cp_id": "CP0146"
+        }
+    }
+}
+
+
+#################################################################
+Channel Partner Employee creation
+
+name, state_code, country_code, mobile, cp_employee_id - required
+
+if cp employee with cp_employee_id found writes else creates

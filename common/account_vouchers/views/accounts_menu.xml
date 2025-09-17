@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <!-- ♦ ./Accounting ♦ -->
+    <menuitem id="accounting_menu_main" name="Accounting" sequence="2" web_icon="account_vouchers,static/description/icon.png"/>
+
+        <!-- ♦ Accounting/Accounting ♦ -->
+        <menuitem id="accounting_menu_subhead" parent="accounting_menu_main" name="Accounting" sequence="10"/>
+
+            <!-- ♦ Accounting/Accounting/Accounts ♦ -->
+            <menuitem id="accounting_submenu" parent="accounting_menu_subhead" name="Accounts" sequence="10"/>
+
+                        <!-- ♦ Receipt Voucher  ♦ -->
+                        <menuitem id="direct_journal_entry_receipt_menu" parent="accounting_submenu" name="Receipt Voucher" action="inexoft_account_voucher.action_direct_journal_receipt" sequence="10"/>
+
+                        <!-- ♦ Payment Voucher ♦ -->
+                        <menuitem id="direct_journal_entry_payment_menu" parent="accounting_submenu" name="Payment Voucher" action="inexoft_account_voucher.action_direct_journal_payment" sequence="20"/>
+
+                        <!-- ♦ Journal Voucher ♦ -->
+                        <menuitem id="direct_journal_entry_journal_menu" parent="accounting_submenu" name="Journal Voucher" action="inexoft_account_voucher.action_direct_journal_voucher" sequence="30"/>
+
+
+            <!-- ♦ Accounting/Accounting/Transactions ♦ -->
+            <menuitem id="transactions_accounting_submenu" parent="accounting_menu_subhead" name="Transactions" sequence="20"/>
+
+                    <!-- ♦ Customer Receipt ♦ -->
+                    <menuitem id="customer_receipt_menu" parent="transactions_accounting_submenu" name="Customer Receipt" action="inexoft_account_payments.action_customer_receipt" sequence="10"/>
+
+                    <!-- ♦ Vendor Payments ♦ -->
+                    <menuitem id="vendor_payment_menu" parent="transactions_accounting_submenu" name="Vendor Payments" action="inexoft_account_payments.action_vendor_payment" sequence="20"/>
+
+
+            <!-- ♦ Accounting/Accounting/Others ♦ -->
+            <menuitem id="others_accounting_submenu" parent="accounting_menu_subhead" name="Others" sequence="30"/>
+
+                    <!-- ♦ Bank Statement Reconciliation ♦ -->
+                    <menuitem id="bank_reconciliation_statement_menu" parent="others_accounting_submenu" name="Bank Statement Reconciliation" action="bank_reconciliation.action_bank_statement_wiz" sequence="10"/>
+
+    <!-- ♦ Accounting/Masters ♦ -->
+    <menuitem name="Master" id="menu_master_custom_menu" parent="accounting_menu_main" sequence="20" groups="account.group_account_manager"/>
+
+            <!-- ♦ Account Head ♦ -->
+            <menuitem name="Account Head" id="account_head_custom_menu" parent="menu_master_custom_menu" sequence="10" action="account.action_account_form"/>
+
+            <!-- ♦ Account Head Type ♦ -->
+            <menuitem name="Account Head Type" id="account_head_type_custom_menu" parent="menu_master_custom_menu" sequence="20" action="account.action_account_type_form"/>
+
+            <!-- ♦ Account Opening ♦ -->
+            <menuitem id="account_opening_menu" name="Account Opening" action="inexoft_account_opening.action_account_opening" parent="menu_master_custom_menu" sequence="25"/>
+
+            <!-- ♦ Bank Accounts ♦ -->
+            <menuitem id="menu_bank_master" name="Bank Accounts" action="base.action_res_bank_form" parent="menu_master_custom_menu" sequence="40"/>
+
+            <!-- ♦ Bank Journals ♦ -->
+            <menuitem id="menu_bank_journals" name="Bank Journals" action="action_account_bank_journal_form" parent="menu_master_custom_menu" sequence="40"/>
+
+
+    <!-- ♦ Accounting/Fixed Assets ♦ -->
+    <menuitem name="Fixed Assets" id="menu_fixed_assets_custom_menu" parent="accounting_menu_main" sequence="30"/>
+
+            <!-- ♦ Assets ♦ -->
+            <menuitem name="Assets" id="menu_assets_menu" parent="menu_fixed_assets_custom_menu" action="base_accounting_kit.action_account_asset_asset_form" sequence="10"/>
+
+            <!-- ♦ Asset Types ♦ -->
+            <menuitem name="Asset Types" id="menu_asset_types_menu" parent="menu_fixed_assets_custom_menu" action="base_accounting_kit.action_account_asset_asset_list_normal_purchase" sequence="20"/>
+
+            <!-- ♦ Assets Analysis ♦ -->
+            <menuitem name="Assets Analysis" id="menu_asset_analysis_menu" parent="menu_fixed_assets_custom_menu" action="base_accounting_kit.action_asset_asset_report" sequence="30"/>
+
+
+    <!-- ♦ Accounting/Reports ♦ -->
+    <menuitem id="accounts_reports_menu" parent="accounting_menu_main" name="Reports" sequence="40"/>
+
+            <!-- ♦ Cash Book ♦ -->
+            <menuitem id="cash_book_menu" name="Cash Book" parent="accounts_reports_menu" action="cash_book.cash_book_action" sequence="10"/>
+
+            <!-- ♦ Day Book ♦ -->
+            <menuitem id="day_book_menu" name="Day Book" parent="accounts_reports_menu" action="day_book.day_book_action" sequence="20"/>
+
+            <!-- ♦ Daybook Co Op ♦ -->
+            <menuitem id="daybook_co_op_menu" name="DayBook Co Op" parent="accounts_reports_menu" action="daybook_co_op.daybook_co_op_action" sequence="30"/>
+
+            <!-- ♦ General Ledger ♦ -->
+            <menuitem id="general_ledger_menu" name="General Ledger" parent="accounts_reports_menu" action="general_ledger.general_ledger_action" sequence="40"/>
+
+            <!-- ♦ Partner Ledger ♦ -->
+            <menuitem id="partner_ledger_menu" name="Partner Ledger" parent="accounts_reports_menu" action="partner_ledger.partner_ledger_action" sequence="50"/>
+
+            <!-- ♦ Receipt and Disbursements ♦ -->
+            <menuitem id="rnd_register_menu" name="R&amp;D Register" parent="accounts_reports_menu" action="rnd_register.rnd_register_action" sequence="60"/>
+
+            <!-- ♦ Trial Balance ♦ -->
+            <menuitem id="trial_balance_menu" name="Trial Balance" parent="accounts_reports_menu" action="trial_balance.trial_balance_action" sequence="70"/>
+
+            <!-- ♦ Trading A/C Report ♦ -->
+            <menuitem id="trading_account_menu" name="Trading A/C Report" parent="accounts_reports_menu" action="manufacturing_trading.trading_account_action" sequence="80"/>
+
+            <!-- ♦ Profit and Loss ♦ -->
+            <menuitem id="profit_and_loss_menu" name="Profit and Loss" parent="accounts_reports_menu" action="profit_loss_balance_sheet.profit_loss_account_action" sequence="90"/>
+
+            <!-- ♦ Balance Sheet ♦ -->
+            <menuitem id="balance_sheet_menu" name="Balance Sheet" parent="accounts_reports_menu" action="profit_loss_balance_sheet.balance_sheet_account_action" sequence="100"/>
+
+    </data>
+</odoo>

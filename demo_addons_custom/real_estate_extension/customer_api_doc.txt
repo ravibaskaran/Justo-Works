@@ -1,0 +1,47 @@
+Documentation - Customer Creation API
+-------------------------------
+
+url :   /project/customer_master_create
+methode:  POST
+
+Body(json):
+
+#################################################################
+
+{
+    "params": {
+        "login": "api",
+        "password": "fe22ef842f0e34e3c0c95976720a27ec35433412",
+        "record": {
+            "customer_id": "CU1689",
+            "name": "Samples0012",
+            "state_code": "KL",
+            "country_code": "IN",
+            "street": "Street",
+            "street2": "Street2",
+            "city": "City",
+            "zip": "600066",
+            "gstin": "",
+            "pan": "000452",
+            "aadhar": "0000052",
+            "occupation": "test",
+            "phone": "234234",
+            "mobile": "234234",
+            "email": "sample@sample.com",
+            "website": "sample.com",
+            "bank": "Sample Bank",
+            "ifsc": "000001",
+            "account_number": "000002",
+            "gender": "M",
+            "date_of_birth": "04-03-1999",
+            "credit_days": 3,
+            "income": 20000
+        }
+    }
+}
+#################################################################
+Customer creation
+
+name, state_code, country_code - required
+
+if customer_id given updates else creates

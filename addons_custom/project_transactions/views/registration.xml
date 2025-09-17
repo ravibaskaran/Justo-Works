@@ -1,0 +1,230 @@
+<odoo>
+    <record id="project_registration_view_form" model="ir.ui.view">
+        <field name="name">project_registration_view_form</field>
+        <field name="model">project.registration</field>
+        <field name="arch" type="xml">
+            <form string="project_registration_form">
+                <header>
+                    <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm"
+                            type="object"/>
+                    <button name="action_cancel" attrs="{'invisible': [('state', 'not in', ['confirmed'])]}" string="Cancel"
+                            type="object" groups="project_transactions.view_registration_delete"/>
+<!--                    <button name="action_create_invoice" attrs="{'invisible': [('state', '!=', 'confirmed')]}"-->
+<!--                            string="Create Invoice" type="object"/>-->
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+<!--                        <button name="view_invoice" string="Invoice" type="object" icon="fa-files-o"-->
+<!--                                class="oe_stat_button" attrs="{'invisible' : [('state', '!=', 'invoiced')]}"/>-->
+                    </div>
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <group>
+                            <field name="customer_id" context="{'default_is_tenant': True}" required="1"
+                                   options="{'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <label for="street" string="Address &amp; Personal Information"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="city" placeholder="City" class="o_address_city"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                       attrs="{'readonly': [('state','!=','draft')]}"
+                                       options="{'no_open': True, 'no_quick_create': True}"
+                                       context="{'default_country_id': country_id}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                       attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country"
+                                       attrs="{'readonly': [('state','!=','draft')]}"
+                                       options='{"no_open": True, "no_create": True}'/>
+                            </div>
+                            <field name="cp_id" options="{'no_open': True}" context="{'default_is_channel': True}"
+                                   readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="name" readonly="1" force_save="1"/>
+                            <field name="booking_id" invisible="1"/>
+                            <field name="project_id" required="1" attrs="{'readonly': [('state','!=','draft')]}"
+                                   options="{'no_open': True, 'no_create_edit': True, 'no_quick_create': True, 'no_create': True}"/>
+                            <field name="flat_id" required="1" attrs="{'readonly': [('state','!=','draft')]}"
+                                   domain="[('is_property', '=', True), ('state', '=', 'reserved'), ('building_id', '=?', project_id), ('booking_id', '=?', booking_id)]"
+                                   options="{'no_open': True, 'no_create_edit': True, 'no_quick_create': True, 'no_create': True}"/>
+                            <field name="total_saleable_area" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="unit_type" options="{'no_open': True}"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="closing_manager" options="{'no_open': True}"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="co_customer_id" context="{'default_is_tenant': True}" options="{'no_open': True}"
+                               attrs="{'readonly': [('state','!=','draft')]}"/>
+                        <label for="co_street" string="Address &amp; Personal Information"/>
+                        <div class="o_address_format">
+                            <field name="co_street" placeholder="Street..." class="o_address_street"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="co_street2" placeholder="Street 2..." class="o_address_street"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="co_city" placeholder="City" class="o_address_city"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="co_state_id" class="o_address_state" placeholder="State"
+                                   attrs="{'readonly': [('state','!=','draft')]}"
+                                   options="{'no_open': True, 'no_quick_create': True}"
+                                   context="{'default_country_id': co_country_id}"/>
+                            <field name="co_zip" placeholder="ZIP" class="o_address_zip"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="co_country_id" placeholder="Country" class="o_address_country"
+                                   attrs="{'readonly': [('state','!=','draft')]}"
+                                   options='{"no_open": True, "no_create": True}'/>
+                        </div>
+                        <field name="registration_date" attrs="{'readonly': [('state','!=','draft')]}" required="1"/>
+                        <field name="registration_document_number" attrs="{'readonly': [('state','!=','draft')]}"/>
+                    </group>
+                    <field name="notes" placeholder="Notes" attrs="{'readonly': [('state','!=','draft')]}"/>
+                    <separator string="DOCUMENTS" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                    <field name="attach_line" class="file_attach_line_with_view">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="file"/>
+                            <button name="download_file" type="object" string=" "
+                                    class="oe-highlight fa fa-download"/>
+                            <field name="view_file_toggle" widget="view_file_toggle" nolabel="1"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="project_registration_view_tree" model="ir.ui.view">
+        <field name="name">project_registration_view_tree</field>
+        <field name="model">project.registration</field>
+        <field name="arch" type="xml">
+            <tree string="project_registration_tree">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="project_id"/>
+                <field name="flat_id"/>
+                <field name="total_saleable_area"/>
+                <field name="unit_type"/>
+                <field name="closing_manager"/>
+                <field name="registration_date"/>
+            </tree>
+        </field>
+    </record>
+    <record id="project_registration_view_kanban" model="ir.ui.view">
+        <field name="name">project_registration_view_kanban</field>
+        <field name="model">project.registration</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" group_create="0" sample="1">
+                <field name="customer_id"/>
+                <field name="project_id"/>
+                <field name="flat_id"/>
+                <field name="total_saleable_area"/>
+                <field name="unit_type"/>
+                <field name="closing_manager"/>
+                <field name="registration_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-12">
+                                    <strong>
+                                        <span>Project:
+                                            <field name="project_id"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>
+                                        <strong>Customer:</strong>
+                                        <br/>
+                                        <field name="customer_id"/>
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <span>
+                                        <strong>Flat:</strong>
+                                        <br/>
+                                        <field name="flat_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Area:</strong>
+                                    <br/>
+                                    <field name="total_saleable_area"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Closing Manager:</strong>
+                                    <br/>
+                                    <field name="closing_manager"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Type:</strong>
+                                    <br/>
+                                    <field name="unit_type"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Date:</strong>
+                                    <br/>
+                                    <field name="registration_date"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="project_registration_filter" model="ir.ui.view">
+        <field name="name">project.registration.search</field>
+        <field name="model">project.registration</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Top Search">
+                <group>
+                    <field name="customer_id"/>
+                    <field name="project_id"/>
+                    <field name="flat_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By...">
+                    <filter name="customer" string="Customer" domain="[]"  context="{'group_by':'customer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="project_registration_action" model="ir.actions.act_window">
+        <field name="name">Registration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.registration</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+    <data noupdate="1">
+        <record id="sequence_registration" model="ir.sequence">
+            <field name="name">Registration</field>
+            <field name="code">sequence.registration</field>
+            <field name="prefix">REG/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+    </data>
+</odoo>

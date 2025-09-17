@@ -1,0 +1,314 @@
+<odoo>
+        <template id="report_product_ledger">
+<!--        <t t-call="web.html_container">-->
+<!--            <t t-call="web.basic_layout">-->
+
+                <div id="wrapwrap" class="page mb80" style="padding-right: 15px;padding-left: 15px;">
+                    <style type="text/css">
+                #details-tbl{
+                border: none;
+                }
+                tr th{
+                padding: 5px 10px;
+                border: none;
+                border-top: 1px solid ;
+                border-bottom: 1px solid ;
+                }
+                #details-tbl tr td{
+                padding: 3px 10px;
+                border: none;
+                border-bottom: 1px solid ;
+                }
+                .text-right{
+                text-align:right !important;
+                }
+                .text-left{
+                text-align:left !important;
+                }
+                .text-center{
+                text-align:center !important;
+                }
+                thead { display: table-header-group; }
+                .table-striped tbody tr:nth-of-type(odd) {
+                background-color: rgba(0, 0, 0, 0.05) !important;
+                }
+                .daybook-table tr td{word-break: break-all; !important}
+                .pagebreak{page-break-after:always}
+                html,body{height:99% !important}
+                @media pdf {
+                a{
+                text-decoration: none !important;
+                color: inherit !important;
+                }
+                thead {display: table-row-group;}
+                tbody tr:nth-of-type(#{$table-striped-order}) {
+                background-color: $table-accent-bg;}
+                .pagebreak{page-break-after:always
+                }
+                }
+                @media print {
+                a{
+                text-decoration: none !important;
+                color: inherit !important;
+                }
+                #branch{padding:0 !important;height: 145px;}
+                .company_name{padding-top:0px !important}
+                .pagebreak{page-break-after:always}}
+                .header_company{display: none;}
+                @media print{
+                .header_company{display: unset;}
+                }
+                @media pdf{
+                .header_company{display: unset;}
+                }
+            </style>
+
+                      <t t-if="res_company" >
+                <div class="header header_company" >
+                    <table class="" width="100%">
+                        <tr class="company_info" style="height:130px !important;">
+                            <td id="logo_company" class="text-center logo_company" colspan="0"
+                                style="float: left;position: absolute;">
+                                <div id="img_logo" style="float:left;padding-top: 3px;padding-left: 20px;" class="mb4">
+                                    <img style="width: 100px;" t-if="res_company.logo"
+                                         t-att-src="image_data_uri(res_company.logo)" alt="Logo"/>
+                                </div>
+                            </td>
+                            <td colspan="8" style="float: left;width: 100%;text-align: center;">
+                                <table width="100%" style="margin-top: 12px;text-align:center"
+                                       class="mb4 text-center">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <h4 style="margin:0;color:#1155cc;font-size: 1.2rem;">
+                                                <span t-esc="res_company.name"/>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <p style="margin-bottom:0;">
+                                                <span t-esc="res_company.street"/>,
+                                                <span t-esc="res_company.street2"/>,
+                                                <span t-esc="res_company.city"/>,
+                                                <span t-esc="res_company.state_id.name"/>,
+                                                <span t-esc="res_company.country_id.name"/>-
+                                                <span t-esc="res_company.zip"/>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <p style="margin-bottom:0;">
+                                                <span t-if="res_company.phone" style="padding-right:15px">Phone :
+                                                    <span t-esc="res_company.phone"/>
+                                                </span>
+                                                <span t-if="res_company.email">
+                                                    Email :
+                                                    <span t-esc="res_company.email"/>
+                                                </span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <p t-if="res_company.vat">
+                                                <span class="list-inline-item d-inline">
+                                                    GSTIN
+                                                    :
+                                                </span>
+                                                <span t-esc="res_company.vat"/>
+                                            </p>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center"><span  t-if="branch_name!=''">Branch : <t t-esc="branch_name"/></span></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">
+                                <div class="row zero_min_height">
+                                    <div class="col-12">
+                                        <div style="border-bottom: 1px solid #000;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+                 <div class="mb24 mt24" id="dvData"> <center>
+                    <h4 class="text-center mb20" style="text-align:center">Product Ledger</h4>
+
+                    <h6 class="text-center" style="text-align:center">Date : <t t-esc="date_from" /> - <t t-esc="date_to" /></h6>
+                 </center>
+                 </div>
+               <table t-if="data['horizontal']" id="tableId2" rules="groups" frame="hsides" border="1"  class="table table-bordered table-striped"   style="width: 100%;font-size:12px;border-top: 2px solid black;margin-top:10px;">
+                   <style> .table td{ padding: .8px !important;} </style>
+                   <thead>
+                        <tr>
+                            <th class="text-left" width="20%">Name</th>
+                            <th class="text-right" width="10%">Opening Stock</th>
+                            <th class="text-right" width="10%">Purchase</th>
+                            <th class="text-right" width="10%">Purchase Return</th>
+                            <th class="text-right" width="10%">Sales</th>
+                            <th class="text-right" width="10%">Sales Return</th>
+                            <th class="text-right" width="10%">Other Issue</th>
+                            <th class="text-right" width="10%">Other Receipt</th>
+                            <th class="text-right" width="10%">Closing Stock</th>
+                        </tr>
+                   </thead>
+                   <tbody>
+                        <t t-foreach="lines" t-as="product">
+                            <tr t-if="lines[product]['opening_balance'] != 0 or
+                                      lines[product]['purchase'] != 0 or
+                                      lines[product]['purchase_return'] != 0 or
+                                      lines[product]['sales'] != 0 or
+                                      lines[product]['sales_return'] != 0 or
+                                      lines[product]['other_issue'] != 0 or
+                                      lines[product]['other_receipt'] != 0 or
+                                      lines[product]['closing_balance'] != 0 ">
+                                <td class="text-left"><t t-esc="lines[product]['name']"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['opening_balance'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['purchase'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['purchase_return'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['sales'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['sales_return'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['other_issue'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['other_receipt'])"/></td>
+                                <td class="text-right"><t t-esc="'{:.2f}'.format(lines[product]['closing_balance'])"/></td>
+                            </tr>
+                        </t>
+<!--                       <t t-esc="lines"/>-->
+                   </tbody>
+               </table>
+               <table t-else="" id="tableId2" rules="groups" frame="hsides" border="1"  class="table table-bordered table-striped"   style="width: 100%;font-size:12px;border-top: 2px solid black;margin-top:10px;">
+                   <style> .table td{ padding: .8px !important;} </style>
+                        <thead>
+                        <tr>
+                            <th class="text-left" width="15%">Date</th>
+                            <th class="text-left" width="25%">Name</th>
+                            <th class="text-left" width="20%">Bill No.</th>
+                            <th class="text-center" width="10%">Type</th>
+                            <th class="text-right" width="10%">Receipt</th>
+                            <th class="text-right" width="10%">Issue</th>
+                            <th class="text-right" width="10%">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="g_total_in" t-value="0"/>
+                        <t t-set="g_total_out" t-value="0"/>
+                        <t t-set="g_total" t-value="0"/>
+                        <t t-foreach="lines" t-as="product">
+                            <t t-set="opening" t-value="lines[product]['opening_balance']"/>
+                            <t t-if="lines[product]['opening_receipt']!=0 or lines[product]['opening_issue']!=0 or opening!=0 or lines[product]['data']">
+                            <tr>
+                                <td colspan="7" style="padding: 5px 100px;">
+                                    <strong>
+                                        <t t-esc="lines[product]['name']"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    <strong>Opening</strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(lines[product]['opening_receipt'])"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(lines[product]['opening_issue'])"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(opening)"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr t-foreach="lines[product]['data']" t-as="line">
+                                <td class="text-left">
+                                    <t t-esc="line[0]"/>
+                                </td>
+                                <td class="text-left">
+                                    <t t-esc="line[1]"/>
+                                </td>
+                                <td class="text-left">
+                                    <t t-esc="line[2]"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line[3]"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="'{:.2f}'.format(line[4])"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="'{:.2f}'.format(line[5])"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-set="opening" t-value="opening + line[4] - line[5]"/>
+                                    <t t-esc="'{:.2f}'.format(opening)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    <strong>Total</strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(lines[product]['total_in'])"/>
+                                    </strong>
+                                    <t t-set="g_total_in" t-value="g_total_in+lines[product]['total_in']"/>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(lines[product]['total_out'])"/>
+                                    </strong>
+                                    <t t-set="g_total_out" t-value="g_total_out+lines[product]['total_out']"/>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(opening)"/>
+                                    </strong>
+                                    <t t-set="g_total" t-value="g_total+opening"/>
+                                </td>
+                            </tr>
+                                </t>
+                        </t>
+                        <tr style="font-size:15px">
+                                <td></td>
+                        <td colspan="3">
+                                    <strong>Grand Total</strong>
+                                </td>
+                        <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(g_total_in)"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(g_total_out)"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <t t-esc="'{:.2f}'.format(g_total)"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                    </tbody>
+                    </table>
+                </div>
+<!--            </t>-->
+
+<!--        </t>-->
+    </template>
+
+</odoo>

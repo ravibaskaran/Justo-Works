@@ -1,0 +1,21 @@
+<odoo>
+    <record model="ir.ui.view" id="branch_hsn_report_wizard">
+        <field name="name">Branch Wise HSN Report</field>
+        <field name="model">branch.hsn.report</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                    <group>
+                        <field name="branch" widget="many2many_tags" options="{'no_create_edit': True,'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                    </group>
+
+                <footer>
+                    <button name="get_hsn_branch_report" string="Get HSN CSV" type="object" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,27 @@
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_payroll" model="ir.sequence">
+            <field name="name">Sequence Payroll</field>
+            <field name="code">payroll.sequence</field>
+            <field name="number_next_actual">001</field>
+            <field name="prefix">PR/%(range_year)s/</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payroll_accounts" model="ir.sequence">
+            <field name="name">Sequence Payroll Accounts</field>
+            <field name="code">payroll.accounts.sequence</field>
+            <field name="number_next_actual">001</field>
+            <field name="prefix">PRA/%(range_year)s/</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="journal_payroll" model="account.journal">
+            <field name="name">Payroll Journal</field>
+            <field name="code">PR</field>
+            <field name="type">payslip</field>
+            <field name="sequence_id" ref="om_payroll_custom.sequence_payroll_accounts"/>
+            <field name="refund_sequence">True</field>
+            <field name="refund_sequence_id" ref="om_payroll_custom.sequence_payroll"/>
+        </record>
+    </data>
+</odoo>

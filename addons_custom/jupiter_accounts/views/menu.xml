@@ -1,0 +1,116 @@
+<odoo>
+    <menuitem id="account_vouchers.accounting_menu_main" name="Accounting" sequence="7" web_icon="jupiter_accounts,static/src/img/accounting.png"/>
+    <menuitem id="reports_menu.report_menu" name="Reports" sequence="11" web_icon="jupiter_accounts,static/src/img/reports.png"/>
+    <menuitem id="purchase_extension.purchase_main" name="Purchase"  sequence="9" web_icon="jupiter_accounts,static/src/img/purchase.png" />
+
+    <menuitem id="project_configurations_menu" parent="itsys_real_estate.menu_settings" action="jupiter_accounts.project_configurations_action" sequence="60"/>
+
+    <menuitem id="project_invoices_menu" name="Invoices" parent="itsys_real_estate.menu_itsys_real_estate" sequence="60"/>
+    <menuitem id="spot_booking_invoice_menu" parent="jupiter_accounts.project_invoices_menu"
+              action="jupiter_accounts.spot_booking_invoice_action" sequence="10"/>
+    <menuitem id="cp_brokerage_invoice_menu" parent="jupiter_accounts.project_invoices_menu"
+              action="jupiter_accounts.cp_brokerage_invoice_action" sequence="20"/>
+    <menuitem id="employee_invoice_menu" parent="jupiter_accounts.project_invoices_menu"
+              action="jupiter_accounts.employee_invoice_action" sequence="30"/>
+    <menuitem id="developer_invoice_menu" parent="jupiter_accounts.project_invoices_menu"
+              action="jupiter_accounts.developer_invoice_action" sequence="40"/>
+
+    <menuitem id="project_config_menu" name="Config" parent="itsys_real_estate.menu_itsys_real_estate" sequence="90"/>
+    <menuitem id="employee_intensive_move_menu" parent="jupiter_accounts.project_config_menu"
+              action="jupiter_accounts.employee_intensive_move_action" sequence="100"/>
+
+    <menuitem id="incentive_generation_menu" parent="itsys_real_estate.project_transaction_main_menu" action="jupiter_accounts.incentive_generation_action" sequence="110"/>
+
+    <menuitem id="accounting_project_invoices_menu" name="Invoices" parent="account_vouchers.accounting_menu_main" sequence="50"/>
+    <menuitem id="accounting_spot_booking_invoice_menu" parent="jupiter_accounts.accounting_project_invoices_menu"
+              action="jupiter_accounts.spot_booking_invoice_action" sequence="10"/>
+    <menuitem id="accounting_cp_brokerage_invoice_menu" parent="jupiter_accounts.accounting_project_invoices_menu"
+              action="jupiter_accounts.cp_brokerage_invoice_action" sequence="20"/>
+    <menuitem id="accounting_employee_invoice_menu" parent="jupiter_accounts.accounting_project_invoices_menu"
+              action="jupiter_accounts.employee_invoice_action" sequence="30"/>
+    <menuitem id="accounting_developer_invoice_menu" parent="jupiter_accounts.accounting_project_invoices_menu"
+              action="jupiter_accounts.developer_invoice_action" sequence="40"/>
+
+    <record id="account_vouchers.customer_receipt_menu" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="action_developer_receipt" model="ir.actions.act_window">
+        <field name="name">Developer Receipt</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{
+            'default_payment_type': 'inbound',
+            'default_partner_type': 'customer',
+            'default_partner': 'is_owner'
+            }
+        </field>
+        <field name="view_id" ref="account.view_account_payment_tree"/>
+        <field name="domain">[('partner_id.is_owner','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a developer receipt
+            </p>
+        </field>
+    </record>
+    <menuitem id="developer_receipt_menu" parent="account_vouchers.transactions_accounting_submenu" action="action_developer_receipt" sequence="10"/>
+    <record id="action_spot_booking_payment" model="ir.actions.act_window">
+        <field name="name">Spot Booking Payments</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{
+                'default_payment_type': 'outbound',
+                'default_partner_type': 'supplier',
+                'default_partner': 'is_channel_employee'
+            }
+        </field>
+        <field name="view_id" ref="account.view_account_payment_tree"/>
+        <field name="domain">[('partner_id.is_channel_employee','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a spot booking payment
+            </p>
+        </field>
+    </record>
+    <menuitem id="spot_booking_payment_menu" parent="account_vouchers.transactions_accounting_submenu" action="action_spot_booking_payment" sequence="20"/>
+    <record id="action_cp_brokerage_payment" model="ir.actions.act_window">
+        <field name="name">CP Brokerage Payments</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{
+                'default_payment_type': 'outbound',
+                'default_partner_type': 'supplier',
+                'default_partner': 'is_channel'
+            }
+        </field>
+        <field name="view_id" ref="account.view_account_payment_tree"/>
+        <field name="domain">[('partner_id.is_channel','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a CP Brokerage payment
+            </p>
+        </field>
+    </record>
+    <menuitem id="cp_brokerage_payment_menu" parent="account_vouchers.transactions_accounting_submenu" action="action_cp_brokerage_payment" sequence="30"/>
+    <record id="action_incentive_payment" model="ir.actions.act_window">
+        <field name="name">Incentive Payments</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{
+                'default_payment_type': 'outbound',
+                'default_partner_type': 'supplier',
+                'default_partner': 'is_employee'
+            }
+        </field>
+        <field name="view_id" ref="account.view_account_payment_tree"/>
+        <field name="domain">[('partner_id.is_employee','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register an incentive payment
+            </p>
+        </field>
+    </record>
+    <menuitem id="incentive_payment_menu" parent="account_vouchers.transactions_accounting_submenu" action="action_incentive_payment" sequence="40"/>
+    <record id="inexoft_account_payments.action_vendor_payment" model="ir.actions.act_window">
+        <field name="domain">[('partner_id.is_vendor','=',True)]</field>
+    </record>
+</odoo>

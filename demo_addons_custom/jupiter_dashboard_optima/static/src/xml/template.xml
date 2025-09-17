@@ -1,0 +1,1949 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template">
+    <t t-name="JupiterDashboardOptima">
+        <div class="jupiter_dashboard container-fluid px-5 position-relative">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+                  integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+                  crossorigin="anonymous" referrerpolicy="no-referrer"/>
+            <!--            <span class="values_info">(*Values are in lakhs)</span>-->
+            <div class="dashboard-rows mt-3 pb-0 relative-overflow-none" id="region_2_dashboard">
+                <div class="radio-region-container row">
+                    <div class="col-6 p-0">
+                        <input id="region_count2" value="count" class="region-radio-input2" type="radio"
+                               name="region_radio_2" checked="checked"/>
+                        <label for="region_count2" class="region-radio-label count">Count</label>
+                    </div>
+                    <div class="col-6 p-0">
+                        <input id="region_value2" value="value" class="region-radio-input2" type="radio"
+                               name="region_radio_2"/>
+                        <label for="region_value2" class="region-radio-label value">Value</label>
+                    </div>
+                </div>
+
+
+                <!-- Booking, Cancellation, Net, Registration Heading Section -->
+                <div class="col-12 col-sm-8 col-lg-12">
+                    <div class="row">
+                        <h5 style="margin-left: 6.1rem;" class="left-headers2">Booking - Cancellation - Net -
+                            Registration
+                        </h5>
+                        <div class="graph2-legend" style="margin-top: 20px; margin-left: 9rem; margin-right: 10rem;">
+                            <input class="booking-cancel-net-reg-input" type="checkbox" id="booking" name="selection"
+                                   value="booking"/>
+                            <label for="booking" class="custom-checkbox-container">
+                                <span class="custom-checkbox"
+                                      style="border-color: #3498db; background-color: #3498db;"></span>
+                                <span class="label-text">Booking</span>
+                            </label>
+
+                            <input class="booking-cancel-net-reg-input" type="checkbox" id="cancellation"
+                                   name="selection" value="cancellation"/>
+                            <label for="cancellation" class="custom-checkbox-container">
+                                <span class="custom-checkbox"
+                                      style="border-color: #34495e; background-color: #34495e;"></span>
+                                <span class="label-text">Cancellation</span>
+                            </label>
+
+                            <input class="booking-cancel-net-reg-input" type="checkbox" id="net" name="selection"
+                                   value="net"/>
+                            <label for="net" class="custom-checkbox-container">
+                                <span class="custom-checkbox"
+                                      style="border-color: #16a085; background-color: #16a085;"></span>
+                                <span class="label-text">Net</span>
+                            </label>
+
+                            <input class="booking-cancel-net-reg-input" type="checkbox" id="registration"
+                                   name="selection" value="registration"/>
+                            <label for="registration" class="custom-checkbox-container">
+                                <span class="custom-checkbox"
+                                      style="border-color: #e74c3c; background-color: #e74c3c;"></span>
+                                <span class="label-text">Registration</span>
+                            </label>
+                        </div>
+<!--                        <div class="region-blocks2" data-region-id="1" data-region-name="Region 1">-->
+<!--    <div class="column" data-column="Booking">Booking</div>-->
+<!--    <div class="column" data-column="Cancellation">Cancellation</div>-->
+<!--    <div class="column" data-column="Net">Net</div>-->
+<!--    <div class="column" data-column="Registration">Registration</div>-->
+<!--</div>-->
+
+
+
+                        <!-- Radio Buttons styled with .radio-inputs -->
+                        <div class="radio-inputs" style="margin-right: 2rem;">
+                            <div class="radio">
+                                <input value="month" name="value-radio" checked="checked"
+                                       class="month-quarter-wise-radio-input2" id="month" type="radio"/>
+                                <label for="month" class="name">Month</label>
+                            </div>
+                            <div class="radio">
+                                <input value="quarter" name="value-radio" class="month-quarter-wise-radio-input2"
+                                       id="quarter" type="radio"/>
+                                <label for="quarter" class="name">Quarter</label>
+                            </div>
+                        </div>
+                        <span class="selection"></span>
+                        <select id="financial-years-container">
+                        </select>
+                    </div>
+                    <div class="" style="width: 95.8%;">
+                        <div id="region_wise_booking_registration2">
+                            <img src="/jupiter_dashboard_optima/static/src/img/loading_transparent.gif"
+                                     alt="Loading..."
+                                     class="loading-gif"
+                                     id="report_loader"
+                                />
+                        </div>
+                    </div>
+                    <div id="financial_count_chart">
+
+                    </div>
+
+                    <!--                    <table>-->
+                    <!--                        <thead>-->
+                    <!--                            <th width="6%"></th>-->
+                    <!--                            <th width="22%"></th>-->
+                    <!--                            <th width="22%"></th>-->
+                    <!--                            <th width="22%"></th>-->
+                    <!--                            <th width="22%"></th>-->
+                    <!--                            <th width="6%"></th>-->
+                    <!--                        </thead>-->
+                    <!--                        <tr>-->
+                    <!--                            <td>Booking</td>-->
+                    <!--                            <td style="background-color: #5CA8FF;">Cell 1</td>-->
+                    <!--                            <td style="background-color: #5CA8FF;">Cell 5</td>-->
+                    <!--                            <td style="background-color: #5CA8FF;">Cell 9</td>-->
+                    <!--                            <td style="background-color: #5CA8FF;">Cell 13</td>-->
+                    <!--                            <td style="background-color: #5CA8FF;">Cell 13</td>-->
+
+                    <!--                        </tr>-->
+                    <!--                        <tr>-->
+                    <!--                            <td >Cancellation</td>-->
+                    <!--                            <td style="background-color: #5d6d7e;">Cell 2</td>-->
+                    <!--                            <td style="background-color: #5d6d7e;">Cell 6</td>-->
+                    <!--                            <td style="background-color: #5d6d7e;">Cell 14</td>-->
+                    <!--                            <td style="background-color: #5d6d7e;">Cell 10</td>-->
+                    <!--                            <td style="background-color: #5d6d7e;">Cell 10</td>-->
+                    <!--                        </tr>-->
+                    <!--                        <tr>-->
+                    <!--                            <td >Net</td>-->
+                    <!--                            <td style="background-color: #82e0aa;">Cell 7</td>-->
+                    <!--                            <td style="background-color: #82e0aa;">Cell 3</td>-->
+                    <!--                            <td style="background-color: #82e0aa;">Cell 11</td>-->
+                    <!--                            <td style="background-color: #82e0aa;">Cell 15</td>-->
+                    <!--                            <td style="background-color: #82e0aa;">Cell 15</td>-->
+                    <!--                        </tr>-->
+                    <!--                        <tr>-->
+                    <!--                            <td>Registration</td>-->
+                    <!--                            <td style="background-color: #f1948a;">Cell 8</td>-->
+                    <!--                            <td style="background-color: #f1948a;">Cell 12</td>-->
+                    <!--                            <td style="background-color: #f1948a;">Cell 16</td>-->
+                    <!--                            <td style="background-color: #f1948a;">Cell 4</td>-->
+                    <!--                            <td style="background-color: #f1948a;">Cell 4</td>-->
+                    <!--                        </tr>-->
+                    <!--                    </table>-->
+
+
+                </div>
+
+                <div style="display: flex; justify-content: center; margin-top: 15px;">
+                    <div class="custom-radio">
+                        <input value="region" name="region" checked="checked"
+                               class="region-cluster-projects-radio-input" id="regions" type="radio"/>
+                        <label for="regions" class="">Regions</label>
+                    </div>
+                    <div class="custom-radio">
+                        <input value="cluster" name="region"
+                               class="region-cluster-projects-radio-input" id="clusters" type="radio"/>
+                        <label for="clusters" class="">Clusters</label>
+                    </div>
+                    <div class="custom-radio">
+                        <input value="project" name="region"
+                               class="region-cluster-projects-radio-input" id="projects" type="radio"/>
+                        <label for="projects" class="">Projects</label>
+                    </div>
+                    <div class="custom-radio">
+                        <input value="cluster_head" name="region"
+                               class="region-cluster-projects-radio-input" id="cluster_heads" type="radio"/>
+                        <label for="cluster_heads" class="">Cluster Head</label>
+                    </div>
+                </div>
+
+                <!-- Region, Cluster, Projects Selection Section -->
+                <div class="col-12 col-sm-4 col-lg-12 circle-container pl-02 pt-05 region-container-div">
+                    <h5 class="left-headers2">Regions</h5>
+                    <span class="select_all_span2">Select All
+                    <input id="region_select_all2" class="ml-2" type="checkbox" checked="checked" name="region_select_all2"/>
+                    </span>
+                    <div class="region">
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <select id="region-select" class="o_input o_region_many2many" multiple="multiple" style="min-width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Modal structure -->
+                    <div
+                      class="modal fade"
+                      id="regionSearchModal"
+                      tabindex="-1"
+                      role="dialog"
+                      aria-labelledby="regionSearchModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+
+                          <!-- Modal header -->
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="regionSearchModalLabel">Search: Regions</h5>
+                            <button
+                              type="button"
+                              class="close"
+                              data-dismiss="modal"
+                              aria-label="Close"
+                            >
+                              <span aria-hidden="true"></span>
+                            </button>
+                          </div>
+
+                          <!-- Modal body: jsTree will render here -->
+                          <div class="modal-body" style="max-height: 420px !important;">
+                              <div>
+                                  <label class="d-flex align-items-center">
+
+                                  </label>
+                                </div>
+
+                          <div class="form-group mb-2">
+                            <div class="d-flex align-items-center">
+                            <input type="checkbox"
+                                      id="select-all-regions"
+                                      class="me-2 region-checkbox" style="margin-left: 3px;"
+                                      aria-checked="false"/>
+                                <span class="ms-4 mb-0" style="padding-left: 15px;">Name</span>
+                                <input type="text"
+                                id="region-search-input"
+                                class="form-control" style="margin-left: 40%; margin-right: 3px;"
+                                placeholder="Type to filter regions..."/>
+                          </div>
+                          </div>
+                              <div id="region-tree-container"></div>
+                              <ul id="ul_list" class="list-group mt-3">
+                              </ul>
+                          </div>
+
+                          <!-- Modal footer -->
+                          <div class="modal-footer">
+                            <button
+                              id="select-region-btn"
+                              type="button"
+                              class="btn btn-primary"
+                            >Select</button>
+                              <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-dismiss="modal" style="margin-right: 812px !important;"
+                            >Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <style>
+                        .select2-container-multi .select2-choices{
+                            height: 113px !important;
+                            overflow: auto;
+                        }
+                        .region-list-item.selected {
+  background-color: #e9ecef;  /* light gray background, similar to Bootstrap’s “bg-light” */
+}
+                    </style>
+                </div>
+                <div class="col-12 col-sm-4 col-lg-12 circle-container pl-02 pt-05 cluster-container-div d-none">
+                    <h5 class="left-headers2">Clusters</h5>
+                    <span class="select_all_span2">Select All
+                        <input id="cluster_select_all2" class="ml-2" type="checkbox" checked="checked"/>
+                    </span>
+                    <div class="cluster">
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <select id="cluster-select" class="o_input o_cluster_many2many" multiple="multiple" style="min-width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+<!-- Modal structure -->
+                <div
+                  class="modal fade"
+                  id="clusterSearchModal"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="clusterSearchModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                      <!-- Modal header -->
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="clusterSearchModalLabel">Search: Clusters</h5>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+
+                      <!-- Modal body: jsTree will render here -->
+                      <div class="modal-body" style="max-height: 420px !important;">
+                          <div>
+                              <label class="d-flex align-items-center">
+
+                              </label>
+                            </div>
+
+                      <div class="form-group mb-2">
+                        <div class="d-flex align-items-center">
+<input
+                                  type="checkbox"
+                                  id="select-all-clusters"
+                                  class="me-2 cluster-checkbox" style="margin-left: 3px;"
+                                  aria-checked="false"
+                                />
+                        <span class="ms-4 mb-0" style="padding-left: 15px;">Name</span>
+                        <input type="text"
+                            id="cluster-search-input"
+                            class="form-control" style="margin-left: 40%; margin-right: 3px;"
+                            placeholder="Type to filter clusters..."/>
+                      </div>
+                      </div>
+                          <div id="cluster-tree-container"></div>
+                          <ul id="ul_list" class="list-group mt-3">
+                          </ul>
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                        <button
+                          id="select-cluster-btn"
+                          type="button"
+                          class="btn btn-primary"
+                        >Select</button>
+                          <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal" style="margin-right: 812px !important;"
+                        >Cancel</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                </div>
+                <div class="col-12 col-sm-4 col-lg-12 circle-container pl-02 pt-05 project-container-div d-none">
+                    <h5 class="left-headers2">Projects</h5>
+                    <span class="select_all_span2">Select All
+                        <input id="project_select_all2" class="ml-2" type="checkbox" checked="checked"/>
+                    </span>
+                    <div class="project">
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <select id="project-select" class="o_input o_project_many2many" multiple="multiple" style="min-width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Modal structure -->
+                    <div
+                      class="modal fade"
+                      id="projectSearchModal"
+                      tabindex="-1"
+                      role="dialog"
+                      aria-labelledby="projectSearchModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+
+                          <!-- Modal header -->
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="projectSearchModalLabel">Search: Projects</h5>
+                            <button
+                              type="button"
+                              class="close"
+                              data-dismiss="modal"
+                              aria-label="Close"
+                            >
+                              <span aria-hidden="true"></span>
+                            </button>
+                          </div>
+
+                          <!-- Modal body: jsTree will render here -->
+                          <div class="modal-body" style="max-height: 420px !important;">
+                              <div>
+                                  <label class="d-flex align-items-center">
+
+                                  </label>
+                                </div>
+
+                          <div class="form-group mb-2">
+                            <div class="d-flex align-items-center">
+    <input
+                                      type="checkbox"
+                                      id="select-all-projects"
+                                      class="me-2 project-checkbox" style="margin-left: 3px;"
+                                      aria-checked="false"
+                                    />
+                            <span class="ms-4 mb-0" style="padding-left: 15px;">Name</span>
+                                <input type="text"
+                                id="project-search-input"
+                                class="form-control" style="margin-left: 40%; margin-right: 3px;"
+                                placeholder="Type to filter projects..."/>
+                          </div>
+                          </div>
+                              <div id="project-tree-container"></div>
+                              <ul id="ul_list" class="list-group mt-3">
+                              </ul>
+                          </div>
+
+                          <!-- Modal footer -->
+                          <div class="modal-footer">
+                            <button
+                              id="select-project-btn"
+                              type="button"
+                              class="btn btn-primary"
+                            >Select</button>
+                              <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-dismiss="modal" style="margin-right: 812px !important;"
+                            >Cancel</button>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4 col-lg-12 circle-container pl-02 pt-05 cluster-head-container-div d-none">
+                    <h5 class="left-headers2">Cluster Head</h5>
+                    <span class="select_all_span2">Select All
+                        <input id="cluster_head_select_all2" class="ml-2" type="checkbox" checked="checked"/>
+                    </span>
+                    <div class="clusterhead">
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <select id="clusterhead-select" class="o_input o_cluster_head_data_many2many" multiple="multiple" style="min-width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+
+                <!-- Modal structure -->
+                <div
+                  class="modal fade"
+                  id="clusterheadSearchModal"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="clusterheadSearchModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                      <!-- Modal header -->
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="clusterheadSearchModalLabel">Search: Cluster Heads</h5>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+
+                      <!-- Modal body: jsTree will render here -->
+                      <div class="modal-body" style="max-height: 420px !important;">
+                          <div>
+                              <label class="d-flex align-items-center">
+
+                              </label>
+                            </div>
+
+                      <div class="form-group mb-2">
+                        <div class="d-flex align-items-center">
+<input
+                                  type="checkbox"
+                                  id="select-all-clusterheads"
+                                  class="me-2 clusterhead-checkbox" style="margin-left: 3px;"
+                                  aria-checked="false"
+                                />
+                        <span class="ms-4 mb-0" style="padding-left: 15px;">Name</span>
+                            <input type="text"
+                            id="clusterhead-search-input"
+                            class="form-control" style="margin-left: 40%; margin-right: 3px;"
+                            placeholder="Type to filter Cluster Heads..."/>
+                      </div>
+                      </div>
+                          <div id="clusterhead-tree-container"></div>
+                          <ul id="ul_list" class="list-group mt-3">
+                          </ul>
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                        <button
+                          id="select-clusterhead-btn"
+                          type="button"
+                          class="btn btn-primary"
+                        >Select</button>
+                          <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal" style="margin-right: 812px !important;"
+                        >Cancel</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                </div>
+
+            </div>
+            <style>
+                /* Customize the GIF */
+                .loading-gif {
+                margin-left: 50%;
+                    margin-top: 140px;
+                    margin-bottom: 153px;
+                    max-width: 100px;               /* Adjust the size of the GIF */
+                    max-height: 100px;              /* Maintain proportions */
+                    animation: spin 2s linear infinite; /* Optional spin effect */
+                }
+                /* Container for horizontal alignment */
+                .custom-radio-group {
+
+                    display: flex;
+                    gap: 10px;
+                }
+
+                /* Hide the default radio button */
+                .custom-radio input {
+                    display: none;
+                }
+
+                /* Basic button style for labels */
+                .custom-radio label {
+                    display: inline-block;
+                    padding: 1px 14px;
+                    background-color: #ddd; /* Default button color */
+                    border: 0px solid #aaa;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    cursor: pointer;
+                    transition: 0.2s ease;
+                    margin-top: 10px;
+                    margin-left: 8px;
+                }
+
+                /* Selected button style */
+                .custom-radio input:checked + label {
+                    background-color: #007bff;
+                    color: white;
+                    border-color: #007bff;
+                }
+
+                /* Hover effect */
+                .custom-radio label:hover {
+                    background-color: #ccc;
+                }
+                .data-table-brnc{
+
+                }
+                /* Table Cells Styling */
+                .tot_td{
+                text-align:right !important;
+                font-weight: bolder !important;
+                }
+                .data-table-Booking-td {
+                border: 1px solid white;
+                text-align: center;
+                background-color: #aed6f1;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+                cursor:pointer;
+                }
+                .data-table-Cancellation-td {
+                border: 1px solid white;
+                text-align: center;
+                background-color: #D3D3D3;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+                cursor:pointer;
+                }
+                .data-table-Net-td {
+                border: 1px solid white;
+                text-align: center;
+                background-color: #82e0aa;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+                cursor:pointer;
+                }
+                .data-table-Registration-td {
+                border: 1px solid white;
+                text-align: center;
+                background-color: #f1948a;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+                cursor:pointer;
+                }
+
+                /* Hover Effect */
+                .data-table-Booking-td:hover {
+                background-color: #5499c7; /* Darker shade */
+                transform: scale(1.05); /* Slightly enlarge */
+                }
+                .data-table-Cancellation-td:hover {
+                background-color: #a9a9a9; /* Darker shade */
+                transform: scale(1.05); /* Slightly enlarge */
+                }
+                .data-table-Net-td:hover {
+                background-color: #73c4b7; /* Darker shade */
+                transform: scale(1.05); /* Slightly enlarge */
+                }
+                .data-table-Registration-td:hover {
+                background-color: #e74c3c; /* Darker shade */
+                transform: scale(1.05); /* Slightly enlarge */
+                }
+
+                .data-table-Booking-td,
+                .data-table-Cancellation-td,
+                .data-table-Net-td,
+                .data-table-Registration-td {
+                opacity: 0;
+                animation: fadeInCubeEffect 1s ease forwards;
+                }
+
+                .data-table-Booking-td {
+                animation-delay: 0s;
+                }
+
+                .data-table-Cancellation-td {
+                animation-delay: 0.2s;
+                }
+
+                .data-table-Net-td {
+                animation-delay: 0.4s;
+                }
+
+                .data-table-Registration-td {
+                animation-delay: 0.6s;
+                }
+
+                @keyframes fadeInCubeEffect {
+                0% {
+                opacity: 0;
+                transform: translateY(20px);
+                }
+                100% {
+                opacity: 1;
+                transform: translateY(0);
+                }
+                }
+
+
+                /* Scope the hide rule only to the checkboxes inside the specific container */
+                .graph2-legend > input[type="checkbox"] {
+                display: none; /* This hides the default checkboxes only in this container */
+                }
+
+                /* Style for the custom checkbox container */
+                .custom-checkbox-container {
+                display: inline-flex;
+                align-items: center;
+                margin-right: 12px; /* Reduced margin */
+                cursor: pointer;
+                }
+
+                /* Style for the custom checkbox */
+                .custom-checkbox {
+                display: inline-block;
+                width: 12px; /* Reduced width */
+                height: 12px; /* Reduced height */
+                border: 2px solid;
+                border-radius: 4px;
+                position: relative;
+                margin-right: 6px; /* Reduced margin */
+                background-color: transparent;
+                }
+
+                /* Style for the custom checkmark */
+                .custom-checkbox::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 6px; /* Further reduced width */
+                height: 6px; /* Further reduced height */
+                background-color: white;
+                border-radius: 2px;
+                opacity: 0;
+                }
+
+                /* When the checkbox is checked, show the checkmark */
+                input[type="checkbox"]:checked + .custom-checkbox-container .custom-checkbox::after {
+                opacity: 1;
+                }
+
+                /* Style for the label text */
+                .label-text {
+                font-size: 12px; /* Further reduced font size */
+                font-weight: bold;
+                color: #333;
+                transition: all 0.3s ease;
+                }
+
+                /* When the checkbox is checked, apply strike-through effect */
+                input[type="checkbox"]:checked + .custom-checkbox-container .label-text {
+                text-decoration: line-through; /* Strike-through effect */
+                color: #888; /* Optional: change text color when checked */
+                }
+
+                #financial-years-container{
+                width: 9%;
+                height:10%;
+                margin-top: 0.7rem;
+                background: #079ad9;
+                color: white;
+                border-radius: 15px
+                }
+                /* From Uiverse.io by 00Kubi */
+                .radio-inputs {
+                position: relative;
+                display: flex;
+                flex-wrap: wrap;
+                border-radius: 1rem;
+                box-sizing: border-box;
+                padding: 0.3rem;
+                width: 200px; /* Adjusted width */
+                font-size: 12px; /* Smaller font size */
+                gap: 0.5rem;
+                }
+
+                .radio-inputs .radio {
+                flex: 1 1 auto;
+                text-align: center;
+                position: relative;
+                }
+
+                .radio-inputs .radio input {
+                display: none;
+                }
+
+                .radio-inputs .radio .name {
+                display: flex;
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                border-radius: 0.7rem;
+                border: 1px solid #ddd; /* Added border instead of background */
+                padding: 0.5rem 1rem; /* Smaller padding */
+                color: #333; /* Darker text */
+                font-weight: 500;
+                font-family: inherit;
+                background: transparent; /* Removed background gradient */
+                box-shadow:
+                2px 2px 4px rgba(0, 0, 0, 0.1),
+                -2px -2px 4px rgba(255, 255, 255, 0.7);
+                transition: all 0.2s ease;
+                overflow: hidden;
+                }
+
+                .radio-inputs .radio input:checked + .name {
+                color: #fff; /* White text when checked */
+                background-color: #079ad9; /* Updated background color */
+                font-weight: 600;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+                box-shadow:
+                inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.1),
+                3px 3px 8px rgba(7, 154, 217, 0.3); /* Updated shadow */
+                transform: translateY(2px);
+                }
+
+                /* Hover effect */
+                .radio-inputs .radio:hover .name {
+                background-color: #f0f0f0; /* Light background when hovered */
+                transform: translateY(-1px);
+                box-shadow:
+                3px 3px 6px rgba(0, 0, 0, 0.1),
+                -3px -3px 6px rgba(255, 255, 255, 0.8);
+                }
+
+                .radio-inputs .radio:hover input:checked + .name {
+                transform: translateY(1px);
+                }
+
+                /* Animation */
+                .radio-inputs .radio input:checked + .name {
+                animation: select 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                /* Particles */
+                .radio-inputs .radio .name::before,
+                .radio-inputs .radio .name::after {
+                content: "";
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                opacity: 0;
+                pointer-events: none;
+                }
+
+                .radio-inputs .radio input:checked + .name::before,
+                .radio-inputs .radio input:checked + .name::after {
+                animation: particles 0.8s ease-out forwards;
+                }
+
+                .radio-inputs .radio .name::before {
+                background: #079ad9; /* Updated color */
+                box-shadow: 0 0 6px #079ad9; /* Updated shadow */
+                top: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                }
+
+                .radio-inputs .radio .name::after {
+                background: #5bb7de; /* A lighter shade of the same color */
+                box-shadow: 0 0 8px #5bb7de; /* Updated shadow */
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                }
+
+                /* Sparkles */
+                .radio-inputs .radio .name::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background: radial-gradient(
+                circle at var(--x, 50%) var(--y, 50%),
+                rgba(7, 154, 217, 0.3) 0%,
+                transparent 50%
+                );
+                opacity: 0;
+                transition: opacity 0.3s;
+                }
+
+                .radio-inputs .radio input:checked + .name::after {
+                opacity: 1;
+                animation: sparkle-bg 1s ease-out forwards;
+                }
+
+                /* Bottom particles animation */
+                @keyframes sparkle-bg {
+                0% {
+                opacity: 0;
+                transform: scale(0.2);
+                }
+                50% {
+                opacity: 1;
+                }
+                100% {
+                opacity: 0;
+                transform: scale(2);
+                }
+                }
+
+                /* Glowing border */
+                .radio-inputs .radio input:checked + .name {
+                position: relative;
+                }
+
+                .radio-inputs .radio input:checked + .name::after {
+                content: "";
+                position: absolute;
+                inset: -2px;
+                border-radius: inherit;
+                background: linear-gradient(
+                45deg,
+                rgba(7, 154, 217, 0.5), /* Updated color */
+                rgba(5, 139, 204, 0.5) /* Updated color */
+                );
+                -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                animation: border-glow 1.5s ease-in-out infinite alternate;
+                }
+
+                @keyframes border-glow {
+                0% {
+                opacity: 0.5;
+                }
+                100% {
+                opacity: 1;
+                }
+                }
+
+                @keyframes select {
+                0% {
+                transform: scale(0.95) translateY(2px);
+                }
+                50% {
+                transform: scale(1.05) translateY(-1px);
+                }
+                100% {
+                transform: scale(1) translateY(2px);
+                }
+                }
+
+                .walk_in_loader{
+                position: absolute;
+                z-index: 5;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                }
+                #walk_in_region_selection{
+                height: 29px;
+                }
+                .list_view_link,.report_link{
+                cursor: pointer;
+                }
+                .flex-wrap-space-around{
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                }
+                #man_power_radial_chart{
+                width: 70%;
+                height: 120px;
+                background: #d1e3ff;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                color: #004589;
+                border-radius: 5px;
+                font-size: 2rem;
+                margin-top: 1rem;
+                font-weight: 600;
+                }
+                .selectable-block.active:after {
+                content: '✓';
+                position: absolute;
+                right: 8px;
+                top: 7px;
+                border-radius: 15px;
+                padding: 0px 4px;
+                font-size: 10px;
+                font-weight: 900;
+                color: #ffffff;
+                background: #0a7ca3;
+                }
+                .selectable-block2.active:after {
+                /*content: '✓'; */
+                position: absolute;
+                right: 8px;
+                top: 7px;
+                border-radius: 15px;
+                padding: 0px 4px;
+                font-size: 9px;
+                font-weight: 900;
+                color: #ffffff;
+                background: #0a7ca3;
+                }
+                text.highcharts-credits {
+                display: none;
+                }
+                .walk-in-conversion-radio{
+                width: 50%;
+                position: absolute;
+                right: calc(25%);
+                top: 0;
+                }
+                .walk-in-conversion-radio,
+                .top-20-cp-radio{
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                flex-direction: row !important;
+                }
+                .region_selection_div{
+                width: 11%; float: right;
+                }
+                .cp_booking_unit_table tbody td{
+                padding: 0.3rem 1rem 0.2rem 1rem;
+                }
+                .cp_booking_unit_table thead th{
+                padding: .8rem 1rem 0.3rem 1rem;
+                text-wrap: nowrap;
+                }
+                .cp_booking_unit_table{
+                border-top: 2px solid #2998bd;
+                }
+                .cp_booking_unit_table thead{
+                background: #2998bd;
+                color: white;
+                position: sticky;
+                top: -1px;
+                }
+                #project_wise_booking_registration{
+                height: 240px !important;
+                }
+                .manpower_project_div{
+                height: 245px !important;
+                }
+                #project_wise_booking_registration,
+                .manpower_project_div,
+                .walk_in_project_div,
+                .cp_booking_unit_div{
+                border: 1px solid #2998bd;
+                height: 300px;
+                overflow-y: auto;
+                border-radius: 7px;
+                scrollbar-color: #56c2e6 #ffffff00;
+                scrollbar-width: thin;
+                }
+                .fw-semibold {
+                z-index: 1;
+                position: relative;
+                }
+                .select_all_span{
+                position: absolute;
+                right: 23px;
+                top: 0px;
+                display: flex;
+                font-weight: 600;
+                }
+                <!--                Graph 2 -->
+                .select_all_span2{
+                position: absolute;
+                right: 23px;
+                top: 0px;
+                display: flex;
+                font-weight: 600;
+                }
+                .select2-search-choice-close{
+                top: 10px !important;
+                left: 5px !important;
+                font-size: 14px;
+                color: white;
+                opacity: 0.8;
+                }
+
+                .select2-container-multi .select2-choices .select2-search-choice {
+                    padding: 1px 2px 1px 12px;
+                    font-size: 12px;
+                    margin: 2px 0 2px 6px;
+                    border-radius: 6px;
+                    height: auto !important;
+                    min-height: 20px;
+                    overflow-y: auto;
+                    border-radius: 8px;
+
+                    padding: 6px 8px;
+                    background-color: #e8f4ff !important;  /* very pale blue fill */
+                    border: 1px solid #66b0ff !important;  /* light-blue border */
+                }
+                .o_input {
+    border: 0px solid var(--o-input-border-color);
+    padding: 0px 0px;
+}
+                .select2-container-multi .select2-choices .select2-search-choice-close {
+                  position: absolute;
+                  top: 50%;
+                  right: 8px;
+                  transform: translateY(-50%);
+                  width: 16px;
+                  font-size: 12px;
+                  color: rgba(255,255,255,0.9);
+                  text-align: center;
+                  line-height: 16px;
+                  border-radius: 50%;
+                  cursor: pointer;
+                  transition: background .2s ease;
+                }
+                .select2-container-multi .select2-choices .select2-search-choice-close:hover {
+                  background: rgba(0,0,0,0.3);
+                }
+                .select2-search-choice {
+                    background-color: #007bff !important;
+                    color: #fff;
+                    border: none;
+                    border-radius: 12px !important;
+                    padding: 4px 10px 4px 16px !important;
+                    font-size: 12px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    margin: 4px 5px;
+                }
+
+                .select2-results{
+                scrollbar-color: #00000082 #c1c1c14f;
+                scrollbar-width: thin;
+                }
+                .small_top_10{
+                position: absolute;
+                right: 80px;
+                }
+                #project_wise_flat_status{
+                margin-top: 5rem;
+                }
+                .pb-10px{
+                padding-bottom: 10px;
+                }
+                .z-relative{
+                z-index: 1;
+                position: relative;
+                }
+                .cluster-select-div{
+                display: flex;
+                flex-direction: column;
+                max-height: 300px;
+                overflow: auto;
+                scrollbar-color: #56c2e6ad #56c2e61f;
+                scrollbar-width: thin;
+                }
+                .select2-search-choice-close{
+                top: 1px;
+                left: 1px !important;
+                }
+
+                .select2-results{
+                scrollbar-color: #00000082 #c1c1c14f;
+                scrollbar-width: thin;
+                }
+                .controller_selects .select2-choices{
+                max-height: 35px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border-radius: 3px;
+                }
+                .region-select-div{
+                width: 100%;
+                }
+                /* Hide any active multi‐select dropdown for Select2 */
+                .select2-drop.select2-drop-multi.select2-drop-active {
+                  display: none !important;
+                }
+
+                .controller_selects{
+                min-width: 100%;
+                max-width: 100%;
+                scrollbar-color: #56c2e6ad #56c2e61f;
+                scrollbar-width: thin;
+                }
+
+                .fa-user.icon-green{
+                color: #b8e1d9;
+                }
+                .fa-user.icon-warning{
+                color: #efd9b3;
+                }
+                .fa-user.icon-danger{
+                color: #edc7bc;
+                }
+                .fa-user.icon-info{
+                color: #bdd0ed;
+                }
+                .fa-user{
+                position: absolute;
+                font-size: 9rem;
+                right: -10px;
+                bottom: -12px;
+                }
+                .h-11-overflow-hidden{
+                height: 11rem;
+                overflow: hidden;
+                }
+                .p-20-0 {
+                padding: 11px 0;
+                }
+                .rounded-circle-icon {
+                border-radius: 50% !important;
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                }
+                .item {
+                padding: 1rem;
+                width: 50%;
+                }
+                .cp_item_parent{
+                display: flex;
+                align-content: center;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                }
+                .bg-info-subtle {
+                background-color: #006bff;
+                }
+                .bg-danger-subtle {
+                background-color: #ff4000;
+                }
+                .bg-success-subtle {
+                background-color: #00ffcc;
+                }
+                .bg-warning-subtle {
+                background-color: #ffa300;
+                }
+                .bg-primary-subtle {
+                background-color: rgba(93, 135, 255, 0.1);
+                }
+
+                .align-left-headers{
+                text-align: left;
+                padding-left: 2rem;
+                padding-top: 1rem;
+                padding-right: 2rem;
+                color: #004589;
+                }
+                .comparison-radio-input input {
+                display: none;
+                }
+
+                .comparison-radio-input {
+                --container_width: 215px;
+                position: relative;
+                display: flex;
+                align-items: center;
+                border-radius: 10px;
+                background-color: #fff;
+                color: #000000;
+                width: var(--container_width);
+                overflow: hidden;
+                border: 1px solid rgba(53, 52, 52, 0.226);
+                float: right;
+                height: 32px;
+                }
+
+                .comparison-radio-input label {
+                width: 100%;
+                padding: 7px;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1;
+                font-weight: 600;
+                letter-spacing: -1px;
+                font-size: 14px;
+                margin: 0;
+                }
+
+                .comparison-selection {
+                display: none;
+                position: absolute;
+                height: 100%;
+                width: calc(var(--container_width) / 2);
+                z-index: 0;
+                left: 0;
+                top: 0;
+                transition: .15s ease;
+                }
+
+                .comparison-radio-input label:has(input:checked) {
+                color: #fff;
+                }
+
+                .comparison-radio-input label:has(input:checked) ~ .comparison-selection {
+                background-color: rgb(11 117 223);
+                display: inline-block;
+                }
+
+                .comparison-radio-input label:nth-child(1):has(input:checked) ~ .comparison-selection {
+                transform: translateX(calc(var(--container_width) * 0/2));
+                }
+
+                .comparison-radio-input label:nth-child(2):has(input:checked) ~ .comparison-selection {
+                transform: translateX(calc(var(--container_width) * 1/2));
+                }
+
+                #cluster_wise_booking_registration .apexcharts-legend{
+                display: none;
+                }
+                #project_wise_booking_registration .apexcharts-legend{
+                display: none;
+                }
+                #cluster_wise_booking_registration .apexcharts-tooltip.apexcharts-theme-light{
+                margin-top: 7rem;
+                }
+                .custom-tooltip {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background: #fff;
+                color: #333;
+                font-size: 12px;
+                fontFamily: 'Poppins, sans-serif';
+                border-radius: 5px;
+                }
+                .custom-tooltip .category {
+                font-weight: bold;
+                font-size: 14px;
+                margin-bottom: 8px;
+                border-bottom: 1px solid #d5d5d575;
+                }
+                .custom-tooltip .series-data {
+                margin: 4px 0;
+                display: flex;
+                align-items: center; /* Align items horizontally */
+                }
+                .custom-tooltip .series-data .marker {
+                width: 10px; /* Adjust size as needed */
+                height: 10px; /* Adjust size as needed */
+                border-radius: 50%;
+                margin-right: 8px; /* Space between marker and text */
+                }
+                .custom-tooltip .series-data .Gross { background-color: #00a6fb; }
+                .custom-tooltip .series-data .Cancelled { background-color: #2e294e; }
+                .custom-tooltip .series-data .Net { background-color: #06d6a0; }
+                .custom-tooltip .series-data .Registration { background-color: rgb(234, 82, 111); }
+                .apexcharts-legend.apexcharts-align-center.apx-legend-position-left {
+                scrollbar-color: #56c2e6ad #56c2e61f;
+                scrollbar-width: thin;
+                }
+                .h-240{
+                position: relative;
+                max-height: 240px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                scrollbar-color: #56c2e6ad #56c2e61f;
+                scrollbar-width: thin;
+                }
+                .relative-overflow-none{
+                position: relative;
+                overflow: hidden;
+                }
+                label.manpower-radio-label,
+                label.region-radio-label,
+                label.cluster-radio-label,
+                label.project-radio-label {
+                padding-top: 6rem;
+                cursor: pointer;
+                margin: 0;
+                }
+                .manpower-radio-label.count,
+                .region-radio-label.count,
+                .cluster-radio-label.count,
+                .project-radio-label.count{
+                padding-left: 10rem;
+                padding-right: 10px;
+                }
+                .manpower-radio-label.value,
+                .region-radio-label.value,
+                .cluster-radio-label.value,
+                .project-radio-label.value{
+                padding-right: 10rem;
+                padding-left: 10px;
+                }
+                .radio-manpower-container,
+                .radio-region-container,
+                .radio-cluster-container,
+                .radio-project-container{
+                position: absolute;
+                right: -139px;
+                top: -32px;
+                rotate: 45deg;
+                padding-top: 0rem;
+                background: #ffffff;
+                z-index: 2;
+                border: 1px solid #079ad9;
+                color: #079ad9;
+                }
+                <!--               Graph 2 -->
+                .radio-manpower-container2,
+                .radio-region-container2,
+                .radio-cluster-container2,
+                .radio-project-container2{
+                position: absolute;
+                right: -139px;
+                top: -32px;
+                rotate: 45deg;
+                padding-top: 0rem;
+                background: #ffffff;
+                z-index: 2;
+                border: 1px solid #079ad9;
+                color: #079ad9;
+                }
+                .manpower-radio-input,
+                .region-radio-input,
+                .cluster-radio-input,
+                .project-radio-input{
+                display: none;
+                }
+                .manpower-radio-input2,
+                .region-radio-input2,
+                .cluster-radio-input2,
+                .project-radio-input2{
+                display: none;
+                }
+                .radio-manpower-container .manpower-radio-input:checked + .manpower-radio-label,
+                .radio-region-container .region-radio-input:checked + .region-radio-label,
+                .radio-cluster-container .cluster-radio-input:checked + .cluster-radio-label,
+                .radio-project-container .project-radio-input:checked + .project-radio-label{
+                color: white;
+                background-color: #079ad9;
+                }
+                <!--                Graph 2 -->
+                .radio-manpower-container .manpower-radio-input2:checked + .manpower-radio-label,
+                .radio-region-container .region-radio-input2:checked + .region-radio-label,
+                .radio-cluster-container .cluster-radio-input2:checked + .cluster-radio-label,
+                .radio-project-container .project-radio-input2:checked + .project-radio-label{
+                color: white;
+                background-color: #079ad9;
+                }
+                #region_wise_booking_select{
+                bottom: 15px !important;
+                }
+                #region_wise_booking_select,
+                #cluster_wise_booking_select,
+                #project_wise_booking_select{
+                width: 28%;
+                right: 12px;
+                font-size: 11px;
+                bottom: 0px;
+                position: absolute;
+                }
+                .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                }
+
+                .radio-tile-group {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                flex-direction: column;
+                }
+
+                .radio-tile-group .input-container {
+                position: relative;
+
+                width: 100%;
+                margin: 0.5rem;
+                }
+
+                .radio-tile-group .input-container .radio-button {
+                opacity: 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                cursor: pointer;
+                }
+
+                .radio-tile-group .input-container .radio-tile {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                border: 2px solid #079ad9;
+                border-radius: 5px;
+                padding: 6px 5px;
+                transition: transform 300ms ease;
+                }
+
+                .radio-tile-group .input-container .icon svg {
+                fill: #079ad9;
+                width: 2rem;
+                height: 2rem;
+                }
+
+                .radio-tile-group .input-container .radio-tile-label {
+                text-align: center;
+                font-size: 0.8rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: black;
+                margin: 0;
+                }
+
+                .radio-tile-group .input-container .radio-button:checked + .radio-tile {
+                background-color: #079ad9;
+                border: 2px solid #079ad9;
+                color: white;
+                transform: scale(1.1, 1.1);
+                }
+
+                .radio-tile-group .input-container .radio-button:checked + .radio-tile .icon svg {
+                fill: white;
+                background-color: #079ad9;
+                }
+
+                .radio-tile-group .input-container .radio-button:checked + .radio-tile .radio-tile-label {
+                color: white;
+                background-color: #079ad9;
+                }
+
+
+                .left-headers{
+                text-align: center;
+                color: #004589 !important;
+                }
+                .left-headers2{
+                text-align: center;
+                color: #004589 !important;
+                }
+                .dashboard-rows{
+                background-color: #fff;
+                background-clip: border-box;
+                border: 1px solid rgba(0, 0, 0, 0.125);
+                border-radius: 7px;
+                padding: 19px 7px 0px 7px;
+                }
+                .fa-globe-asia:nth-child(1){
+                rotate: 0deg;
+                }
+                .fa-globe-asia:nth-child(2){
+                rotate: 60deg;
+                }
+                .fa-globe-asia:nth-child(3){
+                rotate: 120deg;
+                }
+                .fa-globe-asia:nth-child(4){
+                rotate: 180deg;
+                }
+                .fa-globe-asia:nth-child(5){
+                rotate: 240deg;
+                }
+                .fa-globe-asia:nth-child(6){
+                rotate: 300deg;
+                }
+                .fa-globe-asia{
+                font-size: 58px;
+                position: absolute;
+                right: 7px;
+                top: -5px;
+                color: rgba(0, 0, 0, 0.2);
+                transition: transform 0.3s ease;
+                z-index: 0;
+                display: none;
+                }
+                .registration-card-inner{
+                height: 50px;
+                border-radius: 12px;
+                background: white;
+                padding: 8px;
+                z-index: 1;
+                }
+                .registration-icon-initial{
+                font-size: 104px;
+                color: rgb(0 0 0 / 10%);
+                transition: transform 0.3s ease;
+                z-index: 0;
+                rotate: -197deg;
+                margin-top: -16px;
+                }
+                .registration-icon{
+                font-size: 46px;
+                position: absolute;
+                right: 13px;
+                bottom: 3px;
+                color: rgba(0, 0, 0, 0.2);
+                transition: transform 0.3s ease;
+                z-index: 0;
+                rotate: 197deg;
+                display: none;
+                }
+                .registration-foot{
+                color: #ffffff;
+                position: absolute;
+                top: 6px;
+                left: 17px;
+                font-weight: 400;
+                }
+                .registration-card.initial .card-foot{
+                color: #00779f;position: absolute;top: 7px;left: 5px;
+                }
+                .registration-card.initial .card-inner{
+                height: 50px;
+                border-radius: 12px;
+                background: #56c2e6;
+                overflow: hidden;
+                }
+                .registration-card.initial{
+                border-radius: 12px;
+                height: 92px;
+                background: #ffffff;
+                border: 1px solid #56c2e6;
+                }
+                .registration-card{
+                border-radius: 12px;
+                height: 92px;
+                background: #56c2e6;
+                transition: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                <!--                cursor: pointer;-->
+                overflow: hidden;
+                display: flex;
+                flex-direction: column-reverse;
+                }
+                .registration-bar{
+                color: #4680ff;
+                position: relative;
+                height: 100%;
+                }
+                .registration-row{
+                font-weight: 600;
+                }
+                .selectable-block.active{
+                opacity: 1 !important;
+                background: rgb(20 181 255 / 12%) !important;
+                }
+                .selectable-block.active:hover {
+                background: white !important;
+                }
+                .selectable-block:hover {
+                opacity: 1;
+                background: #14b5ff12;
+                }
+                .selectable-block{
+                height: 27px;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                color: black;
+                background: white;
+                cursor: pointer;
+                margin: 3px;
+                border-radius: 7px;
+                text-align: center;
+                border: 1px solid rgb(20, 181, 255);
+                transition: transform 0.2s ease;
+                word-break: break-all;
+                overflow: hidden;
+                flex-flow: wrap;
+                }
+                .selectable-block2.active{
+                opacity: 1 !important;
+                background: rgb(20 181 255 / 12%) !important;
+                }
+                .selectable-block2.active:hover {
+                background: white !important;
+                }
+                .selectable-block2:hover {
+                opacity: 1;
+                background: #14b5ff12;
+                }
+                .selectable-block2{
+                height: 28px;
+                display: flex;
+                align-items: center;
+                color: black;
+                background: white;
+                cursor: pointer;
+                margin: 3px;
+                text-align: center;
+                transition: transform 0.2s ease;
+                word-break: break-all;
+                overflow: hidden;
+                flex-flow: wrap;
+                }
+
+                .booking_count_span{
+                position: absolute;
+                top: 2px;
+                left: 4px;
+                }
+                .booking_value_span{
+                float: right;
+                position: absolute;
+                bottom: 0;
+                right: 4px;
+                }
+                .gross-bar {
+                background: rgb(217 229 255 / 20%);
+                border-bottom: 1px solid #e9eaff;
+                color: #4680ff;
+                border-top-left-radius: 6px;
+                border-top-right-radius: 6px;
+                position: relative;
+                }
+                .cancelled-bar {
+                background: rgb(255 245 245 / 20%);
+                color: #ff5252;
+                border-top: 1px solid #ffecec;
+                border-bottom: 1px solid #ffecec;
+                position: relative;
+                }
+                .net-bar {
+                background: rgb(234 255 210 / 20%);
+                color: #108710;
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+                border-top: 1px solid #99d99952;
+                position: relative;
+                }
+                .col-15p{
+                width: 15%;
+                max-width: 15%;
+                min-width: 15%;
+                padding-right: 5px;
+                }
+                .col-10p{
+                width: 10%;
+                max-width: 10%;
+                min-width: 10%;
+                padding-right: 5px;
+                }
+                .img-header{
+                position: absolute;
+                top: 7px;
+                left: 17px;
+                }
+                .dash_card_center.initial {
+                background: #56c2e6;
+                color: white;
+                display: flex;
+                justify-content: center;
+
+                }
+                .dash_card_center {
+                --primary-clr: #1C204B;
+                --dot-clr: #BBC0FF;
+                --play: hsl(195, 74%, 62%);
+                height: 50px;
+                border-radius: 10px;
+                background: #f5f5dc00;
+                border: none;
+                overflow: hidden;
+                }
+                .dash_card_center {
+                color: #484848;
+                display: grid;
+                <!--                cursor: pointer;-->
+                grid-template-rows: 0px 1fr;
+                border: 1px solid #56c2e6;
+                padding: 1rem;
+                text-align: right;
+                display: flex;
+                justify-content: center;
+                font-weight: 600;
+                }
+                .dash_card_center:hover .img-section {
+                transform: translateY(1em);
+                }
+                .dash_card {
+                --primary-clr: #1C204B;
+                --dot-clr: #BBC0FF;
+                --play: hsl(195, 74%, 62%);
+                height: 170px;
+                border-radius: 10px;
+                background: #f5f5dc00;
+                border: none;
+                overflow: hidden;
+                }
+                .dash_card {
+                color: #fff;
+                display: grid;
+                <!--                cursor: pointer;-->
+                grid-template-rows: 50px 1fr;
+                }
+                .dash_card:hover .img-section {
+                transform: translateY(1em);
+                }
+                .initial .card-desc {
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                background: #56c2e6;
+                color: white;
+                }
+                .card-desc {
+                border-radius: 10px;
+                padding: 8px;
+                position: relative;
+                top: -10px;
+                display: grid;
+                gap: 1px;
+                background: #ffffff;
+                color: black;
+                border: 1px solid #56c2e6;
+                font-weight: 600;
+                }
+                .card-time {
+                font-size: 1.7em;
+                font-weight: 500;
+                }
+                .initial .img-header {
+                color: #00779f;
+                }
+                .initial .img-section {
+                background: white;
+                color: black;
+                border: 1px solid #56c2e6;
+                }
+                .img-section {
+                transition: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                background: hsl(195, 74%, 62%);
+                overflow: hidden;
+                }
+                .card-header {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                }
+                .card-title {
+                flex: 1;
+                font-size: 0.9em;
+                font-weight: 500;
+                }
+                .card-menu {
+                display: flex;
+                gap: 4px;
+                margin-inline: auto;
+                }
+                .dash_card svg {
+                float: right;
+                max-width: 100%;
+                max-height: 100%;
+                }
+                .dash_card .dot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--dot-clr);
+                }
+                .dash_card .recent {
+                line-height: 0;
+                font-size: 0.8em;
+                }
+                .circle-container{
+                position: relative;
+                width: 1445px;
+                height: 177px;
+                margin-top: 6px;
+                }
+                .circle-div{
+                position: absolute;
+                width: 100%;
+                height: 80%;
+                display: flex;
+                justify-content: flex-start;
+                overflow: auto;
+                align-content: flex-start;
+                scrollbar-color: #56c2e6ad #56c2e61f;
+                scrollbar-width: thin;
+                }
+                circle.fg {
+                transform: rotate(-90deg);
+                transform-origin: 125px 125px;
+                }
+                .circular-progress {
+                --size: 250px;
+                --half-size: calc(var(--size) / 2);
+                --stroke-width: 20px;
+                --radius: calc((var(--size) - var(--stroke-width)) / 2);
+                --circumference: calc(var(--radius) * pi * 2);
+                --dash: calc((var(--progress) * var(--circumference)) / 100);
+                cursor: pointer;
+                padding: 8px;
+                position: absolute;
+                }
+                .circular-progress circle {
+                cx: var(--half-size);
+                cy: var(--half-size);
+                r: var(--radius);
+                stroke-width: var(--stroke-width);
+                fill: none;
+                stroke-linecap: round;
+                }
+                .circular-progress circle.bg {
+                stroke: #ddd;
+                }
+                .circular-progress circle.fg {
+                transform: rotate(-90deg);
+                transform-origin: var(--half-size) var(--half-size);
+                stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
+                transition: stroke-dasharray 0.3s linear 0s;
+                }
+                .values_info{
+                position: absolute;
+                top: 5px;
+                right: 28px;
+                color: #0073a1;
+                }
+                .jupiter_dashboard{
+                padding-top: 2.2rem;
+                padding-bottom: 2.2rem;
+                }
+                @media (max-width: 992px) {
+                .mt-3-sm{
+                margin-top: 1rem !important;
+                }
+                .p-20-0 i{
+                display: none;
+                }
+                .p-20-0{
+                padding: 1px 0;
+                }
+                .col-10p{
+                min-width: 50%;
+                }
+                .col-15p{
+                min-width: 50%;
+                }
+                .walk-in-conversion-radio {
+                width: 100%;
+                position: unset;
+                }
+                .project_wise_booking_div,
+                .cluster_wise_booking_div
+                {
+                padding-top: 4rem !important;
+                }
+                }
+                @media (max-width: 576px) {
+                .region_wise_booking_div {
+                padding-bottom: 3rem !important;
+                }
+                #region_wise_booking_select,
+                #cluster_wise_booking_select,
+                #project_wise_booking_select{
+                right: -4px;
+                bottom: -14px;
+                }
+                .project_wise_booking_div,
+                .cluster_wise_booking_div
+                {
+                padding-top: 0rem !important;
+                }
+                .col-10p{
+                min-width: 100%;
+                }
+                .col-15p{
+                min-width: 100%;
+                }
+                .walk-in-conversion-radio{
+                flex-direction: column !important;
+                }
+                .cluster_wise_booking_div,
+                .project_wise_booking_div{
+                margin-top: 5rem;
+                }
+                .z-relative{
+                width: 100% !important;
+                padding-left: 0;
+                padding-right: 0;
+                }
+                .region_selection_div{
+                width: 100% !important;
+                }
+                .o_sales_summary_rep_loc_account a.select2-search-choice-close {
+                    top: 5px !important;
+                }
+                .o_sales_summary_rep_loc_account{width:100% !important; max-width:400px !important;height: 41px !important;overflow: auto !important;}
+                .o_sales_summary_rep_loc_account li.select2-search-choice{border-radius: 18px !important;background-blend-mode: color-dodge !important;font-size: x-small !important; }
+                .o_sales_summary_rep_detail{transform : scale(2);}
+                }
+            </style>
+        </div>
+    </t>
+</templates>

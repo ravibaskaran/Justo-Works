@@ -1,0 +1,8 @@
+<odoo>
+    <data>
+        <menuitem id="accounting_root_menu" name="Vouchers" parent="account.menu_finance" sequence="1"/>
+        <menuitem id="direct_journal_entry_receipt_menu" parent="accounting_root_menu" name="Receipt Voucher" action="action_direct_journal_receipt" sequence="1"/>
+        <menuitem id="direct_journal_entry_payment_menu" parent="accounting_root_menu" name="Payment Voucher" action="action_direct_journal_payment" sequence="2"/>
+        <menuitem id="direct_journal_entry_journal_menu" parent="accounting_root_menu" name="Journal Voucher" action="action_direct_journal_voucher" sequence="3"/>
+    </data>
+</odoo>

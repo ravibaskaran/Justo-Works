@@ -1,0 +1,1950 @@
+# -*- coding: utf-8 -*-
+import json
+import requests
+from dateutil.relativedelta import relativedelta
+
+from odoo import http
+from odoo.exceptions import ValidationError
+from odoo.http import request
+from datetime import datetime, timedelta, date
+from pytz import timezone
+import calendar
+
+
+class JupiterDashboardTres(http.Controller):
+    def get_actual_date(self, tz_datetime):
+        fmt = "%Y-%m-%d %H:%M:%S"
+        now_utc = datetime.now(timezone('UTC'))
+        now_timezone = now_utc.astimezone(timezone(request.env.user.tz))
+        utc_offset_timedelta = datetime.strptime(now_utc.strftime(fmt), fmt) - datetime.strptime(
+            now_timezone.strftime(fmt), fmt)
+        local_datetime = datetime.strptime(tz_datetime, fmt)
+        result_utc_datetime = local_datetime + utc_offset_timedelta
+        return result_utc_datetime.strftime(fmt)
+
+    @http.route('/jupiter_dashboard_tres/call_list_view', auth='public', type='json')
+    def jupiter_dashboard_tres_call_list_view(self, domain, model, name):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_mode': 'tree,form',
+            'res_model': model,
+            'views': [(False, 'list'), (False, 'form')],
+            'domain': domain,
+            'context': {'create': False}
+        }
+
+    @http.route('/jupiter_dashboard_tres/call_report', auth='public', type='json')
+    def jupiter_dashboard_tres_call_report(self, report_attr, model='beta.booking.report', region_ids=False,
+                                           cluster_ids=False, project_ids=False):
+        projects = False
+        if region_ids:
+            projects = request.env['building'].search([('region_id', 'in', region_ids)])
+        if cluster_ids:
+            projects = request.env['building'].search([('sub_region_id', 'in', cluster_ids)])
+        if project_ids:
+            projects = request.env['building'].search([('id', 'in', project_ids)])
+        if region_ids or cluster_ids or project_ids:
+            full_project_count = request.env['building'].search_count([])
+            if len(projects) != full_project_count:
+                report_attr['project_filter'] = 'selected'
+                report_attr['project_ids'] = projects.ids
+        report_obj = request.env[model].create(report_attr)
+        report_obj.get_html()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Report',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': model,
+            'views': [(False, 'form')],
+            'res_id': report_obj.id,
+        }
+
+    @http.route('/jupiter_dashboard_tres/cp_booking_units_region_wise', auth='public', type='json')
+    def cp_booking_units_region_wise(self, model='region', frequency='month', custom_start=False, custom_end=False):
+        if model == 'region':
+            records = request.env['regions'].search([('is_parent', '=', True)], order='name')
+        else:
+            records = request.env['regions'].search([('is_parent', '=', False)], order='name')
+
+        current_datetime = datetime.today()
+        start_date = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_date + timedelta(days=1) - timedelta(microseconds=1)
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d %H:%M:%S'))
+        if custom_start and custom_end:
+            start_formatted = self.get_actual_date(str(custom_start) + ' 00:00:00')
+            end_formatted = self.get_actual_date(str(custom_end) + ' 23:59:59')
+        elif frequency == 'today':
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'week':
+            start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+            start_date = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'month':
+            start_date = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'quarter':
+            financial_year_start_month = 4
+            quarter_month_starts = [4, 7, 10, 1]
+
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+            start_date = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'half':
+            financial_year_start_month = 4
+            half_year_starts = [4, 10]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+            start_date = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'year':
+            fin_year_obj = (
+                date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+            start_date = fin_year_obj.strftime('%Y-%m-%d')
+            fin_year_end = date.today().strftime('%Y-%m-%d')
+            start_formatted = self.get_actual_date(start_date + ' 00:00:00')
+        data = {
+            'categories': [],
+            'data': []
+        }
+        for record in records:
+            domain_str = 'region_id' if model == 'region' else 'sub_region_id'
+            booking = request.env['unit.reservation'].search(
+                [('date', '<=', end_formatted), ('date', '>=', start_formatted), ('source_of_booking', '=', 'cp'),
+                 (f'building.{domain_str}', '=', record.id), ('state', 'in', ('confirmed', 'canceled'))])
+            data['categories'].append(record.name)
+            data['data'].append(len(booking))
+        return data
+
+    @http.route('/jupiter_dashboard_tres/walk_in_data', auth='public', type='json')
+    def walk_in_data(self, model='region', frequency='month', region=False, cluster=False):
+        config_obj = request.env['ir.config_parameter'].sudo()
+        if not config_obj.get_param('jupiter_dashboard_tres.enable_dashboard_walk_in_api'):
+            return 'disable'
+        username = config_obj.get_param('jupiter_dashboard_tres.dashboard_walk_in_api_username')
+        password = config_obj.get_param('jupiter_dashboard_tres.dashboard_walk_in_api_key')
+        url = config_obj.get_param('jupiter_dashboard_tres.dashboard_walk_in_api_url')
+        data = {
+            'params': {
+                'login': username,
+                'password': password
+            }
+        }
+        api_model_mapping = {
+            'region': {},
+            'cluster': {},
+            'project': {}
+        }
+        disable = False
+        try:
+            headers = {"Content-Type": "application/json; charset=utf-8"}
+            response = requests.post(url, headers=headers, json=data)
+            if response.ok:
+                rec = json.loads(response.text)
+                api_data = rec.get('data')
+                # api_model_mapping['region'] = api_data.get('visited_region')
+                # api_model_mapping['cluster'] = api_data.get('visited_cluster')
+                # api_model_mapping['project'] = api_data.get('visted_project')
+                for item in api_data:
+                    for line in item:
+                        api_model_mapping['project'][line] = item[line]
+            else:
+                raise ValidationError(str(response.text))
+        except:
+            disable = True
+        if disable:
+            return 'disable'
+        api_frequency_mapping = {
+            'today': 'today',
+            'week': 'week',
+            'month': 'month',
+            'quarter': 'quarter',
+            'half': 'semi',
+            'year': 'year'
+        }
+        data = {
+            'categories': [],
+            'walk_in': [],
+            'booking': [],
+            'conversion': [],
+            'width': [0.32, 0.40] if model == 'region' else [0.22, 0.32]
+        }
+        domain = ' where b.active = True '
+        if model == 'region':
+            pass
+            # records = request.env['regions'].search([('is_parent', '=', True)], order='name')
+        elif model == 'cluster':
+            pass
+            # records = request.env['regions'].search([('is_parent', '=', False)], order='name')
+        else:
+            if region:
+                # domain.append(('region_id', '=', int(region)))
+                domain += f' and b.region_id = {region}'
+            if cluster:
+                # domain.append(('sub_region_id', 'in', cluster))
+                domain += f' and b.sub_region_id in ({",".join([str(i) for i in cluster])})'
+            data = ''
+        # records = request.env['building'].search(domain, order='name')
+        request.env.cr.execute(f"""
+            select b.name, b.code, b.id, b.region_id, b.sub_region_id, r.name as region_name, c.name as cluster_name 
+            from building b 
+            left join regions r on r.id = b.region_id 
+            left join regions c on c.id = b.sub_region_id
+            {domain}
+        """)
+        records = request.env.cr.dictfetchall()
+        current_datetime = datetime.today()
+        start_date = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_date + timedelta(days=1) - timedelta(microseconds=1)
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d %H:%M:%S'))
+        if frequency == 'today':
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'week':
+            start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+            start_date = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'month':
+            start_date = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'quarter':
+            financial_year_start_month = 4
+            quarter_month_starts = [4, 7, 10, 1]
+
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+            start_date = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'half':
+            financial_year_start_month = 4
+            half_year_starts = [4, 10]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+            start_date = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'year':
+            fin_year_obj = (
+                date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+            start_date = fin_year_obj.strftime('%Y-%m-%d')
+            start_formatted = self.get_actual_date(start_date + ' 00:00:00')
+
+        region_data = {}
+
+        for record in records:
+            # domain_str = 'region_id' if model == 'region' else 'sub_region_id' if model == 'cluster' else 'id'
+
+            walk_in = 0
+            record_name = record['code']
+            if record_name in api_model_mapping.get('project'):
+                walk_in = api_model_mapping['project'][record_name].get(api_frequency_mapping[frequency])
+
+            booking = request.env['unit.reservation'].search(
+                [('date', '<=', end_formatted), ('date', '>=', start_formatted),
+                 ('building.id', '=', record['id']), ('state', 'in', ('confirmed', 'canceled'))])
+            booking_count = len(booking)
+            if model != 'project':
+                if model == 'region':
+                    region_field = 'region_id'
+                    region_name = record['region_name']
+                else:
+                    region_field = 'sub_region_id'
+                    region_name = record['cluster_name']
+                if record['region_id'] not in region_data:
+                    region_data[record[region_field]] = [walk_in, booking_count, region_name]
+                else:
+                    region_data[record[region_field]][0] += walk_in
+                    region_data[record[region_field]][1] += booking_count
+
+            if model == 'project':
+                conversion = "{:,.2f}".format(
+                    booking_count * 100 / walk_in if walk_in != 0 else 0 if (
+                                booking_count == 0 and walk_in == 0) else 100)
+                data += f"""
+                    <tr>
+                        <td class="pr-0">{record['name']}</td>
+                        <td class="text-right">{walk_in}</td>
+                        <td class="text-right">{booking_count}</td>
+                        <td class="text-right">{conversion}</td>
+                    </tr>
+                """
+            # else:
+            #     data['categories'].append(record.name)
+            #     data['walk_in'].append(walk_in)
+            #     data['booking'].append(booking_count)
+            #     data['conversion'].append(conversion)
+        if model != 'project':
+            for item in region_data:
+                walk_in = region_data[item][0]
+                booking_count = region_data[item][1]
+                name = region_data[item][2]
+                conversion = "{:,.2f}".format(
+                    booking_count * 100 / walk_in if walk_in != 0 else 0 if (
+                            booking_count == 0 and walk_in == 0) else 100)
+                data['categories'].append(name)
+                data['walk_in'].append(walk_in)
+                data['booking'].append(booking_count)
+                data['conversion'].append(conversion)
+        return data
+
+    # @http.route('/jupiter_dashboard_tres/walk_in_data', auth='public', type='json')
+    def walk_in_data_old(self, model='region', frequency='month', region=False, cluster=False):
+        config_obj = request.env['ir.config_parameter'].sudo()
+        if not config_obj.get_param('jupiter_dashboard_tres.enable_dashboard_walk_in_api'):
+            return 'disable'
+        username = config_obj.get_param('jupiter_dashboard_tres.dashboard_walk_in_api_username')
+        password = config_obj.get_param('jupiter_dashboard_tres.dashboard_walk_in_api_key')
+        url = config_obj.get_param('jupiter_dashboard_tres.dashboard_walk_in_api_url')
+        data = {
+            'params': {
+                'login': username,
+                'password': password
+            }
+        }
+        api_model_mapping = {
+            'region': {},
+            'cluster': {},
+            'project': {}
+        }
+        disable = False
+        try:
+            headers = {"Content-Type": "application/json; charset=utf-8"}
+            response = requests.post(url, headers=headers, json=data)
+            if response.ok:
+                rec = json.loads(response.text)
+                api_data = rec.get('data')
+                api_model_mapping['region'] = api_data.get('visited_region')
+                api_model_mapping['cluster'] = api_data.get('visited_cluster')
+                api_model_mapping['project'] = api_data.get('visted_project')
+            else:
+                raise ValidationError(str(response.text))
+        except:
+            disable = True
+        if disable:
+            return 'disable'
+        api_frequency_mapping = {
+            'today': 'Today_Visited',
+            'week': 'This_Week_Visted',
+            'month': 'This_Month_Visted',
+            'quarter': 'Visited_Quarterly',
+            'half': 'Semi_Year_Visited',
+            'year': 'Annual_Visited'
+        }
+        data = {
+            'categories': [],
+            'walk_in': [],
+            'booking': [],
+            'conversion': [],
+            'width': [0.32, 0.40] if model == 'region' else [0.22, 0.32]
+        }
+        if model == 'region':
+            records = request.env['regions'].search([('is_parent', '=', True)], order='name')
+        elif model == 'cluster':
+            records = request.env['regions'].search([('is_parent', '=', False)], order='name')
+        else:
+            domain = []
+            if region:
+                domain.append(('region_id', '=', int(region)))
+            if cluster:
+                domain.append(('sub_region_id', 'in', cluster))
+            records = request.env['building'].search(domain, order='name')
+            data = ''
+        current_datetime = datetime.today()
+        start_date = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_date + timedelta(days=1) - timedelta(microseconds=1)
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d %H:%M:%S'))
+        if frequency == 'today':
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'week':
+            start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+            start_date = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'month':
+            start_date = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'quarter':
+            financial_year_start_month = 4
+            quarter_month_starts = [4, 7, 10, 1]
+
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+            start_date = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'half':
+            financial_year_start_month = 4
+            half_year_starts = [4, 10]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+            start_date = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'year':
+            fin_year_obj = (
+                date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+            start_date = fin_year_obj.strftime('%Y-%m-%d')
+            start_formatted = self.get_actual_date(start_date + ' 00:00:00')
+        for record in records:
+            domain_str = 'region_id' if model == 'region' else 'sub_region_id' if model == 'cluster' else 'id'
+
+            walk_in = 0
+            record_name = record.code if model == 'project' else record.name
+            if record_name in api_model_mapping.get(model):
+                walk_in = api_model_mapping[model][record_name].get(api_frequency_mapping[frequency])
+
+            booking = request.env['unit.reservation'].search(
+                [('date', '<=', end_formatted), ('date', '>=', start_formatted),
+                 (f'building.{domain_str}', '=', record.id), ('state', 'in', ('confirmed', 'canceled'))])
+            booking_count = len(booking)
+            conversion = "{:,.2f}".format(
+                booking_count * 100 / walk_in if walk_in != 0 else 0 if (booking_count == 0 and walk_in == 0) else 100)
+            if model == 'project':
+                data += f"""
+                    <tr>
+                        <td class="pr-0">{record.name}</td>
+                        <td class="text-right">{walk_in}</td>
+                        <td class="text-right">{booking_count}</td>
+                        <td class="text-right">{conversion}</td>
+                    </tr>
+                """
+            else:
+                data['categories'].append(record.name)
+                data['walk_in'].append(walk_in)
+                data['booking'].append(booking_count)
+                data['conversion'].append(conversion)
+        return data
+
+    @http.route('/jupiter_dashboard_tres/get_top_20_cp', auth='public', type='json')
+    def get_top_20_cp(self, frequency='month', custom_start=False, custom_end=False):
+        current_datetime = datetime.today()
+        start_date = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_date + timedelta(days=1) - timedelta(microseconds=1)
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d %H:%M:%S'))
+        if custom_start and custom_end:
+            start_formatted = self.get_actual_date(str(custom_start) + ' 00:00:00')
+            end_formatted = self.get_actual_date(str(custom_end) + ' 23:59:59')
+        elif frequency == 'today':
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'week':
+            start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+            start_date = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'month':
+            start_date = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'quarter':
+            financial_year_start_month = 4
+            quarter_month_starts = [4, 7, 10, 1]
+
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+            start_date = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'half':
+            financial_year_start_month = 4
+            half_year_starts = [4, 10]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+            start_date = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'year':
+            fin_year_obj = (
+                date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+            start_date = fin_year_obj.strftime('%Y-%m-%d')
+            start_formatted = self.get_actual_date(start_date + ' 00:00:00')
+
+        booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_formatted),
+             ('state', 'in', ('confirmed', 'canceled')), ('source_of_booking', '=', 'cp')])
+        cp_dict = {}
+        for booking in booking_confirmed:
+            if booking.cp_id:
+                if booking.cp_id.id in cp_dict:
+                    cp_dict[booking.cp_id.id][0] += 1
+                else:
+                    cp_dict[booking.cp_id.id] = [1, booking.cp_id.name]
+        cp_dict = sorted(cp_dict.items(), key=lambda x: x[1][0], reverse=True)[:20]
+        cp_data = ''
+        for cp in cp_dict:
+            cp_data += f"""
+                <tr>
+                    <td>{cp[1][1]}</td>
+                    <td class="text-right">{cp[1][0]}</td>
+                </tr>
+            """
+        return cp_data
+
+    @http.route('/jupiter_dashboard_tres/manpower_productivity', auth='public', type='json')
+    def manpower_productivity(self, frequency='month', count_or_value='count', date_from=False, date_to=False):
+        def get_productivity(start_date, end_date, project_domain):
+            total_manpower = 0
+            total_booking_count = 0
+            projects = request.env['building'].search(project_domain)
+            for project in projects:
+                first_assigning = request.env['project.employee.assigning'].search(
+                    [('project_id', '=', project.id), ('date', '<=', start_date)], limit=1)
+                in_range_assigning = request.env['project.employee.assigning'].search(
+                    [('project_id', '=', project.id), ('date', '<=', end_date), ('date', '>=', start_date)], order='id')
+                in_range_mapping = {}
+                for assign in in_range_assigning:
+                    in_range_mapping[assign.date] = assign
+                employee_total_count = 0
+                no_of_days = 0
+
+                def compute_employee_count(assigning):
+                    return (len(assigning.closing_manager_ids.mapped(
+                        'employee_id')) + len(assigning.sourcing_manager_ids.mapped(
+                        'employee_id')) + len(assigning.closing_tl_ids.mapped(
+                        'employee_id')) + len(assigning.sourcing_tl_ids.mapped(
+                        'employee_id')) + len(assigning.crm_ids.mapped(
+                        'employee_id')) + len(assigning.marketing_ids.mapped(
+                        'employee_id')) + len(assigning.business_head_id) + len(
+                        assigning.site_head_id) + len(assigning.cluster_head_id))
+
+                employee_count = compute_employee_count(first_assigning) if first_assigning else 0
+                current_date = start_date
+                while current_date <= end_date:
+                    no_of_days += 1
+                    if current_date in in_range_mapping:
+                        first_assigning = in_range_mapping[current_date]
+                        employee_count = compute_employee_count(first_assigning)
+                    employee_total_count += employee_count
+                    current_date += timedelta(days=1)
+                man_power_per_day = employee_total_count / no_of_days if no_of_days != 0 else 0
+                end_formatted = end_date.strftime('%Y-%m-%d 23:59:59')
+                start_formatted = start_date.strftime('%Y-%m-%d 00:00:00')
+                bookings = request.env['unit.reservation'].search([('building', '=', project.id),
+                                                                   ('date', '<=', end_formatted),
+                                                                   ('date', '>=', start_formatted),
+                                                                   ('state', 'in', ('confirmed', 'canceled'))])
+                if count_or_value == 'count':
+                    booking_count = len(bookings)
+                else:
+                    booking_count = sum(bookings.mapped('flat_cost')) / 100000
+                total_manpower += man_power_per_day
+                total_booking_count += booking_count
+            total_productivity = total_booking_count / total_manpower if total_manpower != 0 else 0
+            return "{:,.2f}".format(total_productivity)
+
+        current_datetime = datetime.today().date()
+        start_date = end_date = current_datetime
+        if date_from and date_to:
+            if date_from > date_to:
+                raise ValidationError('Date From should be less than Date To')
+            start_date = datetime.strptime(date_from, '%Y-%m-%d').date()
+            end_date = datetime.strptime(date_to, '%Y-%m-%d').date()
+        elif frequency == 'week':
+            start_date = current_datetime - timedelta(days=current_datetime.weekday())
+        elif frequency == 'month':
+            start_date = current_datetime.replace(day=1)
+        elif frequency == 'quarter':
+            financial_year_start_month = 4
+            quarter_month_starts = [4, 7, 10, 1]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+            start_date = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+            start_date = start_date.date()
+        elif frequency == 'half':
+            financial_year_start_month = 4
+            half_year_starts = [4, 10]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+            start_date = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+            start_date = start_date.date()
+        elif frequency == 'year':
+            start_date = (
+                date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+        consolidate = get_productivity(start_date, end_date, [])
+        regions = request.env['regions'].search([('is_parent', '=', True)], order='name')
+        region_data = {
+            'categories': [],
+            'data': []
+        }
+        for region in regions:
+            region_data['categories'].append(region.name)
+            region_data['data'].append(get_productivity(start_date, end_date, [('region_id', '=', region.id)]))
+        cluster_data = {
+            'categories': [],
+            'data': []
+        }
+        clusters = request.env['regions'].search([('is_parent', '=', False)], order='name')
+        for cluster in clusters:
+            cluster_data['categories'].append(cluster.name)
+            cluster_data['data'].append(get_productivity(start_date, end_date, [('sub_region_id', '=', cluster.id)]))
+        project_data = ''
+        projects = request.env['building'].search([], order='name')
+        for project in projects:
+            project_productivity = get_productivity(start_date, end_date, [('id', '=', project.id)])
+            project_data += f"<tr><td>{project.name}</td><td class='text-right'>{project_productivity}</td></tr>"
+        return [consolidate, region_data, cluster_data, project_data]
+
+    @http.route('/jupiter_dashboard_tres/walk_in_get_cluster', auth='public', type='json')
+    def jupiter_dashboard_walk_in_get_cluster(self, region=False):
+        cluster_data = 'Cluster<select id="walk_in_cluster_select" class="controller_selects walk_in_cluster_select" multiple="multiple">'
+        domain = ''
+        if region:
+            domain += f' and region_id = {region}'
+        request.env.cr.execute(f"select id, name from regions where is_parent = False {domain}")
+        rows = request.env.cr.dictfetchall()
+        for row in rows:
+            cluster_data += "<option cluster_id='" + str(row['id']) + "'>" + str(row['name']) + "</option>"
+        cluster_data += '</select>'
+        return cluster_data
+
+    @http.route('/jupiter_dashboard_tres/get_cluster', auth='public', type='json')
+    def jupiter_dashboard_get_cluster(self, region=False):
+        cluster_data = 'Cluster<select id="cluster_select" class="controller_selects cluster_select" multiple="multiple">'
+        domain = ''
+        if region:
+            domain += f' and region_id = {region}'
+        request.env.cr.execute(f"select id, name from regions where is_parent = False {domain}")
+        rows = request.env.cr.dictfetchall()
+        for row in rows:
+            cluster_data += "<option cluster_id='" + str(row['id']) + "'>" + str(row['name']) + "</option>"
+        cluster_data += '</select>'
+        return cluster_data
+
+    @http.route('/jupiter_dashboard_tres/get_region', auth='public', type='json')
+    def jupiter_dashboard_get_region(self):
+        regions = request.env['regions'].search([('is_parent', '=', True)], order='name')
+        data = '<a class="dropdown-item" href="#">All</a>'
+        for region in regions:
+            data += '<a class="dropdown-item" href="#" value="%s">%s</a>' % (str(region.id), str(region.name))
+        configuration_data = ''
+        request.env.cr.execute("select id, name from building_unit")
+        rows = request.env.cr.dictfetchall()
+        for row in rows:
+            configuration_data += "<option configuration_id='" + str(row['id']) + "'>" + str(row['name']) + "</option>"
+        return [data, configuration_data]
+
+    @http.route('/jupiter_dashboard_tres/sales_inventory', auth='public', type='json')
+    def sales_inventory(self, region_wise, project_wise, project_region, configuration_ids=False, cluster_ids=False):
+        region_list = []
+        region_booked = []
+        region_available = []
+        if region_wise:
+            regions = request.env['regions'].search([('is_parent', '=', True)], order='name')
+            for region in regions:
+                available_count = request.env['product.template'].search_count(
+                    [('region_id', '=', region.id), ('state', '=', 'free')])
+                booked_count = request.env['product.template'].search_count(
+                    [('region_id', '=', region.id), ('state', '=', 'reserved')])
+                region_list.append(region.name)
+                region_booked.append(booked_count)
+                region_available.append(available_count)
+
+        project_list = []
+        project_booked = []
+        project_available = []
+        if project_wise:
+            region_clause = ''
+            configuration_clause = ''
+            if project_region:
+                region_clause = ' AND b.region_id = %s' % str(project_region)
+            if cluster_ids:
+                region_clause += f' AND b.sub_region_id = {",".join([str(i) for i in cluster_ids])}'
+            if configuration_ids:
+                configuration_clause += f' AND pt.flat_type in ({",".join([str(i) for i in configuration_ids])})'
+            request.env.cr.execute("""
+                SELECT 
+                    b.name, 
+                    SUM(CASE WHEN pt.state = 'free' THEN 1 ELSE 0 END) AS available_count,
+                    SUM(CASE WHEN pt.state = 'reserved' THEN 1 ELSE 0 END) AS reserved_count
+                FROM 
+                    building b 
+                LEFT JOIN 
+                    product_template pt ON pt.building_id = b.id %s
+                WHERE 
+                    b.active = True and pt.active = True
+                    %s
+                GROUP BY 
+                    b.id, b.name
+                ORDER BY 
+                    available_count DESC
+                LIMIT 25;
+            """ % (configuration_clause, region_clause))
+            rows = request.env.cr.dictfetchall()
+            for row in rows:
+                project_list.append(row['name'])
+                project_booked.append(row['reserved_count'])
+                project_available.append(row['available_count'])
+
+        return {
+            'region_booked': region_booked,
+            'region_available': region_available,
+            'regions': region_list,
+            'projects': project_list,
+            'project_booked': project_booked,
+            'project_available': project_available,
+        }
+
+    @http.route('/jupiter_dashboard_tres/get_cluster_select_data', auth='public', type='json')
+    def get_cluster_select_data(self, region_ids=False):
+        cluster_data = ''
+        domain = ''
+        if region_ids:
+            domain = f" and region_id in ({','.join([str(i) for i in region_ids])}) "
+        request.env.cr.execute(f"select id, name from regions where is_parent = False {domain}")
+        rows = request.env.cr.dictfetchall()
+        for row in rows:
+            cluster_data += "<span class='d-flex'><input class='cluster_checkbox mr-2' type='checkbox' checked='checked' cluster_id='" + str(
+                row['id']) + "'/>" + str(row['name']) + "</span>"
+        return cluster_data
+
+    @http.route('/jupiter_dashboard_tres/get_region_select_data', auth='public', type='json')
+    def get_region_select_data(self):
+        region_data = ''
+        request.env.cr.execute("select id, name from regions where is_parent = True")
+        rows = request.env.cr.dictfetchall()
+        for row in rows:
+            region_data += "<option region_id='" + str(row['id']) + "'>" + str(row['name']) + "</option>"
+        return region_data
+
+    @http.route('/jupiter_dashboard_tres/get_last_6_month_cp_booking', auth='public', type='json')
+    def jupiter_dashboard_tres_get_last_6_month_cp_booking(self, region_ids=False, cluster_ids=False):
+        current_date = datetime.now()
+        months = []
+        bookings = []
+        for i in range(5, -1, -1):
+            start_month = current_date.month - i
+            start_year = current_date.year - 1 if start_month <= 0 else current_date.year
+            start_month = (start_month + 12) % 12 or 12
+            start_date = datetime(start_year, start_month, 1)
+            end_month = start_month % 12 + 1
+            end_year = start_year if end_month != 1 else start_year + 1
+            end_date = datetime(end_year, end_month, 1) - timedelta(days=1)
+            months.append(start_date.strftime('%b %y'))
+            start_date = start_date.strftime('%Y-%m-%d')
+            end_date = end_date.strftime('%Y-%m-%d')
+            start_date_formatted = self.get_actual_date(start_date + " 00:00:00")
+            end_date_formatted = self.get_actual_date(end_date + " 23:59:59")
+            domain = [('date', '<=', end_date_formatted), ('date', '>=', start_date_formatted),
+                      ('state', '=', 'confirmed'), ('source_of_booking', '=', 'cp')]
+            if region_ids:
+                domain.append(('building.region_id', 'in', region_ids))
+            if cluster_ids:
+                domain.append(('building.sub_region_id', 'in', cluster_ids))
+            booking_search = request.env['unit.reservation'].search(domain)
+            bookings.append(len(booking_search))
+        return {
+            'months': months,
+            'bookings': bookings,
+        }
+
+    @http.route('/jupiter_dashboard_tres/get_cp_count', auth='public', type='json')
+    def jupiter_dashboard_tres_get_cp_count(self):
+        current_datetime = datetime.now()
+        months = []
+        create_cps_list = []
+        active_cps_list = []
+        for i in range(5, -1, -1):
+            start_month = current_datetime.month - i
+            start_year = current_datetime.year - 1 if start_month <= 0 else current_datetime.year
+            start_month = (start_month + 12) % 12 or 12
+            start_date = datetime(start_year, start_month, 1)
+            end_month = start_month % 12 + 1
+            end_year = start_year if end_month != 1 else start_year + 1
+            end_date = datetime(end_year, end_month, 1) - timedelta(days=1)
+            months.append(start_date.strftime('%b %y'))
+            start_date = start_date.strftime('%Y-%m-%d')
+            end_date = end_date.strftime('%Y-%m-%d')
+            start_date_formatted = self.get_actual_date(start_date + " 00:00:00")
+            end_date_formatted = self.get_actual_date(end_date + " 23:59:59")
+            cps = request.env['res.partner'].search_count(
+                [('is_channel', '=', True), ('create_date', '<=', end_date_formatted),
+                 ('create_date', '>=', start_date_formatted)])
+            bookings = request.env['unit.reservation'].search(
+                [('date', '<=', end_date_formatted), ('date', '>=', start_date_formatted),
+                 ('state', '=', 'confirmed')])
+            cps_active = len(bookings.mapped('cp_id'))
+            create_cps_list.append(cps)
+            active_cps_list.append(cps_active)
+        start_of_today = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_of_today + timedelta(days=1) - timedelta(microseconds=1)
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d %H:%M:%S'))
+        start_of_month = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        start_of_month_formatted = self.get_actual_date(start_of_month.strftime('%Y-%m-%d %H:%M:%S'))
+        fin_year_obj = (
+            date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+        fin_year_start = fin_year_obj.strftime('%Y-%m-%d')
+        fin_year_start_formatted = self.get_actual_date(fin_year_start + ' 00:00:00')
+        financial_year_start_month = 4
+        quarter_month_starts = [4, 7, 10, 1]
+        half_year_starts = [4, 10]
+
+        year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+        quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+        quarter_start = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+        half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+        half_start = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+
+        start_of_quarter_formatted = self.get_actual_date(quarter_start.strftime('%Y-%m-%d %H:%M:%S'))
+        start_of_half_formatted = self.get_actual_date(half_start.strftime('%Y-%m-%d %H:%M:%S'))
+
+        month_cp_domain = [('is_channel', '=', True), ('create_date', '>=', start_of_month_formatted),
+                           ('create_date', '<=', end_formatted)]
+        quarter_cp_domain = [('is_channel', '=', True), ('create_date', '>=', start_of_quarter_formatted),
+                             ('create_date', '<=', end_formatted)]
+        half_cp_domain = [('is_channel', '=', True), ('create_date', '>=', start_of_half_formatted),
+                          ('create_date', '<=', end_formatted)]
+        year_cp_domain = [('is_channel', '=', True), ('create_date', '>=', fin_year_start_formatted),
+                          ('create_date', '<=', end_formatted)]
+
+        month_cps = 0
+        quarter_cps = 0
+        half_cps = 0
+        year_cps = 0
+
+        config_obj = request.env['ir.config_parameter'].sudo()
+        disable = True
+        if config_obj.get_param('jupiter_dashboard_tres.enable_dashboard_new_cp_api'):
+            username = config_obj.get_param('jupiter_dashboard_tres.dashboard_new_cp_api_username')
+            password = config_obj.get_param('jupiter_dashboard_tres.dashboard_new_cp_api_key')
+            url = config_obj.get_param('jupiter_dashboard_tres.dashboard_new_cp_api_url')
+            data = {
+                'params': {
+                    'login': username,
+                    'password': password
+                }
+            }
+            try:
+                headers = {"Content-Type": "application/json; charset=utf-8"}
+                response = requests.post(url, headers=headers, json=data)
+                if response.ok:
+                    rec = json.loads(response.text)
+                    api_data = rec.get('data')
+                    month_cps = api_data.get('ThisMonthActiveCP')
+                    quarter_cps = api_data.get('Finacial_Year_Qurter_Active_CP')
+                    half_cps = api_data.get('Finacial_half_year_CP')
+                    year_cps = api_data.get('Finacial_Yaer_CP')
+                    disable = False
+                else:
+                    raise ValidationError(str(response.text))
+            except:
+                disable = True
+
+        if disable:
+            month_cps = request.env['res.partner'].search_count(month_cp_domain)
+            quarter_cps = request.env['res.partner'].search_count(quarter_cp_domain)
+            half_cps = request.env['res.partner'].search_count(half_cp_domain)
+            year_cps = request.env['res.partner'].search_count(year_cp_domain)
+
+        month_cps_active = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_month_formatted),
+             ('state', '=', 'confirmed')]).mapped('cp_id').filtered(lambda x: x.is_channel)
+
+        quarter_cps_active = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_quarter_formatted),
+             ('state', '=', 'confirmed')]).mapped('cp_id').filtered(lambda x: x.is_channel)
+
+        half_cps_active = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_half_formatted),
+             ('state', '=', 'confirmed')]).mapped('cp_id').filtered(lambda x: x.is_channel)
+
+        year_cps_active = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', fin_year_start_formatted),
+             ('state', '=', 'confirmed')]).mapped('cp_id').filtered(lambda x: x.is_channel)
+        total_cp = request.env['res.partner'].search([('is_channel', '=', True)])
+        total_cp_count = len(total_cp)
+        return {
+            'months': months,
+            'create_cps_list': create_cps_list,
+            'active_cps_list': active_cps_list,
+
+            'month_cps': month_cps,
+            'quarter_cps': quarter_cps,
+            'half_cps': half_cps,
+            'year_cps': year_cps,
+
+            'month_cps_active': len(month_cps_active),
+            'quarter_cps_active': len(quarter_cps_active),
+            'half_cps_active': len(half_cps_active),
+            'year_cps_active': len(year_cps_active),
+
+            'month_cps_dormant': total_cp_count - len(month_cps_active),
+            'quarter_cps_dormant': total_cp_count - len(quarter_cps_active),
+            'half_cps_dormant': total_cp_count - len(half_cps_active),
+            'year_cps_dormant': total_cp_count - len(year_cps_active),
+
+            'month_cp_domain': str(month_cp_domain),
+            'quarter_cp_domain': str(quarter_cp_domain),
+            'half_cp_domain': str(half_cp_domain),
+            'year_cp_domain': str(year_cp_domain),
+
+            'month_cp_active_domain': "[('id', 'in', " + str(month_cps_active.ids) + ")]",
+            'quarter_cp_active_domain': "[('id', 'in', " + str(quarter_cps_active.ids) + ")]",
+            'half_cp_active_domain': "[('id', 'in', " + str(half_cps_active.ids) + ")]",
+            'year_cp_active_domain': "[('id', 'in', " + str(year_cps_active.ids) + ")]",
+
+            'month_cps_dormant_domain': "[('id', 'in', " + str(
+                (total_cp.filtered(lambda x: x not in month_cps_active)).ids) + ")]",
+            'quarter_cps_dormant_domain': "[('id', 'in', " + str(
+                (total_cp.filtered(lambda x: x not in quarter_cps_active)).ids) + ")]",
+            'half_cps_dormant_domain': "[('id', 'in', " + str(
+                (total_cp.filtered(lambda x: x not in half_cps_active)).ids) + ")]",
+            'year_cps_dormant_domain': "[('id', 'in', " + str(
+                (total_cp.filtered(lambda x: x not in year_cps_active)).ids) + ")]",
+        }
+
+    @http.route('/jupiter_dashboard_tres/budget_actual_comparison', auth='public', type='json')
+    def jupiter_dashboard_budget_actual_comparison(self, booking_type='number', registration_type='number',
+                                                   budget_type='number'):
+        current_date = datetime.now()
+        months = []
+        bookings = []
+        registrations = []
+        booking_budgets = []
+        registration_budgets = []
+        for i in range(11, -1, -1):
+            start_month = current_date.month - i
+            start_year = current_date.year - 1 if start_month <= 0 else current_date.year
+            start_month = (start_month + 12) % 12 or 12
+            start_date = datetime(start_year, start_month, 1)
+            end_month = start_month % 12 + 1
+            end_year = start_year if end_month != 1 else start_year + 1
+            end_date = datetime(end_year, end_month, 1) - timedelta(days=1)
+            months.append(start_date.strftime('%b'))
+            budget_month = start_date.strftime("%B %Y")
+            start_date = start_date.strftime('%Y-%m-%d')
+            end_date = end_date.strftime('%Y-%m-%d')
+            start_date_formatted = self.get_actual_date(start_date + " 00:00:00")
+            end_date_formatted = self.get_actual_date(end_date + " 23:59:59")
+            if booking_type:
+                booking_search = request.env['unit.reservation'].search(
+                    [('date', '<=', end_date_formatted), ('date', '>=', start_date_formatted),
+                     ('state', '=', 'confirmed')])
+                if booking_type == 'number':
+                    bookings.append(len(booking_search))
+                else:
+                    bookings.append(sum(booking_search.mapped('flat_cost')) / 100000)
+            if registration_type:
+                registration_search = request.env['project.registration'].search(
+                    [('registration_date', '<=', end_date), ('registration_date', '>=', start_date),
+                     ('state', '=', 'confirmed')])
+                if registration_type == 'number':
+                    registrations.append(len(registration_search))
+                else:
+                    booking_of_registration = request.env['unit.reservation'].search(
+                        [('building_unit', 'in', registration_search.mapped('flat_id').ids),
+                         ('state', '=', 'confirmed')])
+                    registrations.append(sum(booking_of_registration.mapped('flat_cost')) / 100000)
+            if budget_type:
+                budget = request.env['project.target.line'].search([('month', '=', budget_month)])
+                booking_budgets.append(sum(budget.mapped('inventory')))
+                registration_budgets.append(sum(budget.mapped('registration')))
+        return {
+            'months': months,
+            'bookings': bookings,
+            'registrations': registrations,
+            'booking_budgets': booking_budgets,
+            'registration_budgets': registration_budgets,
+        }
+
+    @http.route('/jupiter_dashboard_tres/get_project_data', auth='public', type='json')
+    def get_project_data(self, region=False, cluster=False):
+        domain = []
+        # elevate to superuser
+        # env = request.env.sudo()
+        # hr.employee: To get the logged-in employee's details and role.
+        conf = self.user_configuration()
+
+        if conf and conf not in ['no_limit', 'no_conf']:
+            filter_on = conf[3]
+            if filter_on == 'region':
+                domain.append(('region_id', 'in', conf[0]))
+            elif filter_on == 'cluster':
+                domain.append(('sub_region_id', 'in', conf[1]))
+            elif filter_on == 'project':
+                domain.append(('id', 'in', conf[2]))
+
+        if region:
+            domain.append(('region_id', 'in', region))
+        if cluster:
+            domain.append(('sub_region_id', 'in', cluster))
+        projects = request.env['building'].search([('active', '=', True)] + domain, order='name')
+        data = ""
+        colors = ['#14b5ff', '#00d58e', '#8950ff', '#ff50ab', '#eb5b30', '#0d7ea9', '#ff1f1f', '#008755', '#e5ac0a',
+                  '#00ad95']
+        index = 0
+        angle = (360 / len(projects)) if len(projects) != 0 else 0
+        degree = 0
+        for project in projects:
+            degree += angle
+            data += f"""
+                <div class="col-4 px-0">
+                    <div class="project-blocks selectable-block active" project_id="{project.id}">
+                        {project.name}
+                    </div>
+                </div>
+            """
+            if index == len(colors) - 1:
+                index = 0
+            else:
+                index += 1
+        return data
+
+    @http.route('/jupiter_dashboard_tres/get_cluster_data', auth='public', type='json')
+    def get_cluster_data(self, region=False):
+        domain = []
+        conf = self.user_configuration()
+
+        if conf and conf not in ['no_limit', 'no_conf']:
+            filter_on = conf[3]
+            if filter_on == 'region':
+                domain.append(('region_id', 'in', conf[0]))
+            elif filter_on == 'cluster':
+                domain.append(('id', 'in', conf[1]))
+            # elif filter_on == 'project':
+            #     domain.append(('id', 'in', conf[2]))
+
+        if region:
+            domain.append(('region_id', 'in', region))  # Optional: Add region filter
+
+        clusters = request.env['regions'].search([('is_parent', '=', False)] + domain, order='name')
+        data = ""
+        colors = ['#14b5ff', '#00d58e', '#8950ff', '#ff50ab', '#eb5b30', '#0d7ea9', '#ff1f1f', '#008755', '#e5ac0a',
+                  '#00ad95']
+        index = 0
+        angle = (360 / len(clusters)) if len(clusters) != 0 else 0
+        degree = 0
+        for cluster in clusters:
+            degree += angle
+            data += f"""
+                <div class="col-4 px-0">
+                    <div class="cluster-blocks selectable-block active" cluster_id="{cluster.id}">
+                        {cluster.name}
+                    </div>
+                </div>
+            """
+            if index == len(colors) - 1:
+                index = 0
+            else:
+                index += 1
+        return data
+
+    @http.route('/jupiter_dashboard_tres/get_region_data', auth='public', type='json')
+    def get_region_data(self):
+        # Elevate the entire env to superuser
+        # env = request.env.sudo()
+        # Get the logged-in employee
+        # employee = request.env['hr.employee'].search([('user_id', '=', request.env.user.id)], limit=1)
+
+        conf = self.user_configuration()
+        domain = []  # Default condition for parent regions
+
+        if conf and conf not in ['no_limit', 'no_conf']:
+            filter_on = conf[3]
+            if filter_on == 'region':
+                domain.append(('id', 'in', conf[0]))
+            # elif filter_on == 'cluster':
+            #     domain.append(('sub_region_id', 'in', conf[1]))
+            # elif filter_on == 'project':
+            #     domain.append(('id', 'in', conf[2]))
+
+        # Fetch the filtered regions based on the domain
+        regions = request.env['regions'].search([('is_parent', '=', True)] + domain, order='name')
+
+        data = ""
+        colors = ['#14b5ff', '#00d58e', '#8950ff', '#ff50ab', '#eb5b30', '#0d7ea9', '#ff1f1f', '#008755', '#e5ac0a',
+                  '#00ad95']
+        index = 0
+        angle = (360 / len(regions)) if len(regions) != 0 else 0
+        degree = 0
+        for region in regions:
+            degree += angle
+            data += f"""
+                <div class="col-4 px-0">
+                    <div class="region-blocks selectable-block active" region_id="{region.id}">
+                        {region.name}
+                    </div>
+                </div>
+            """
+            if index == len(colors) - 1:
+                index = 0
+            else:
+                index += 1
+        return data
+
+    # User based custamization in dashboard project configuration
+    @http.route('/jupiter_dashboard_tres/get_project_configuration_data', auth='public', type='json')
+    def get_project_configuration_data(self):
+        # env = request.env.sudo()
+        region = cluster = project = True
+        employee = request.env['hr.employee'].search([('user_id', '=', request.env.user.id)], limit=1)
+        if request.env.user.has_group('project_transactions.view_all_projects'):
+            region = True
+            cluster = True
+            project = True
+            return [region, cluster, project]
+        if employee and employee.role:
+            configuration = request.env['dashboard.configuration'].search([('role', '=', employee.role)], limit=1)
+            if configuration:
+                region = configuration.region
+                cluster = configuration.cluster
+                project = configuration.project
+        return [region, cluster, project]
+
+    #             graph 2 region dashboard iii
+    @http.route('/jupiter_dashboard_tres/get_region_data2', auth='public', type='json')
+    def get_region_data2(self):
+        conf = self.user_configuration()
+        domain = []  # Default condition for parent regions
+
+        if conf and conf not in ['no_limit', 'no_conf']:
+            filter_on = conf[3]
+            if filter_on == 'region':
+                domain.append(('id', 'in', conf[0]))
+            # elif filter_on == 'cluster':
+            #     domain.append(('sub_region_id', 'in', conf[1]))
+            # elif filter_on == 'project':
+            #     domain.append(('id', 'in', conf[2]))
+
+        # Fetch the filtered regions based on the domain
+        regions = request.env['regions'].search([('is_parent', '=', True)] + domain, order='name')
+
+        data = ""
+        colors = ['#14b5ff', '#00d58e', '#8950ff', '#ff50ab', '#eb5b30', '#0d7ea9', '#ff1f1f', '#008755', '#e5ac0a',
+                  '#00ad95']
+        index = 0
+        angle = (360 / len(regions)) if len(regions) != 0 else 0
+        degree = 0
+        for region in regions:
+            degree += angle
+            data += f"""
+                <div class="col-4 px-0">
+                    <div class="region-blocks2 selectable-block2 active" region_id="{region.id}">
+                        {region.name}
+                    </div>
+                </div>
+            """
+
+            if index == len(colors) - 1:
+                index = 0
+            else:
+                index += 1
+        return data
+
+    @http.route('/jupiter_dashboard_tres/bookings_registrations_region_wise', auth='public', type='json')
+    def bookings_registrations_region_wise(self, frequency='today', region_ids=False, count_or_value='count',
+                                           region_or_cluster='region', parent_region=False, project_ids=False,
+                                           custom_start=False, custom_end=False):
+
+        conf = self.user_configuration()
+        print('conf', conf)
+        if conf and conf not in ['no_limit', 'no_conf']:
+            filter_on = conf[3]
+            if filter_on == 'region':
+                if region_or_cluster =='region' and not region_ids:
+                    region_ids = conf[0]
+
+                if region_or_cluster == 'cluster':
+                    parent_region = conf[0]
+                    if not region_ids:
+                        region_ids = conf[1]
+
+                if region_or_cluster == 'project':
+                    parent_region = conf[0]
+                    region_ids = conf[1]
+                    if not project_ids:
+                        project_ids = conf[2]
+            # ② Cluster-level filtering
+            elif filter_on == 'cluster':
+                if region_or_cluster == 'region' and not region_ids:
+                    region_ids = conf[0]
+
+                if region_or_cluster == 'cluster':
+                    parent_region = conf[0]
+                    if not region_ids:
+                        region_ids = conf[1]
+
+                if region_or_cluster == 'project':
+                    parent_region = conf[0]
+                    region_ids = conf[1]
+                    if not project_ids:
+                        project_ids = conf[2]
+            elif filter_on == 'project':
+                if region_or_cluster == 'region' and not region_ids:
+                    region_ids = conf[0]
+
+                if region_or_cluster == 'cluster':
+                    parent_region = conf[0]
+                    if not region_ids:
+                        region_ids = conf[1]
+
+                if region_or_cluster == 'project':
+                    parent_region = conf[0]
+                    # region_ids = conf[1]
+                    if not project_ids:
+                        project_ids = conf[2]
+
+        series = [
+            {
+                'name': 'Gross',
+                'type': 'column',
+                'data': []
+            },
+            {
+                'name': 'Cancelled',
+                'type': 'column',
+                'data': []
+            },
+            {
+                'name': 'Net',
+                'type': 'column',
+                'data': []
+            },
+            {
+                'name': 'Registration',
+                'type': 'line',
+                'data': []
+            },
+        ]
+        categories = []
+        current_datetime = datetime.today()
+        start_date = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_date + timedelta(days=1) - timedelta(microseconds=1)
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d %H:%M:%S'))
+        if custom_start and custom_end:
+            start_formatted = self.get_actual_date(str(custom_start) + ' 00:00:00')
+            end_formatted = self.get_actual_date(str(custom_end) + ' 23:59:59')
+            start_date = datetime.strptime(start_formatted, '%Y-%m-%d %H:%M:%S')
+            end_of_today = datetime.strptime(end_formatted, '%Y-%m-%d %H:%M:%S')
+        elif frequency == 'today':
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'week':
+            start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+            start_date = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'month':
+            start_date = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'quarter':
+            financial_year_start_month = 4
+            quarter_month_starts = [4, 7, 10, 1]
+
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+            start_date = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+            next_quarter_index = (quarter_index + 1) % 4
+            quarter_end = datetime(current_datetime.year + year_offset, quarter_month_starts[next_quarter_index],
+                                   1) - timedelta(days=1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'half':
+            financial_year_start_month = 4
+            half_year_starts = [4, 10]
+            year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+            half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+            start_date = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+            start_formatted = self.get_actual_date(start_date.strftime('%Y-%m-%d %H:%M:%S'))
+        elif frequency == 'year':
+            fin_year_obj = (
+                date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+            start_date = fin_year_obj.strftime('%Y-%m-%d')
+            fin_year_end = date.today().strftime('%Y-%m-%d')
+            start_formatted = self.get_actual_date(start_date + ' 00:00:00')
+
+        domain = []
+
+        if conf and conf not in ['no_limit', 'no_conf']:
+            if filter_on == 'region':
+                if region_or_cluster == 'region' and not region_ids:
+                    domain.append(('id', 'in', []))
+
+                if region_or_cluster == 'cluster' and not region_ids:
+                    domain.append(('id', 'in', []))
+
+                if region_or_cluster == 'project' and not project_ids:
+                    domain.append(('id', 'in', []))
+
+            if filter_on == 'cluster':
+                if region_or_cluster == 'region' and not region_ids:
+                    domain.append(('id', 'in', []))
+
+                if region_or_cluster == 'cluster' and not region_ids:
+                    domain.append(('id', 'in', []))
+
+                if region_or_cluster == 'project' and not project_ids:
+                    domain.append(('id', 'in', []))
+
+            if filter_on == 'project':
+                if region_or_cluster == 'region' and not region_ids:
+                    domain.append(('id', 'in', []))
+
+                if region_or_cluster == 'cluster' and not region_ids:
+                    domain.append(('id', 'in', []))
+
+                if region_or_cluster == 'project' and not project_ids:
+                    domain.append(('id', 'in', []))
+
+        if region_or_cluster == 'project':
+            # domain = []
+            if project_ids:
+                domain.append(('id', 'in', project_ids))
+            if region_ids:
+                domain.append(('sub_region_id', 'in', region_ids))
+            if parent_region:
+                domain.append(('region_id', 'in', parent_region))
+            regions = request.env['building'].search(domain, order='name')
+        else:
+            if region_or_cluster == 'region':
+                domain.append(('is_parent', '=', True))
+            else:
+                domain.append(('is_parent', '=', False))
+                if parent_region:
+                    domain.append(('region_id', 'in', parent_region))
+            if region_ids:
+                domain.append(('id', 'in', region_ids))
+            regions = request.env['regions'].search(domain, order='name')
+        project_values = {
+            'gross': {},
+            'cancelled': {},
+            'net': {},
+            'registration': {}
+        }
+        for region in regions:
+            categories.append(region.name)
+            region_string = 'region_id' if region_or_cluster == 'region' else 'sub_region_id' if region_or_cluster == 'cluster' else 'id'
+            booking_confirmed = request.env['unit.reservation'].search(
+                [('date', '<=', end_formatted), ('date', '>=', start_formatted),
+                 ('state', 'in', ('confirmed', 'canceled')), (f'building.{region_string}', '=', region.id)])
+            booking_cancelled = request.env['unit.reservation'].search(
+                [('cancellation_date', '<=', end_of_today), ('cancellation_date', '>=', start_date),
+                 ('state', '=', 'canceled'), (f'building.{region_string}', '=', region.id)])
+            registration = request.env['project.registration'].search(
+                [('registration_date', '<=', end_of_today), ('registration_date', '>=', start_date),
+                 ('state', '=', 'confirmed'), (f'project_id.{region_string}', '=', region.id)])
+            if count_or_value == 'count':
+                registration_value = len(registration)
+                booking_gross_value = len(booking_confirmed)
+                booking_cancelled_value = len(booking_cancelled)
+                booking_value = booking_gross_value - booking_cancelled_value
+            else:
+                booking_of_registrations = request.env['unit.reservation'].search(
+                    [('building_unit', 'in', registration.mapped('flat_id').ids),
+                     ('state', '=', 'confirmed')])
+                registration_value = round(sum(booking_of_registrations.mapped('flat_cost')) / 100000, 2)
+                booking_gross_value = round(sum(booking_confirmed.mapped('flat_cost')) / 100000, 2)
+                booking_cancelled_value = round(sum(booking_cancelled.mapped('flat_cost')) / 100000, 2)
+                booking_value = round(booking_gross_value - booking_cancelled_value, 2)
+                booking_value = round(booking_value, 2)
+                booking_cancelled_value = round(booking_cancelled_value, 2)
+            series[0]['data'].append(booking_gross_value)
+            series[1]['data'].append(booking_cancelled_value)
+            series[2]['data'].append(booking_value)
+            series[3]['data'].append(registration_value)
+            if region_or_cluster == 'project':
+                project_values['gross'][region.name] = booking_gross_value
+                project_values['cancelled'][region.name] = booking_cancelled_value
+                project_values['net'][region.name] = booking_value
+                project_values['registration'][region.name] = registration_value
+        if region_or_cluster == 'project':
+            def get_top_10_sorted(dictionary):
+                sorted_items = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
+                top_10_items = sorted_items[:10]
+                categories = [item[0] for item in top_10_items]
+                values = [item[1] for item in top_10_items]
+                return {'categories': categories, 'values': values}
+
+            project_values['gross'] = get_top_10_sorted(project_values['gross'])
+            project_values['cancelled'] = get_top_10_sorted(project_values['cancelled'])
+            project_values['net'] = get_top_10_sorted(project_values['net'])
+            project_values['registration'] = get_top_10_sorted(project_values['registration'])
+        return [series, categories, project_values]
+
+    # Graph 2 Fetching Data and Returning It via JSON dashboard iii
+    @http.route('/jupiter_dashboard_tres/bookings_registrations_region_wise2', auth='public', type='json')
+    def bookings_registrations_region_wise2(self, frequency='today', region_ids=False, count_or_value='count',
+                                            region_or_cluster='region', parent_region=False, project_ids=False,
+                                            custom_start=False, custom_end=False):
+        series = [
+            {
+                'name': 'Booking',
+                'type': 'column',
+                'data': []
+            },
+            {
+                'name': 'Cancellation',
+                'type': 'column',
+                'data': []
+            },
+            {
+                'name': 'Net',
+                'type': 'column',
+                'data': []
+            },
+            {
+                'name': 'Registration',
+                'type': 'column',
+                'data': []
+            }
+        ]
+        categories = []  # X-axis labels (months)
+        current_datetime = datetime.today()
+        current_datetime2 = datetime.utcnow()
+
+        # start_date = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        region_string = 'region_id'
+
+        # Loop through the last 6 months and fetch the data for each month
+        for i in range(6):
+            # Calculate the first day of the month
+            first_day_of_month = current_datetime.replace(day=1) - relativedelta(months=i)
+            first_day_of_month2 = current_datetime2.replace(day=1) - relativedelta(months=i)
+            # first_day_of_month2 = self.get_actual_date(start_date + ' 00:00:00')
+            last_day_of_month = first_day_of_month.replace(
+                day=calendar.monthrange(first_day_of_month.year, first_day_of_month.month)[1])
+
+            # Set start and end of the month
+            start_of_month = first_day_of_month.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_of_month2 = first_day_of_month2.replace(hour=0, minute=0, second=0, microsecond=0)
+            # start_of_month2 = first_day_of_month2.replace(hour=0, minute=0, second=0, microsecond=0)
+            # start_of_month2 = current_datetime.replace(day=1).date()
+            start_of_month_formatted2 = self.get_actual_date(start_of_month2.strftime('%Y-%m-%d 00:00:00'))
+            start_of_month_formatted = self.get_actual_date(start_of_month.strftime('%Y-%m-%d 00:00:00'))
+            end_of_month = last_day_of_month.replace(hour=23, minute=59, second=59)
+            end_of_month_utc_str = self.get_actual_date(end_of_month.strftime('%Y-%m-%d %H:%M:%S'))
+
+            categories.append(start_of_month.strftime('%b %Y'))  # e.g., 'Jan 2024'
+
+            # Fetch cancelled bookings within this month
+            booking_cancelled = request.env['unit.reservation'].search(
+                [('cancellation_date', '<=', end_of_month), ('cancellation_date', '>=', start_of_month),
+                 ('state', '=', 'canceled'), (f'building.{region_string}', 'in', region_ids)]
+            )
+            # Fetch confirmed bookings within this month (only confirmed state)
+            booking_confirmed = request.env['unit.reservation'].search(
+                [('date', '<=', end_of_month_utc_str), ('date', '>=', start_of_month_formatted2),
+                 ('state', 'in', ('confirmed', 'canceled')), (f'building.{region_string}', 'in', region_ids)]
+            )
+            # Fetch confirmed registrations within this month
+            registration = request.env['project.registration'].search(
+                [('registration_date', '<=', end_of_month), ('registration_date', '>=', start_of_month),
+                 ('state', '=', 'confirmed'), (f'project_id.{region_string}', 'in', region_ids)]
+            )
+
+            if count_or_value == 'count':
+                # Count the records
+                booking_cancelled_value = len(booking_cancelled)
+                registration_value = len(registration)
+                booking_confirmed_value = len(booking_confirmed)
+            else:
+                # For cancellations, sum the flat_cost of all canceled bookings
+                booking_cancelled_value = round(sum(booking_cancelled.mapped('flat_cost')) / 100000, 2)
+                # For confirmed bookings, sum the flat_cost of all confirmed bookings
+                booking_confirmed_value = round(sum(booking_confirmed.mapped('flat_cost')) / 100000, 2)
+                booking_of_registrations = request.env['unit.reservation'].search(
+                    [('building_unit', 'in', registration.mapped('flat_id').ids),
+                     ('state', '=', 'confirmed')])
+                registration_value = round(sum(booking_of_registrations.mapped('flat_cost')) / 100000, 2)
+            net_value = round(booking_confirmed_value - booking_cancelled_value, 2)
+
+            # Append data to the respective series
+            series[0]['data'].append(booking_confirmed_value)  # Bookings (Confirmed)
+            series[1]['data'].append(booking_cancelled_value)  # Cancellations
+            series[2]['data'].append(net_value)  # Net
+            series[3]['data'].append(registration_value)  # Registrations
+
+        return [series, categories]
+
+    @http.route('/jupiter_dashboard_tres/cp_booked_count', auth='public', type='json')
+    def jupiter_dashboard_tres_cp_booked_count(self):
+        current_datetime = datetime.today()
+        start_of_today = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_today = start_of_today + timedelta(days=1) - timedelta(microseconds=1)
+        start_formatted = self.get_actual_date(start_of_today.strftime('%Y-%m-%d 00:00:00'))
+        end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d 23:59:59'))
+        start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+        start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+        start_of_week_formatted = self.get_actual_date(start_of_week.strftime('%Y-%m-%d 00:00:00'))
+        start_of_month = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        start_of_month_formatted = self.get_actual_date(start_of_month.strftime('%Y-%m-%d 00:00:00'))
+        fin_year_obj = (
+            date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+        fin_year_start = fin_year_obj.strftime('%Y-%m-%d')
+        fin_year_end = date.today().strftime('%Y-%m-%d')
+        fin_year_start_formatted = self.get_actual_date(fin_year_start + ' 00:00:00')
+        fin_year_end_formatted = self.get_actual_date(fin_year_end + ' 23:59:59')
+
+        financial_year_start_month = 4
+        quarter_month_starts = [4, 7, 10, 1]
+        half_year_starts = [4, 10]
+
+        year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+        quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+        quarter_start = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+        half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+        half_start = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+
+        start_of_quarter_formatted = self.get_actual_date(quarter_start.strftime('%Y-%m-%d 00:00:00'))
+        start_of_half_formatted = self.get_actual_date(half_start.strftime('%Y-%m-%d 00:00:00'))
+        booking_region_filter = []
+        quarter_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_quarter_formatted),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+
+        half_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_half_formatted),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+
+        year_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', fin_year_end_formatted), ('date', '>=', fin_year_start_formatted),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+
+        today_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_formatted),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+
+        this_week_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_week_formatted),
+             ('date', '>=', start_of_month_formatted),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+
+        this_month_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_month_formatted),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+
+        return {
+            'today_booking_cp_count': len(today_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'week_booking_cp_count': len(this_week_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'month_booking_cp_count': len(this_month_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'year_booking_cp_count': len(year_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'quarter_booking_cp_count': len(quarter_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'half_booking_cp_count': len(half_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+        }
+
+    def user_configuration(self, env=None):
+        # default to superuser env if none passed
+        # env = env or request.env.sudo()
+        region = []
+        cluster = []
+        project = []
+        employee = request.env['hr.employee'].search([('user_id', '=', request.env.user.id)], limit=1)
+        if request.env.user.has_group('project_transactions.view_all_projects'):
+            return 'no_limit'
+        if employee:
+            # Get the dashboard configuration for the employee's role
+            configuration = request.env['dashboard.configuration'].search([('role', '=', employee.role)], limit=1)
+
+            if configuration:
+                limit_dashboard_pt = configuration.limit_dashboard_pt
+
+                # Apply filtering based on the "Limit dashboard project wise" setting
+                if limit_dashboard_pt:
+                    filter_on = ''
+                    # Get the projects assigned to the employee
+                    assigned_projects = employee.project_ids
+                    project = assigned_projects.ids
+                    if configuration.region:
+                        filter_on = 'region'
+                    elif configuration.cluster:
+                        filter_on = 'cluster'
+                    elif configuration.project:
+                        filter_on = 'project'
+                    if assigned_projects:
+                        region_ids = assigned_projects.mapped('region_id')
+                        region = region_ids.ids
+
+                        cluster_ids = assigned_projects.mapped('sub_region_id')
+                        cluster = cluster_ids.ids
+
+                    return [region, cluster, project, filter_on]
+                else:
+                    return "no_limit"
+        return 'no_conf'
+
+    @http.route('/jupiter_dashboard_tres/bookings_registrations', auth='public', type='json')
+    def jupiter_dashboard_tres_bookings_registrations(self, region=False, cluster=False, project=False):
+        # Refresh data at first time loading
+        conf = self.user_configuration()
+        # print("CONFIGURATION: %s", conf)
+        if conf and conf not in ['no_limit', 'no_conf']:
+            # region = conf[0]
+            filter_on = conf[3]
+            if filter_on == 'region' and not region:
+                region = conf[0]
+            elif filter_on == 'cluster' and not cluster:
+                cluster = conf[1]
+            elif filter_on == 'project' and not project:
+                project = conf[2]
+
+        currency = request.env.company.currency_id.symbol
+        current_datetime = datetime.today()
+        # start_of_today = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        start_of_today = current_datetime.date()
+        end_of_today = start_of_today + timedelta(days=1) - timedelta(microseconds=1)
+        # start_formatted = self.get_actual_date(start_of_today.strftime('%Y-%m-%d 00:00:00'))
+        start_formatted2 = self.get_actual_date(start_of_today.strftime('%Y-%m-%d 00:00:00'))
+        start_formatted = start_of_today.strftime('%Y-%m-%d 00:00:00')
+        # end_formatted = self.get_actual_date(end_of_today.strftime('%Y-%m-%d 23:59:59'))
+        end_formatted = end_of_today.strftime('%Y-%m-%d 23:59:59')
+        start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+        # start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+        start_of_week = start_of_week.date()
+        # start_of_week_formatted = self.get_actual_date(start_of_week.strftime('%Y-%m-%d 00:00:00'))
+        start_of_week_formatted2 = self.get_actual_date(start_of_week.strftime('%Y-%m-%d 00:00:00'))
+        start_of_week_formatted = start_of_week.strftime('%Y-%m-%d 00:00:00')
+        start_of_month = current_datetime.replace(day=1).date()
+        # start_of_month_formatted = self.get_actual_date(start_of_month.strftime('%Y-%m-%d 00:00:00'))
+        start_of_month_formatted2 = self.get_actual_date(start_of_month.strftime('%Y-%m-%d 00:00:00'))
+        start_of_month_formatted = start_of_month.strftime('%Y-%m-%d 00:00:00')
+        fin_year_obj = (
+            date(date.today().year, 4, 1) if date.today().month >= 4 else date(date.today().year - 1, 4, 1))
+        fin_year_start = fin_year_obj.strftime('%Y-%m-%d')
+        fin_year_end = date.today().strftime('%Y-%m-%d')
+        # fin_year_start_formatted = self.get_actual_date(fin_year_start + ' 00:00:00')
+        fin_year_start_formatted2 = self.get_actual_date(fin_year_start + ' 00:00:00')
+        fin_year_start_formatted = fin_year_start + ' 00:00:00'
+        # fin_year_end_formatted = self.get_actual_date(fin_year_end + ' 23:59:59')
+        fin_year_end_formatted = fin_year_end + ' 23:59:59'
+
+        financial_year_start_month = 4
+        quarter_month_starts = [4, 7, 10, 1]
+        half_year_starts = [4, 10]
+
+        year_offset = 0 if current_datetime.month >= financial_year_start_month else -1
+        quarter_index = (current_datetime.month - financial_year_start_month) // 3 % 4
+        quarter_start = datetime(current_datetime.year + year_offset, quarter_month_starts[quarter_index], 1)
+        next_quarter_index = (quarter_index + 1) % 4
+        quarter_end = datetime(current_datetime.year + year_offset, quarter_month_starts[next_quarter_index],
+                               1) - timedelta(days=1)
+
+        # Adjust the year for the quarter end correctly
+        if next_quarter_index == 0:  # If the next quarter is April (the first month of the financial year)
+            quarter_end = datetime(current_datetime.year + year_offset + 1, quarter_month_starts[next_quarter_index],
+                                   1) - timedelta(days=1)
+        if quarter_month_starts[next_quarter_index] == 1:  # If the next quarter is January
+            quarter_end = datetime(current_datetime.year + year_offset + 1, quarter_month_starts[next_quarter_index],
+                                   1) - timedelta(days=1)
+        half_year_index = (current_datetime.month - financial_year_start_month) // 6 % 2
+        half_start = datetime(current_datetime.year + year_offset, half_year_starts[half_year_index], 1)
+        if current_datetime.month >= half_year_starts[half_year_index]:
+            half_end = datetime(current_datetime.year + year_offset + 1, half_year_starts[(half_year_index + 1) % 2],
+                                1) - timedelta(days=1)
+        else:
+            half_end = datetime(current_datetime.year + year_offset, half_year_starts[(half_year_index + 1) % 2],
+                                1) - timedelta(days=1)
+
+        # start_of_quarter_formatted = self.get_actual_date(quarter_start.strftime('%Y-%m-%d 00:00:00'))
+        start_of_quarter_formatted2 = self.get_actual_date(quarter_start.strftime('%Y-%m-%d 00:00:00'))
+        start_of_quarter_formatted = quarter_start.strftime('%Y-%m-%d 00:00:00')
+        # start_of_half_formatted = self.get_actual_date(half_start.strftime('%Y-%m-%d 00:00:00'))
+        start_of_half_formatted2 = self.get_actual_date(half_start.strftime('%Y-%m-%d 00:00:00'))
+        start_of_half_formatted = half_start.strftime('%Y-%m-%d 00:00:00')
+        # not loading at first time
+
+        if conf and conf not in ['no_limit', 'no_conf']:
+            booking_region_filter = [('building', 'in', [])]
+            registration_region_filter = [('project_id', 'in', [])]
+        else:
+            booking_region_filter = []
+            registration_region_filter = []
+
+        if region:
+            booking_region_filter = [('building.region_id', 'in', region)]
+            registration_region_filter = [('project_id.region_id', 'in', region)]
+        if cluster:
+            booking_region_filter = [('building.sub_region_id', 'in', cluster)]
+            registration_region_filter = [('project_id.sub_region_id', 'in', cluster)]
+        if project:
+            booking_region_filter = [('building', 'in', project)]
+            registration_region_filter = [('project_id', 'in', project)]
+        quarter_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_quarter_formatted2),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+        quarter_booking_cancelled = request.env['unit.reservation'].search(
+            [('cancellation_date', '<=', end_formatted), ('cancellation_date', '>=', quarter_start),
+             ('state', '=', 'canceled')] + booking_region_filter)
+        quarter_registration = request.env['project.registration'].search(
+            [('registration_date', '<=', current_datetime), ('registration_date', '>=', quarter_start),
+             ('state', '=', 'confirmed')] + registration_region_filter)
+
+        quarter_booking_of_registrations = request.env['unit.reservation'].search(
+            [('building_unit', 'in', quarter_registration.mapped('flat_id').ids),
+             ('state', '=', 'confirmed')] + booking_region_filter)
+        quarter_registration_value = sum(quarter_booking_of_registrations.mapped('flat_cost')) / 100000
+        quarter_booking_value = sum(quarter_booking_confirmed.mapped('flat_cost')) / 100000
+
+        half_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_half_formatted2),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+        half_booking_cancelled = request.env['unit.reservation'].search(
+            [('cancellation_date', '<=', end_of_today), ('cancellation_date', '>=', half_start),
+             ('state', '=', 'canceled')] + booking_region_filter)
+        half_registration = request.env['project.registration'].search(
+            [('registration_date', '<=', current_datetime), ('registration_date', '>=', half_start),
+             ('state', '=', 'confirmed')] + registration_region_filter)
+
+        half_booking_of_registrations = request.env['unit.reservation'].search(
+            [('building_unit', 'in', half_registration.mapped('flat_id').ids),
+             ('state', '=', 'confirmed')] + booking_region_filter)
+        half_registration_value = sum(half_booking_of_registrations.mapped('flat_cost')) / 100000
+        half_booking_value = sum(half_booking_confirmed.mapped('flat_cost')) / 100000
+        # year
+        year_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', fin_year_end_formatted), ('date', '>=', fin_year_start_formatted2),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+        year_booking_cancelled = request.env['unit.reservation'].search(
+            [('cancellation_date', '<=', fin_year_end), ('cancellation_date', '>=', fin_year_start),
+             ('state', '=', 'canceled')] + booking_region_filter)
+        year_registration = request.env['project.registration'].search(
+            [('registration_date', '<=', fin_year_end), ('registration_date', '>=', fin_year_start),
+             ('state', '=', 'confirmed')] + registration_region_filter)
+
+        year_booking_of_registrations = request.env['unit.reservation'].search(
+            [('building_unit', 'in', year_registration.mapped('flat_id').ids),
+             ('state', '=', 'confirmed')] + booking_region_filter)
+        year_registration_value = sum(year_booking_of_registrations.mapped('flat_cost')) / 100000
+        year_booking_value = sum(year_booking_confirmed.mapped('flat_cost')) / 100000
+
+        today_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_formatted2),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+        today_booking_cancelled = request.env['unit.reservation'].search(
+            [('cancellation_date', '<=', end_of_today), ('cancellation_date', '>=', end_of_today),
+             ('state', '=', 'canceled')] + booking_region_filter)
+
+        this_week_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_week_formatted2),
+             ('date', '>=', start_of_month_formatted2),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+        this_week_booking_cancelled = request.env['unit.reservation'].search(
+            [('cancellation_date', '<=', end_of_today), ('cancellation_date', '>=', start_of_week),
+             ('cancellation_date', '>=', start_of_month), ('state', '=', 'canceled')] + booking_region_filter)
+
+        this_month_booking_confirmed = request.env['unit.reservation'].search(
+            [('date', '<=', end_formatted), ('date', '>=', start_of_month_formatted2),
+             ('state', 'in', ('confirmed', 'canceled'))] + booking_region_filter)
+        this_month_booking_cancelled = request.env['unit.reservation'].search(
+            [('cancellation_date', '<=', end_of_today), ('cancellation_date', '>=', start_of_month),
+             ('state', '=', 'canceled')] + booking_region_filter)
+
+        today_registration = request.env['project.registration'].search(
+            [('registration_date', '=', current_datetime.date()),
+             ('state', '=', 'confirmed')] + registration_region_filter)
+        today_booking_of_registrations = request.env['unit.reservation'].search(
+            [('building_unit', 'in', today_registration.mapped('flat_id').ids),
+             ('state', '=', 'confirmed')] + booking_region_filter)
+        today_registration_value = sum(today_booking_of_registrations.mapped('flat_cost')) / 100000
+        today_booking_value = sum(today_booking_confirmed.mapped('flat_cost')) / 100000
+
+        this_week_registration = request.env['project.registration'].search(
+            [('registration_date', '<=', end_of_today), ('registration_date', '>=', start_of_week),
+             ('state', '=', 'confirmed')] + registration_region_filter)
+        this_week_booking_of_registrations = request.env['unit.reservation'].search(
+            [('building_unit', 'in', this_week_registration.mapped('flat_id').ids),
+             ('state', '=', 'confirmed')] + booking_region_filter)
+        this_week_registration_value = sum(this_week_booking_of_registrations.mapped('flat_cost')) / 100000
+        this_week_booking_value = sum(this_week_booking_confirmed.mapped('flat_cost')) / 100000
+
+        this_month_registration = request.env['project.registration'].search(
+            [('registration_date', '<=', end_of_today), ('registration_date', '>=', start_of_month),
+             ('state', '=', 'confirmed')] + registration_region_filter)
+        this_month_booking_of_registrations = request.env['unit.reservation'].search(
+            [('building_unit', 'in', this_month_registration.mapped('flat_id').ids),
+             ('state', '=', 'confirmed')] + booking_region_filter)
+        this_month_registration_value = sum(this_month_booking_of_registrations.mapped('flat_cost')) / 100000
+        this_month_booking_value = sum(this_month_booking_confirmed.mapped('flat_cost')) / 100000
+
+        today_booking_cancelled_value = sum(today_booking_cancelled.mapped('flat_cost')) / 100000
+        week_booking_cancelled_value = sum(this_week_booking_cancelled.mapped('flat_cost')) / 100000
+        month_booking_cancelled_value = sum(this_month_booking_cancelled.mapped('flat_cost')) / 100000
+        year_booking_cancelled_value = sum(year_booking_cancelled.mapped('flat_cost')) / 100000
+        quarter_booking_cancelled_value = sum(quarter_booking_cancelled.mapped('flat_cost')) / 100000
+        half_booking_cancelled_value = sum(half_booking_cancelled.mapped('flat_cost')) / 100000
+
+        today_booking_attrs = {
+            "date_from": current_datetime.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+            "state": 'both',
+            'consolidate': 'False',
+            'project_filter': 'all'
+        }
+        week_booking_attrs = {
+            "date_from": start_of_week.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+            "state": 'both',
+            'consolidate': 'False',
+            'project_filter': 'all'
+        }
+        month_booking_attrs = {
+            "date_from": start_of_month.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+            "state": 'both',
+            'consolidate': 'False',
+            'project_filter': 'all'
+        }
+        year_booking_attrs = {
+            "date_from": fin_year_start,
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+            "state": 'both',
+            'consolidate': 'False',
+            'project_filter': 'all'
+        }
+        quarter_booking_attrs = {
+            "date_from": quarter_start.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+            "state": 'both',
+            'consolidate': 'False',
+            'project_filter': 'all'
+        }
+        half_booking_attrs = {
+            "date_from": half_start.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+            "state": 'both',
+            'consolidate': 'False',
+            'project_filter': 'all'
+        }
+        today_registration_attrs = {
+            "date_from": current_datetime.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+        }
+        week_registration_attrs = {
+            "date_from": start_of_week.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+        }
+        month_registration_attrs = {
+            "date_from": start_of_month.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+        }
+        year_registration_attrs = {
+            "date_from": fin_year_start,
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+        }
+        quarter_registration_attrs = {
+            "date_from": quarter_start.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+        }
+        half_registration_attrs = {
+            "date_from": half_start.strftime('%Y-%m-%d'),
+            "date_to": current_datetime.strftime('%Y-%m-%d'),
+        }
+
+        today_booking_cp_domain = [
+            ('source_of_booking', '=', 'cp'), ('date', '<=', end_formatted),
+            ('date', '>=', start_formatted), ('state', 'in', ('confirmed', 'canceled'))
+        ]
+        week_booking_cp_domain = [
+            ('source_of_booking', '=', 'cp'), ('date', '<=', end_formatted),
+            ('date', '>=', start_of_week_formatted), ('state', 'in', ('confirmed', 'canceled'))
+        ]
+        month_booking_cp_domain = [
+            ('source_of_booking', '=', 'cp'), ('date', '<=', end_formatted),
+            ('date', '>=', start_of_month_formatted), ('state', 'in', ('confirmed', 'canceled'))
+        ]
+        quarter_booking_cp_domain = [
+            ('source_of_booking', '=', 'cp'), ('date', '<=', end_formatted),
+            ('date', '>=', start_of_quarter_formatted), ('state', 'in', ('confirmed', 'canceled'))
+        ]
+        half_booking_cp_domain = [
+            ('source_of_booking', '=', 'cp'), ('date', '<=', end_formatted),
+            ('date', '>=', start_of_half_formatted), ('state', 'in', ('confirmed', 'canceled'))
+        ]
+        year_booking_cp_domain = [
+            ('source_of_booking', '=', 'cp'), ('date', '<=', end_formatted),
+            ('date', '>=', fin_year_start_formatted), ('state', 'in', ('confirmed', 'canceled'))
+        ]
+        return {
+
+            'today_booking_gross_count': len(today_booking_confirmed),
+            'week_booking_gross_count': len(this_week_booking_confirmed),
+            'month_booking_gross_count': len(this_month_booking_confirmed),
+            'year_booking_gross_count': len(year_booking_confirmed),
+            'quarter_booking_gross_count': len(quarter_booking_confirmed),
+            'half_booking_gross_count': len(half_booking_confirmed),
+
+            'today_booking_gross_value': currency + "{:,.2f}".format(today_booking_value),
+            'week_booking_gross_value': currency + "{:,.2f}".format(this_week_booking_value),
+            'month_booking_gross_value': currency + "{:,.2f}".format(this_month_booking_value),
+            'year_booking_gross_value': currency + "{:,.2f}".format(year_booking_value),
+            'quarter_booking_gross_value': currency + "{:,.2f}".format(quarter_booking_value),
+            'half_booking_gross_value': currency + "{:,.2f}".format(half_booking_value),
+
+            'today_registration_count': len(today_registration),
+            'week_registration_count': len(this_week_registration),
+            'month_registration_count': len(this_month_registration),
+            'year_registration_count': len(year_registration),
+            'quarter_registration_count': len(quarter_registration),
+            'half_registration_count': len(half_registration),
+
+            'today_registration_value': currency + "{:,.2f}".format(today_registration_value),
+            'week_registration_value': currency + "{:,.2f}".format(this_week_registration_value),
+            'month_registration_value': currency + "{:,.2f}".format(this_month_registration_value),
+            'year_registration_value': currency + "{:,.2f}".format(year_registration_value),
+            'quarter_registration_value': currency + "{:,.2f}".format(quarter_registration_value),
+            'half_registration_value': currency + "{:,.2f}".format(half_registration_value),
+
+            'today_booking_cancelled_count': len(today_booking_cancelled),
+            'week_booking_cancelled_count': len(this_week_booking_cancelled),
+            'month_booking_cancelled_count': len(this_month_booking_cancelled),
+            'year_booking_cancelled_count': len(year_booking_cancelled),
+            'quarter_booking_cancelled_count': len(quarter_booking_cancelled),
+            'half_booking_cancelled_count': len(half_booking_cancelled),
+
+            'today_booking_cancelled_value': currency + "{:,.2f}".format(today_booking_cancelled_value),
+            'week_booking_cancelled_value': currency + "{:,.2f}".format(week_booking_cancelled_value),
+            'month_booking_cancelled_value': currency + "{:,.2f}".format(month_booking_cancelled_value),
+            'year_booking_cancelled_value': currency + "{:,.2f}".format(year_booking_cancelled_value),
+            'quarter_booking_cancelled_value': currency + "{:,.2f}".format(quarter_booking_cancelled_value),
+            'half_booking_cancelled_value': currency + "{:,.2f}".format(half_booking_cancelled_value),
+
+            'today_booking_count': len(today_booking_confirmed) - len(today_booking_cancelled),
+            'week_booking_count': len(this_week_booking_confirmed) - len(this_week_booking_cancelled),
+            'month_booking_count': len(this_month_booking_confirmed) - len(this_month_booking_cancelled),
+            'year_booking_count': len(year_booking_confirmed) - len(year_booking_cancelled),
+            'quarter_booking_count': len(quarter_booking_confirmed) - len(quarter_booking_cancelled),
+            'half_booking_count': len(half_booking_confirmed) - len(half_booking_cancelled),
+
+            'today_booking_value': currency + "{:,.2f}".format(today_booking_value - today_booking_cancelled_value),
+            'week_booking_value': currency + "{:,.2f}".format(this_week_booking_value - week_booking_cancelled_value),
+            'month_booking_value': currency + "{:,.2f}".format(
+                this_month_booking_value - month_booking_cancelled_value),
+            'year_booking_value': currency + "{:,.2f}".format(year_booking_value - year_booking_cancelled_value),
+            'quarter_booking_value': currency + "{:,.2f}".format(
+                quarter_booking_value - quarter_booking_cancelled_value),
+            'half_booking_value': currency + "{:,.2f}".format(half_booking_value - half_booking_cancelled_value),
+
+            'quarter_label': quarter_start.strftime('%b %y') + '-' + quarter_end.strftime('%b %y'),
+            'half_label': half_start.strftime('%b %y') + '-' + half_end.strftime('%b %y'),
+            'year_label': fin_year_obj.strftime('%Y') + '-' + str(int(fin_year_obj.strftime('%Y')) + 1),
+
+            'today_booking_cp_count': len(today_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'week_booking_cp_count': len(this_week_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'month_booking_cp_count': len(this_month_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'year_booking_cp_count': len(year_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'quarter_booking_cp_count': len(quarter_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+            'half_booking_cp_count': len(half_booking_confirmed.filtered(lambda x: x.source_of_booking == 'cp')),
+
+            'today_average_av': currency + "{:,.2f}".format(today_registration_value / len(
+                today_booking_of_registrations) if today_booking_of_registrations else 0),
+            'week_average_av': currency + "{:,.2f}".format(this_week_registration_value / len(
+                this_week_booking_of_registrations) if this_week_booking_of_registrations else 0),
+            'month_average_av': currency + "{:,.2f}".format(this_month_registration_value / len(
+                this_month_booking_of_registrations) if this_month_booking_of_registrations else 0),
+            'quarter_average_av': currency + "{:,.2f}".format(quarter_registration_value / len(
+                quarter_booking_of_registrations) if quarter_booking_of_registrations else 0),
+            'half_average_av': currency + "{:,.2f}".format(
+                half_registration_value / len(half_booking_of_registrations) if half_booking_of_registrations else 0),
+            'year_average_av': currency + "{:,.2f}".format(
+                year_registration_value / len(year_booking_of_registrations) if year_booking_of_registrations else 0),
+
+            'today_booking_attrs': str(today_booking_attrs),
+            'week_booking_attrs': str(week_booking_attrs),
+            'month_booking_attrs': str(month_booking_attrs),
+            'year_booking_attrs': str(year_booking_attrs),
+            'quarter_booking_attrs': str(quarter_booking_attrs),
+            'half_booking_attrs': str(half_booking_attrs),
+
+            'today_registration_attrs': str(today_registration_attrs),
+            'week_registration_attrs': str(week_registration_attrs),
+            'month_registration_attrs': str(month_registration_attrs),
+            'year_registration_attrs': str(year_registration_attrs),
+            'quarter_registration_attrs': str(quarter_registration_attrs),
+            'half_registration_attrs': str(half_registration_attrs),
+
+            'today_booking_cp_domain': str(today_booking_cp_domain),
+            'week_booking_cp_domain': str(week_booking_cp_domain),
+            'month_booking_cp_domain': str(month_booking_cp_domain),
+            'quarter_booking_cp_domain': str(quarter_booking_cp_domain),
+            'half_booking_cp_domain': str(half_booking_cp_domain),
+            'year_booking_cp_domain': str(year_booking_cp_domain),
+        }

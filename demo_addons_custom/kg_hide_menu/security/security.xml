@@ -1,0 +1,6 @@
+<odoo>
+    <record id="group_hide_menu_toggle" model="res.groups">
+        <field name="name">hide menu</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+</odoo>

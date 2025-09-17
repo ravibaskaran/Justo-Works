@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Expiry Main Menu-->
+        <menuitem id="expiry_main_menu" name="Expiry" parent="purchase_extension.purchase_main"   sequence="2"/>
+
+         <!-- Expiry Replacement Menu  Expiry/Expiry Replacement-->
+        <menuitem id="expiry_replacement_menu" name="Expiry Replacement" parent="expiry_main_menu" action="action_expiry_replacement"  sequence="40"/>
+
+        <!-- Expiry Return Menu Expiry/Expiry Return-->
+        <menuitem id="expiry_return_menu" name="Expiry Return" parent="expiry_main_menu" action="action_expiry_return"  sequence="50"/>
+
+
+    </data>
+</odoo>

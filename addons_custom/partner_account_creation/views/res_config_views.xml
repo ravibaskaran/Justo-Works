@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='account_vendor_bills']" position="after">
+                    <h2 class="">Partner Account Creation</h2>
+                    <div class="app_settings_block">
+                        <div class="row mt16 o_settings_container" id="partner_account_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="partnerAccount">
+                                <div class="o_setting_left_pane">
+                                    <field name="create_partner_account"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="partner_account_settings">
+                                    <label for="create_partner_account"/>
+                                    <div class="text-muted">
+                                        Individual account for partners
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="partnerPayableAccount"
+                                 attrs="{'invisible':[('create_partner_account','=', False)]}">
+                                <div class="o_setting_left_pane">
+                                    <field name="create_payable_account"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="partner_account_settings">
+                                    <label for="create_payable_account"/>
+                                    <div class="text-muted">
+                                        Individual account for vendors
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="partnerReceivableAccount"
+                                 attrs="{'invisible':[('create_partner_account','=', False)]}">
+                                <div class="o_setting_left_pane">
+                                    <field name="create_receivable_account"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="partner_account_settings">
+                                    <label for="create_receivable_account"/>
+                                    <div class="text-muted">
+                                        Individual account for customers
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

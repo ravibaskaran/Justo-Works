@@ -1,0 +1,19 @@
+Documentation - Inventory Fetch API
+-------------------------------
+
+url :   /inventory/fetch_record_details
+methode:  POST
+
+Body(json):
+
+#################################################################
+
+{
+    "params": {
+        "login": "api",
+        "password": "",
+        "project": "",
+        "type": ""
+    }
+}
+#################################################################

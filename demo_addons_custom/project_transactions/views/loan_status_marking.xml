@@ -1,0 +1,151 @@
+<odoo>
+    <record id="loan_status_marking_view_form" model="ir.ui.view">
+        <field name="name">loan_status_marking_view_form</field>
+        <field name="model">loan.status.marking</field>
+        <field name="arch" type="xml">
+            <form string="loan_status_marking_form">
+                <sheet>
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="booking_id" invisible="1"/>
+                        <group>
+                            <field name="project_id"
+                                   options="{'no_open': True, 'no_create_edit': True, 'no_quick_create': True, 'no_create': True}"
+                                   required="1"/>
+                            <field name="flat_id"
+                                   domain="[('is_property', '=', True), ('state', '=', 'reserved'), ('building_id', '=?', project_id), ('booking_id', '=?', booking_id)]"
+                                   options="{'no_open': True, 'no_create_edit': True, 'no_quick_create': True, 'no_create': True}"
+                                   required="1"/>
+                            <field name="developer_id" context="{'default_is_owner': True}"
+                                   options="{'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="customer_id" context="{'default_is_tenant': True}" options="{'no_open': True}"
+                                   required="1"/>
+                            <field name="bank_name"/>
+                            <field name="loan_amount"/>
+                            <field name="status"/>
+                            <field name="is_completed" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="loan_status_marking_view_tree" model="ir.ui.view">
+        <field name="name">loan_status_marking_view_tree</field>
+        <field name="model">loan.status.marking</field>
+        <field name="arch" type="xml">
+            <tree string="loan_status_marking_tree">
+                <field name="project_id"/>
+                <field name="flat_id"/>
+                <field name="developer_id"/>
+                <field name="customer_id"/>
+                <field name="bank_name"/>
+                <field name="loan_amount"/>
+                <field name="is_completed" invisible="1"/>
+                <field name="status" widget="badge" decoration-success="is_completed == True"/>
+            </tree>
+        </field>
+    </record>
+    <record id="loan_status_marking_view_kanban" model="ir.ui.view">
+        <field name="name">loan_status_marking_view_kanban</field>
+        <field name="model">loan.status.marking</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" group_create="0" sample="1">
+                <field name="project_id"/>
+                <field name="flat_id"/>
+                <field name="developer_id"/>
+                <field name="customer_id"/>
+                <field name="bank_name"/>
+                <field name="loan_amount"/>
+                <field name="status"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-12">
+                                    <strong>
+                                        <span>Project:
+                                            <field name="project_id"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>
+                                        <strong>Flat:</strong>
+                                        <br/>
+                                        <field name="flat_id"/>
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <span>
+                                        <strong>Developer:</strong>
+                                        <br/>
+                                        <field name="developer_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Customer:</strong>
+                                    <br/>
+                                    <field name="customer_id"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Bank:</strong>
+                                    <br/>
+                                    <field name="bank_name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Loan Amt:</strong>
+                                    <br/>
+                                    <field name="loan_amount"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Status:</strong>
+                                    <br/>
+                                    <field name="status"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="loan_status_marking_filter" model="ir.ui.view">
+        <field name="name">loan.status.marking.search</field>
+        <field name="model">loan.status.marking</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Top Search">
+                <group>
+                    <field name="project_id"/>
+                    <field name="flat_id"/>
+                    <field name="developer_id"/>
+                    <field name="customer_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By...">
+                    <filter name="developer" string="Developer" domain="[]"  context="{'group_by':'developer_id'}"/>
+                    <filter name="customer" string="Customer" domain="[]"  context="{'group_by':'customer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="loan_status_marking_action" model="ir.actions.act_window">
+        <field name="name">Loan Status Marking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">loan.status.marking</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+</odoo>

@@ -1,0 +1,45 @@
+Documentation - Employee Creation API
+--------------------------------------
+
+url :   /employee/fetch_employee_code
+methode:  POST
+
+Body(json):
+
+#################################################################
+{"params": {
+    "login": "api", 
+    "password": "", 
+    "record": {
+        "name": "Sample",
+        "pan": "000000",
+        "job_position": "Position",
+        "work_mobile": "000000000",
+        "work_phone": "000000",
+        "date_of_birth": "04/04/1994",
+        "department": "Sales",
+        "manager": "Kira", 
+        "gender": "o",
+        "joining_date": "04-04-2014",
+        "city": "City",
+        "zip": "000000",
+        "email": "sample@sample.com",
+        "corporate_email": "samplecorporate@sample.com",
+        "personal_mobile": "00000000",
+        "marital_status": "single",
+        "emergency_contact_number": "00000000",
+        "active_status": "f",
+        "ctc": 20000,
+        "employee_id": "041201889995",
+        "location": "testtest",
+        "relieving_date": "04-04-2025",
+}}}
+
+#################################################################
+
+Allowed Inputs:
+
+gender : F or f for Female, M or m for Male, O or o for Other
+marital_status : single, married, cohabitant, widower, divorced
+active_status : T or t for True, F or f for False
+date_of_birth, joining_date formats: DD/MM/YYYY, DD-MM-YYYY

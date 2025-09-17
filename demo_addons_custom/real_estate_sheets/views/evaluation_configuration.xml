@@ -1,0 +1,307 @@
+<odoo>
+    <record id="walk_in_configuration_view_form" model="ir.ui.view">
+        <field name="name">walk_in_configuration_view_form</field>
+        <field name="model">evaluation.configuration</field>
+        <field name="arch" type="xml">
+            <form string="walk_in_configuration_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="walk_ins"/>
+                            <field name="cp_walk_ins"/>
+                            <field name="direct_walk_ins"/>
+                            <field name="reg_month_1"/>
+                            <field name="reg_month_2"/>
+                            <field name="reg_month_3"/>
+                            <field name="reg_month_4"/>
+                        </group>
+                        <group>
+                            <field name="digital_walk_ins"/>
+                            <field name="no_of_digital_leads"/>
+                            <field name="other_exp_percentage"/>
+                            <field name="sales_incentive_group_count"/>
+                            <field name="cf_sales_incentive_group_count"/>
+                            <field name="collection_billing_count"/>
+                            <field name="admin_expense"/>
+                            <field name="activate"/>
+                        </group>
+                    </group>
+                </sheet>
+                <sheet>
+                    <separator class="pb-3" string="EVALUATION SHEET" colspan="4"/>
+                    <notebook>
+                        <page string="Sales Forecast">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Registration</strong>
+                                        </td>
+                                        <td>Sum of current month &amp; previous 3 months %(from configuration) of
+                                            booking
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </page>
+                        <page string="Man Power">
+                            <separator string="TOTAL MAN POWER COST" colspan="4"/>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Site Head</strong>
+                                        </td>
+                                        <td>Man Power Forecast Site Head * Individual Manpower Site Head</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Cluster Head</strong>
+                                        </td>
+                                        <td>Man Power Forecast Cluster Head * Individual Manpower Cluster Head</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Sourcing</strong>
+                                        </td>
+                                        <td>Man Power Forecast Sourcing * Individual Manpower Sourcing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Closing</strong>
+                                        </td>
+                                        <td>Man Power Forecast Closing * Individual Manpower Closing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>CRM</strong>
+                                        </td>
+                                        <td>Man Power Forecast CRM * Individual Manpower CRM</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Others(MIS)</strong>
+                                        </td>
+                                        <td>Man Power Forecast Others(MIS) * Individual Manpower Others</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </page>
+                        <page string="Profit &amp; Loss Statement">
+                            <separator string="INCOME" colspan="4"/>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Average Ticket Size</strong>
+                                        </td>
+                                        <td>Tentative Unit Sales Price (Lakhs)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Sales Value</strong>
+                                        </td>
+                                        <td>Average Ticket Size * Registration</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Billing (After 1st Disbursement)</strong>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Total Revenue</strong>
+                                        </td>
+                                        <td>Billing (After 1st Disbursement) * Retainer Fee</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <separator string="EXPENSES" colspan="4"/>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Admin Exp.</strong>
+                                        </td>
+                                        <td>Man Power Total * Admin Expense(from configuration)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Sales Incentive</strong>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Other Expenses</strong>
+                                        </td>
+                                        <td>%(Other Exp Percentage from configuration) of Sales Value</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Total Expense</strong>
+                                        </td>
+                                        <td>Sum of Admin Exp, Manpower Cost, Sales Incentive, Other Expenses &amp;
+                                            Marketing Expenses
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Net Profit/Loss</strong>
+                                        </td>
+                                        <td>Total Revenue - Total Expense</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </page>
+                        <page string="Cash Flow Statement">
+                            <separator string="INFLOW" colspan="4"/>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Collection (After 1st Disbursement)</strong>
+                                        </td>
+                                        <td>(1 / (Cash Flow Sales Incentive Group Count from configuration)) * (1 -
+                                            Commission Retention %) * Sum of (Cash Flow Sales Incentive Group Count from
+                                            configuration) of previous billings
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>GST Inflow</strong>
+                                        </td>
+                                        <td>Tax (from company) % of (Retainer Fee + Collection)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Gross Inflow</strong>
+                                        </td>
+                                        <td>GST Inflow + Collection + Retainer Fee</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <separator string="OUTFLOW" colspan="4"/>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Manpower Cost</strong>
+                                        </td>
+                                        <td>Previous Month Manpower Cost Total</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Sales Incentive</strong>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Gross Outflow</strong>
+                                        </td>
+                                        <td>Admin Exp + Previous Month Manpower Cost Total + Profit Loss Expense Sales
+                                            Incentive + Other Expense + GST Inflow
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Net Gross Inflow</strong>
+                                        </td>
+                                        <td>Gross Inflow - Gross Outflow</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </page>
+                        <page string="Walk in Projections">
+                            <separator string="LEAD DETAILS" colspan="4"/>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Walk Ins</strong>
+                                        </td>
+                                        <td>Booking * 100 / Walk Ins(from configuration)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Cp Walk Ins</strong>
+                                        </td>
+                                        <td>Cp Walk Ins(from configuration) % of Walk Ins</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Direct Walk Ins</strong>
+                                        </td>
+                                        <td>Direct Walk Ins(from configuration) % of Walk Ins</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Cp Walk Ins</strong>
+                                        </td>
+                                        <td>Digital Walk Ins(from configuration) % of Walk Ins</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>No. of Digital Leads</strong>
+                                        </td>
+                                        <td>Walk Ins * No. of digital Leads(from configuration)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </page>
+                        <page string="Productivity Ratio">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Operating Margin Ratio</strong>
+                                        </td>
+                                        <td>(Revenue - Expense) / Revenue * 100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Net Profit/Total Expenses</strong>
+                                        </td>
+                                        <td>(Revenue - Expense) / Expense * 100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Revenue/Total Expenses</strong>
+                                        </td>
+                                        <td>(Revenue - Expense) / Revenue * 100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Revenue/Manpower Cost</strong>
+                                        </td>
+                                        <td>Revenue / Manpower Cost * 100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Inflow/Outflow</strong>
+                                        </td>
+                                        <td>Gross Inflow / Gross Outflow * 100</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </page>
+                    </notebook>
+                </sheet>
+                <style>
+                    .o_form_view .o_group.o_inner_group > tbody > tr > td.o_td_label{
+                    min-width: 200px !important;
+                    }
+                </style>
+            </form>
+        </field>
+    </record>
+    <record id="walk_in_configuration_action" model="ir.actions.act_window">
+        <field name="name">Evaluation Sheet Configuration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">evaluation.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

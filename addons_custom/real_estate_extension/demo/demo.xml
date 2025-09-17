@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+      <record id="bank_account_type_0" model="bank.account.type">
+        <field name="name">Current Account</field>
+      </record>
+      <record id="bank_account_type_1" model="bank.account.type">
+        <field name="name">Savings Account</field>
+      </record>
+      <record id="bank_account_type_2" model="bank.account.type">
+        <field name="name">Salary Account</field>
+      </record>
+      <record id="bank_account_type_3" model="bank.account.type">
+        <field name="name">NRI Accounts</field>
+      </record>
+    </data>
+</odoo>

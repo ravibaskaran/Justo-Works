@@ -1,0 +1,726 @@
+<odoo>
+    <template id="report_sales_tax">
+        <!--        <t t-call="web.html_container">-->
+        <!--            <t t-call="web.basic_layout">-->
+
+        <div id="wrapwrap" class="page mb80" style="padding-right: 15px;padding-left: 15px;">
+            <style type="text/css">
+                <!--                       *{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;}-->
+
+                #details-tbl{
+                border: none;
+                }
+                #details-tbl tr th{
+                padding: 5px 10px;
+                border: none;
+                border-top: 1px solid #dee2e6;
+                border-bottom: 1px solid #dee2e6;
+                }
+                #details-tbl tr td{
+                padding: 3px 10px;
+                border: none;
+                border-bottom: 1px solid #dee2e6;
+                }
+                .text-right{
+                text-align:right !important;
+                }
+                .page{
+                overflow: auto;
+                }
+            </style>
+
+            <t t-if="data['order']=='bill_wise'">
+                <t t-set="colspan" t-value="12"/>
+            </t>
+            <t t-else="">
+                <t t-set="colspan" t-value="9"/>
+            </t>
+            <t t-if="res_company">
+                <div class="header">
+                    <table class="" width="100%">
+                        <tr class="company_info" style="height:130px !important;">
+                            <td id="logo_company" class="text-center logo_company" colspan="0"
+                                style="float: left;position: absolute;">
+                                <div id="img_logo" style="float:left;padding-top: 3px;padding-left: 20px;" class="mb4">
+                                    <img style="width: 100px;" t-if="res_company.logo"
+                                         t-att-src="image_data_uri(res_company.logo)" alt="Logo"/>
+                                </div>
+                            </td>
+                            <td t-att-colspan="colspan" style="float: left;width: 100%;text-align: center;">
+                                <table width="100%" style="margin-top: 12px;text-align:center"
+                                       class="mb4 text-center">
+                                    <tr>
+                                        <td t-att-colspan="colspan" class="text-center">
+                                            <h4 style="margin:0;color:#1155cc;font-size: 1.2rem;">
+                                                <span t-esc="res_company.name"/>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td t-att-colspan="colspan" class="text-center">
+                                            <p style="margin-bottom:0;">
+                                                <span t-esc="res_company.street"/>,
+                                                <span t-esc="res_company.street2"/>,
+                                                <span t-esc="res_company.city"/>,
+                                                <span t-esc="res_company.state_id.name"/>,
+                                                <span t-esc="res_company.country_id.name"/>-
+                                                <span t-esc="res_company.zip"/>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td t-att-colspan="colspan" class="text-center">
+                                            <p style="margin-bottom:0;">
+                                                <span t-if="res_company.phone" style="padding-right:15px">Phone :
+                                                    <span t-esc="res_company.phone"/>
+                                                </span>
+                                                <span t-if="res_company.email">
+                                                    Email :
+                                                    <span t-esc="res_company.email"/>
+                                                </span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td t-att-colspan="colspan" class="text-center">
+                                            <p t-if="res_company.vat">
+                                                <span class="list-inline-item d-inline">
+                                                    GSTIN
+                                                    :
+                                                </span>
+                                                <span t-esc="res_company.vat"/>
+                                            </p>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td t-att-colspan="colspan" class="text-center">
+<!--                                            <span t-if="branch_name!=''">Branch :-->
+<!--                                                <t t-esc="branch_name"/>-->
+                                            <span  t-if="branch_name!=''">Branch :
+<!--                                                <t t-set="branch_div" t-value='branch_name.split(",")'/>-->
+                                                <t t-set="new" t-value="''"/>
+                                                <t t-set="index" t-value="0"/>
+                                                <t t-foreach="branch_div" t-as="brnch">
+                                                    <t t-set="index" t-value="index + 1"/>
+                                                    <t t-set="new" t-value="new + brnch"/>
+                                                    <t t-if="index % 5 == 0">
+                                                        <t t-set="new" t-value="new + '&lt;br/&gt;'"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-set="new" t-value="new + ','"/>
+                                                    </t>
+                                                </t>
+                                                <t t-set="new" t-value="new.rstrip(',')"/>
+                                                <t t-raw="new"/>
+                                            </span>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td t-att-colspan="colspan">
+                                <div class="row zero_min_height">
+                                    <div class="col-12">
+                                        <div style="border-bottom: 1px solid #000;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+            <div class="mb24 mt24">
+                <table class="" width="100%" style="text-align: center;">
+                    <tr>
+                        <td t-att-colspan="colspan">
+                            <h4 class="text-center mb20" style="text-align: center;">Sales Tax Report</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td t-att-colspan="colspan">
+                            <h6 class="text-center" style="text-align: center;">Date :
+                                <t t-esc="date_from"/>
+                                -
+                                <t t-esc="date_to"/>
+                            </h6>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <t t-if="lines['sales']">
+                <h5 class="text-center mb12" style="text-align: center;">
+                    <u>SALES
+                    </u>
+                </h5>
+                <table id="tableId2" rules="groups" frame="hsides" border="1" class="table table-bordered table-striped"
+                       style="width: 100%;font-size:12px;border-top: 2px solid black;margin-top:10px;">
+                    <style>.table td{ padding: .8px !important;}</style>
+
+
+                    <thead>
+                        <th class="text-center" width="4%">SNo</th>
+                        <th class="text-center" width="8%">Date</th>
+                        <t t-if="order == 'bill_wise'">
+                            <th class="text-center" width="9%">Invoice</th>
+                            <th class="text-center" width="17%">Customer</th>
+                            <th class="text-center">Gst No.</th>
+                        </t>
+                        <th class="text-center" width="8%">Qty</th>
+                        <th class="text-right" width="10%">Taxable</th>
+                        <th class="text-right" width="8%">CGST</th>
+                        <th class="text-right" width="8%">SGST</th>
+                        <th class="text-right" width="5%">IGST</th>
+                        <th class="text-right" width="5%">CESS</th>
+                        <th class="text-right" width="9%">Net Amount</th>
+                    </thead>
+                    <tbody>
+                        <t t-if="order == 'bill_wise'">
+                            <t t-foreach="lines['sales']['lines']" t-as="line">
+
+                                <tr>
+                                    <td class="text-left" colspan="12">
+                                        <strong>
+                                            <t t-esc="lines['sales']['lines'][line]['name']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                                <t t-set="slno" t-value="1"/>
+                                <t t-foreach="lines['sales']['lines'][line]['data']" t-as="data">
+
+                                    <tr>
+                                        <td class="text-right">
+                                            <t t-esc="slno"/>.
+                                            <t t-set="slno" t-value="slno + 1"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="lines['sales']['lines'][line]['data'][data]['date']"/>
+                                        </td>
+                                        <t t-if="order == 'bill_wise'">
+                                            <td class="text-center">
+                                                <span t-esc="lines['sales']['lines'][line]['data'][data]['name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['sales']['lines'][line]['data'][data]['partner']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['sales']['lines'][line]['data'][data]['gst']"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['qty'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['base'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['cgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['sgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['igst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['cess'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['amount'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <t t-if="order == 'bill_wise'">
+                                        <td class="text-center" colspan="5">
+                                            <b>TOTAL</b>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td class="text-center" colspan="2">
+                                            <b>TOTAL</b>
+                                        </td>
+                                    </t>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_qty'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_base'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_cgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_sgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_igst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_cess'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_amount'])"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="lines['sales']['lines']" t-as="line">
+
+                                <tr>
+                                    <td class="text-left" colspan="9">
+                                        <strong>
+                                            <t t-esc="lines['sales']['lines'][line]['name']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                                <t t-set="slno" t-value="1"/>
+                                <t t-foreach="lines['sales']['lines'][line]['data']" t-as="data">
+
+                                    <tr>
+                                        <td class="text-right">
+                                            <t t-esc="slno"/>.
+                                            <t t-set="slno" t-value="slno + 1"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="lines['sales']['lines'][line]['data'][data]['date']"/>
+                                        </td>
+                                        <t t-if="order == 'bill_wise'">
+                                            <td class="text-center">
+                                                <span t-esc="lines['sales']['lines'][line]['data'][data]['name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['sales']['lines'][line]['data'][data]['partner']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['sales']['lines'][line]['data'][data]['gst']"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['qty'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['base'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['cgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['sgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['igst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['cess'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['data'][data]['amount'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <t t-if="order == 'bill_wise'">
+                                        <td class="text-center" colspan="5">
+                                            <b>TOTAL</b>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td class="text-center" colspan="2">
+                                            <b>TOTAL</b>
+                                        </td>
+                                    </t>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_qty'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_base'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_cgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_sgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_igst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_cess'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['sales']['lines'][line]['total_amount'])"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <tr>
+                            <t t-if="order == 'bill_wise'">
+                                <td class="text-center" colspan="5"
+                                    style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                    <b>
+                                        Sales Total
+                                    </b>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="text-center" colspan="2"
+                                    style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                    <b>
+                                        Sales Total
+                                    </b>
+                                </td>
+                            </t>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['total_qty'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['taxable_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['cgst_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['sgst_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['igst_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['cess_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['sales']['amount_total'])"/>
+                                </b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+            <t t-if="lines['returns']">
+                <h5 class="text-center mb12" style="text-align: center;">
+                    <u>
+                        SALES RETURN
+                    </u>
+                </h5>
+                <table id="tableId2" rules="groups" frame="hsides" border="1" class="table table-bordered table-striped"
+                       style="width: 100%;font-size:12px;border-top: 2px solid black;margin-top:10px;">
+                    <style>.table td{ padding: .8px !important;}</style>
+                    <thead>
+                        <th class="text-center" width="4%">SNo</th>
+                        <th class="text-center" width="8%">Date</th>
+                        <t t-if="order == 'bill_wise'">
+                            <th class="text-center" width="9%">Invoice</th>
+                            <th class="text-center" width="17%">Customer</th>
+                            <th class="text-center">Gst No.</th>
+                        </t>
+                        <th class="text-center" width="8%">Qty</th>
+                        <th class="text-right" width="10%">Taxable</th>
+                        <th class="text-right" width="8%">CGST</th>
+                        <th class="text-right" width="8%">SGST</th>
+                        <th class="text-right" width="5%">IGST</th>
+                        <th class="text-right" width="5%">CESS</th>
+                        <th class="text-right" width="9%">Net Amount</th>
+                    </thead>
+                    <tbody>
+                        <t t-if="order == 'bill_wise'">
+                            <t t-foreach="lines['returns']['lines']" t-as="line">
+                                <tr>
+                                    <td class="text-left" colspan="12">
+                                        <strong>
+                                            <t t-esc="lines['returns']['lines'][line]['name']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <t t-set="slno" t-value="1"/>
+                                <t t-foreach="lines['returns']['lines'][line]['data']" t-as="data">
+                                    <tr>
+                                        <td class="text-right">
+                                            <t t-esc="slno"/>.
+                                            <t t-set="slno" t-value="slno + 1"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="lines['returns']['lines'][line]['data'][data]['date']"/>
+                                        </td>
+                                        <t t-if="order == 'bill_wise'">
+                                            <td class="text-center">
+                                                <span t-esc="lines['returns']['lines'][line]['data'][data]['name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['returns']['lines'][line]['data'][data]['partner']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['returns']['lines'][line]['data'][data]['gst']"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['qty'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['base'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['cgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['sgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['igst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['cess'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['amount'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <!--                                    <t t-if="order == 'bill_wise'">-->
+                                    <td class="text-center" colspan="5">
+                                        <b>TOTAL</b>
+                                    </td>
+                                    <!--                                    </t>-->
+
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_qty'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_base'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_cgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_sgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_igst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_cess'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_amount'])"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="lines['returns']['lines']" t-as="line">
+                                <tr>
+                                    <td class="text-left" colspan="9">
+                                        <strong>
+                                            <t t-esc="lines['returns']['lines'][line]['name']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <t t-set="slno" t-value="1"/>
+                                <t t-foreach="lines['returns']['lines'][line]['data']" t-as="data">
+                                    <tr>
+                                        <td class="text-right">
+                                            <t t-esc="slno"/>.
+                                            <t t-set="slno" t-value="slno + 1"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="lines['returns']['lines'][line]['data'][data]['date']"/>
+                                        </td>
+                                        <t t-if="order == 'bill_wise'">
+                                            <td class="text-center">
+                                                <span t-esc="lines['returns']['lines'][line]['data'][data]['name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['returns']['lines'][line]['data'][data]['partner']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="lines['returns']['lines'][line]['data'][data]['gst']"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['qty'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['base'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['cgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['sgst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['igst'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['cess'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['data'][data]['amount'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td class="text-center" colspan="2">
+                                        <b>TOTAL</b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_qty'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_base'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_cgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_sgst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_igst'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_cess'])"/>
+                                        </b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>
+                                            <t t-esc="'{0:.2f}'.format(lines['returns']['lines'][line]['total_amount'])"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <tr>
+                            <t t-if="order == 'bill_wise'">
+                                <td class="text-center" colspan="5"
+                                    style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                    <b>
+                                        Sales Return Total
+                                    </b>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="text-center" colspan="2"
+                                    style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                    <b>
+                                        Sales Return Total
+                                    </b>
+                                </td>
+                            </t>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['total_qty'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['taxable_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['cgst_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['sgst_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['igst_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['cess_total'])"/>
+                                </b>
+                            </td>
+                            <td class="text-right" style="padding-top:5px;padding-bottom:5px;font-size: 15px;">
+                                <b>
+                                    <t t-esc="'{0:.2f}'.format(lines['returns']['amount_total'])"/>
+                                </b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+
+        </div>
+    </template>
+
+</odoo>

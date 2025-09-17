@@ -1,0 +1,83 @@
+<odoo>
+    <record id="wing_view_form" model="ir.ui.view">
+        <field name="name">wing_view_form</field>
+        <field name="model">building.wing</field>
+        <field name="arch" type="xml">
+            <form string="wing_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="wing_view_tree" model="ir.ui.view">
+        <field name="name">wing_view_tree</field>
+        <field name="model">building.wing</field>
+        <field name="arch" type="xml">
+            <tree string="wing_tree">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+    <record id="wing_action" model="ir.actions.act_window">
+        <field name="name">Wings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">building.wing</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="unit_view_form" model="ir.ui.view">
+        <field name="name">unit_view_form</field>
+        <field name="model">building.unit</field>
+        <field name="arch" type="xml">
+            <form string="wing_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                        <group>
+                            <field name="wing_id"/>
+                            <field name="project_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="unit_view_tree" model="ir.ui.view">
+        <field name="name">unit_view_tree</field>
+        <field name="model">building.unit</field>
+        <field name="arch" type="xml">
+            <tree string="wing_tree">
+                <field name="name"/>
+                <field name="wing_id"/>
+                <field name="project_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="unit_action" model="ir.actions.act_window">
+        <field name="name">Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">building.unit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="wing_master_menu" parent="itsys_real_estate.menu_masters" action="wing_action" sequence="150"/>
+    <menuitem id="unit_master_menu" parent="itsys_real_estate.menu_masters" action="unit_action" sequence="160"/>
+</odoo>

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_jupiter_dashboard_optima_jupiter_dashboard_optima,jupiter_dashboard_optima.jupiter_dashboard_optima,model_jupiter_dashboard_optima_jupiter_dashboard_optima,base.group_user,1,1,1,1

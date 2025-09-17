@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+        <record id="view_account_payment_form_total_in_words" model="ir.ui.view">
+            <field name="name">view_account_payment_form_total_in_words</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[3]" position="after">
+                    <group>
+                        <field name="check_amount_in_words" string="Amount(In Words)" readonly="1" style="font-weight: 500; font-style: italic;"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="direct_journal_view_move_form_total_in_words" model="ir.ui.view">
+            <field name="name">direct_journal_view_move_form_total_in_words</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="inexoft_account_voucher.direct_journal_view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='direct_journal_item_ids']" position="after">
+                    <div>
+                        <strong class="pr-1">
+                            Total(In Words):
+                        </strong>
+                        <field name="amount_total_words" style="font-weight: 500;" class="font-italic"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_order_form_total_in_words" model="ir.ui.view">
+            <field name="name">purchase_order_form_total_in_words</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='notes']" position="before">
+                    <div>
+                        <strong class="pr-1 col-6 pl-0">
+                            Total(In Words):
+                        </strong>
+                        <field name="amount_total_words" style="font-weight: 500;" class="font-italic"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_total_in_words" model="ir.ui.view">
+            <field name="name">view_order_form_total_in_words</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='note_group']" position="after">
+                    <div>
+                        <strong class="pr-1 col-6 pl-0">
+                            Total(In Words):
+                        </strong>
+                        <field name="amount_total_words" style="font-weight: 500;" class="font-italic"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_form_total_in_words" model="ir.ui.view">
+            <field name="name">view_move_form_total_in_words</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='line_ids']" position="after">
+                    <div>
+                        <strong class="pr-1">
+                            Total(In Words):
+                        </strong>
+                        <field name="amount_total_words" style="font-weight: 500;" class="font-italic"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='narration']" position="before">
+                    <div class="pt-5 col-12 row">
+                        <strong class="pr-1">
+                            Total(In Words):
+                        </strong>
+                        <field name="amount_total_words" style="font-weight: 500;" class="font-italic"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_category_inex_accounting">
+            <field name="name">Account Voucher</field>
+            <field name="sequence">120</field>
+        </record>
+        <record model="ir.module.category" id="module_category_inex_vouchers">
+            <field name="name">Account Voucher</field>
+            <field name="parent_id" ref="module_category_inex_accounting"/>
+        </record>
+        <!--complete access to account modules-->
+        <record id="group_voucher_user" model="res.groups">
+            <field name="category_id" ref=""/>
+            <field name="name">Voucher Related Model Access</field>
+            <field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
+
+         <!--<record model="res.groups" id="group_no_one">-->
+            <!--<field name="category_id" ref="module_category_usability"/>-->
+        <!--</record>-->
+
+        <!-- <record id="group_receipt_voucher" model="res.groups">
+            <field name="category_id" ref="module_category_inex_accounting"/>
+            <field name="name">Receipt Voucher</field>
+            <field name="implied_ids" eval="[(4, ref('group_voucher_user'))]"/>
+        </record>
+        <record id="group_payment_voucher" model="res.groups">
+            <field name="category_id" ref="module_category_inex_accounting"/>
+            <field name="name">Payment Voucher</field>
+            <field name="implied_ids" eval="[(4, ref('group_voucher_user'))]"/>
+        </record>
+        <record id="group_journal_voucher" model="res.groups">
+            <field name="category_id" ref="module_category_inex_accounting"/>
+            <field name="name">Journal Voucher</field>
+            <field name="implied_ids" eval="[(4, ref('group_voucher_user'))]"/>
+        </record> -->
+        <record id="group_voucher_draft" model="res.groups">
+            <field name="name">Set To Draft</field>
+            <field name="category_id" ref="module_category_inex_vouchers"/>
+            <field name="implied_ids" eval="[(4, ref('group_voucher_user'))]"/>
+        </record>
+        <record id="group_voucher_cancel" model="res.groups">
+            <field name="name">Cancel</field>
+            <field name="category_id" ref="module_category_inex_vouchers"/>
+            <field name="implied_ids" eval="[(4, ref('group_voucher_user')),(4, ref('group_voucher_draft'))]"/>
+        </record>
+    </data>
+</odoo>
