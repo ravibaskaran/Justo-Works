@@ -1,0 +1,10 @@
+<odoo>
+    <template id="login_inherit" inherit_id="web.login"
+              name="Layout Inherit">
+        <xpath expr="//t[@t-call='web.login_layout']" position="inside">
+            <script>
+                localStorage.setItem('logging',1);
+            </script>
+        </xpath>
+    </template>
+</odoo>

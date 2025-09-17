@@ -1,0 +1,26 @@
+<odoo>
+    <record id="view_account_form_jupiter_accounts" model="ir.ui.view">
+        <field name="name">view_account_form_jupiter_accounts</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']/group" position="inside">
+                <table style="margin: 0 !important;" class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td class="o_td_label" style="vertical-align: middle;">
+                                <strong>Opening Balance
+                                </strong>
+                            </td>
+                            <td>
+                                <field name="opening_balance" readonly="1" force_save="1"/>
+                                <field name="opening_type" class="pl-2" readonly="1" force_save="1"/>
+                                <button name="update_opening" string="Update" type="object" class="btn-link"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </xpath>
+        </field>
+    </record>
+</odoo>

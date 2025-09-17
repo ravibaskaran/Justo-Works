@@ -1,0 +1,8 @@
+<odoo>
+    <record id="group_project_configurations" model="res.groups">
+        <field name="name">Project Configurations</field>
+    </record>
+    <record id="edit_incentive_rate_slab_date" model="res.groups">
+        <field name="name">Allow Backdated Incentive Rate Slab</field>
+    </record>
+</odoo>

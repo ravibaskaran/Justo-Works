@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bank_account_type,real_estate_extension.bank_account_type,model_bank_account_type,,1,1,1,1
+access_api_log,real_estate_extension.api_log,model_api_log,,1,1,1,1
+"access_res_users_group_user_menu","res_users group_user_menu","base.model_res_users","group_user_menu",1,1,1,1
+"access_change_password_wizard","access.change.password.wizard","base.model_change_password_wizard","group_user_menu",1,1,1,0
+"access_change_password_user","access.change.password.user","base.model_change_password_user","group_user_menu",1,1,1,0

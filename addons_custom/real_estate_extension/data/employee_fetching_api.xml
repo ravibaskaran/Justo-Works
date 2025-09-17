@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+	<record id="update_employee_cron" model="ir.cron">
+        <field name="name">Update Employee Details</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_update_employee()</field>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

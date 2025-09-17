@@ -1,0 +1,16 @@
+<odoo>
+    <menuitem id="evaluation_sheet_menu" parent="itsys_real_estate.project_transaction_main_menu" action="real_estate_sheets.evaluation_sheet_action" sequence="10"/>
+    <menuitem id="competition_sheet_menu" parent="itsys_real_estate.project_transaction_main_menu" action="real_estate_sheets.competition_sheet_action" sequence="20"/>
+    <menuitem id="term_sheet_menu" parent="itsys_real_estate.project_transaction_main_menu" action="real_estate_sheets.term_sheet_action" sequence="30"/>
+    <menuitem id="retention_receipt_voucher_menu" parent="itsys_real_estate.project_transaction_main_menu" action="real_estate_sheets.action_retention_receipt_voucher" sequence="50"/>
+    <menuitem id="budget_sheet_menu" parent="itsys_real_estate.project_transaction_main_menu" action="real_estate_sheets.budget_sheet_action" sequence="90"/>
+
+    <menuitem id="term_sheet_template_menu" parent="itsys_real_estate.menu_settings" action="real_estate_sheets.term_sheet_template_action" sequence="40"/>
+    <menuitem id="walk_in_configuration_menu" parent="itsys_real_estate.menu_settings" action="real_estate_sheets.walk_in_configuration_action" sequence="50"/>
+
+    <menuitem id="evaluation_sheet_comparison_menu" action="evaluation_sheet_comparison.evaluation_sheet_comparison_action" parent="itsys_real_estate.real_estate_report_menu" sequence="10"/>
+    <menuitem id="flat_inventory_menu" action="flat_inventory.flat_inventory_action" parent="itsys_real_estate.real_estate_report_menu" sequence="20"/>
+    <menuitem id="booking_report_menu" action="booking_report.booking_report_action" parent="itsys_real_estate.real_estate_report_menu" sequence="30"/>
+    <menuitem id="term_sheet_report_menu" action="term_sheet_report.term_sheet_report_action" parent="itsys_real_estate.real_estate_report_menu" sequence="40"/>
+    <menuitem id="registration_report_menu" action="registration_report.registration_report_action" parent="itsys_real_estate.real_estate_report_menu" sequence="50"/>
+</odoo>

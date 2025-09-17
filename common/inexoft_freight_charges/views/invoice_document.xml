@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        <template id="report_invoice_document" inherit_id="account.document_tax_totals">
+             <xpath expr="//tr[@class='border-black o_total']" position="before">
+                 <t t-if="o._name == 'account.move'">
+                    <tr t-if="o.move_type in ['in_invoice', 'in_refund']">
+                         <td>
+                             <strong>Additional Charges</strong>
+                         </td>
+                         <td class="text-right">
+                             <span t-field="o.other_charge_total"/>
+                         </td>
+                     </tr>
+                 </t>
+             </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="UserMenu.Actions">
+        <div role="separator" class="dropdown-divider"/>
+        <a role="menuitem" href="#" data-menu="settings" class="dropdown-item">Preferences</a>
+        <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
+    </t>
+
+    <t t-extend="Chrome">
+        <t t-jquery="div.pos-branding"
+           t-operation="replace">
+            <div class="pos-branding">
+                    <img class="pos-logo" src="/web/binary/company_logo" alt="Logo"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="odoo_de_brand.ErrorDialogBody" owl="1">
+      <div class="alert alert-warning clearfix" role="alert">
+          <div class="float-right ml8 btn-group-vertical"/>
+          <p><b>An error occurred</b></p>
+          <p>Please use the copy button to report the error to your support service.</p>
+      </div>
+    </t>
+
+    <t t-name="odoo_de_brand.SessionExpiredDialogBody" owl="1">
+      <div role="alert">
+        <p style="white-space: pre-wrap;">
+          Your session expired. The current page is about to be refreshed.
+        </p>
+      </div>
+    </t>
+
+    <t t-extend="ImportView">
+        <t t-jquery="a[href='https://www.odoo.com/documentation/15.0/applications/general/export_import_data.html']" t-operation="replace"/>
+    </t>
+</templates>

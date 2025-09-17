@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_warning_wizard" model="ir.ui.view">
+            <field name="name">Warning</field>
+            <field name="model">warning.wizard</field>
+            <field name="arch" type="xml">
+            <form string="Warning">
+                    <field name="message"/>
+                    <field name="account_payment_id" invisible="1"/>
+                <footer>
+                    <button string="Continue"  class="oe_highlight" type="object" name="continue_btn"/>
+                    <button string="Discard" type="object" class="oe_highlight" name="cancel_btn"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+</odoo>

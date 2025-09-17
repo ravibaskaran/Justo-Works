@@ -1,0 +1,189 @@
+<odoo>
+    <data>
+        <record id="evaluation_sheet_comparison_view_form" model="ir.ui.view">  <!--CHANGE THIS-->
+            <field name="name">evaluation_sheet_comparison_view_form</field>  <!--CHANGE THIS-->
+            <field name="model">beta.evaluation.sheet.comparison</field>  <!--CHANGE THIS-->
+            <field name="arch" type="xml">
+                <form string="evaluation_sheet_comparison_form">
+                    <div class="beta_main_panel" report="Evaluation Sheet Comparison">  <!--CHANGE THIS-->
+                        <div class="m-0 row report_panel">
+                            <div class="col-12 col-lg-4 my-auto text-center report-btn-panel">
+                                <a role="button" style="color: #FFFFFF; border-radius:6px; padding: 0.60rem 4rem;"
+                                   title="Download Excel" id="beta_excel_print"
+                                   class="col-5 btn btn-primary fa fa-file-excel-o mr-1">
+                                    Excel
+                                </a>
+                                <button name="get_html" type="object"
+                                        style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 40px"
+                                        class="col-5 btn btn-primary o_panel_get_report_beta">
+                                    Get Report
+                                </button>
+                            </div>
+                            <field name="report_id" invisible="1"/>
+                            <div class="col-12 col-lg-8">
+                                <div class="row mr-3">
+                                    <div class="col-12">
+                                        <div class="row pt-3">
+                                            <div class="col-4 col-lg-2 text-right">
+                                                <strong>Evaluation Sheets</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="evaluation_sheet_ids" widget="many2many_tags"
+                                                       required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 template_div">
+                            <div class="beta_template_area"/>
+                            <field name="template_area" class="d-none"/>
+                            <field name="form_edit" class="d-none"/>
+                        </div>
+                        <script>
+                            $(document).ready(function(){
+                            $('.beta_template_area').append($('[name="template_area"]').val())
+                            $('[name="form_edit"]').click();
+                            })
+                        </script>
+                        <style>
+                            html .o_web_client > .o_action_manager > .o_action > .o_content{
+                            overflow: overlay;
+                            }
+                            .o_form_view {
+                            padding: 0 0 14px 0px !important;
+                            background: #f9f9f9;
+                            }
+                            .report_panel{
+                            padding-bottom: 1rem;
+                            box-shadow: 0px 6px 7px #0000003b;
+                            padding-top: 14px;
+                            background: white;
+                            position: fixed;
+                            width: 95%;
+                            z-index: 1;
+                            top: 46px;
+                            left: 64px;
+                            max-height: 150px;
+                            border-radius: 14px;
+                            }
+                            .template_div{
+                            padding-top: 8rem;
+                            }
+                            .o_field_widget.o_field_many2manytags .o_tag_color_0{
+                            box-shadow: inset 0 0 0 1px #777777;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge{
+                            font-size: 11px;
+                            }
+                            .o_field_many2manytags {
+                            max-height: 40px;
+                            height: 40px;
+                            overflow-y: auto;
+                            width: 100%;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge {
+                            font-size: 11px;
+                            max-width: 95%;
+                            height: 18px;
+                            }
+                            .o_form_view .o_datepicker {
+                            width: 100% !important;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge .o_badge_text{
+                            text-overflow: ellipsis;
+                            width: 90%;
+                            }
+                            .template_div .table thead{
+                            top: 95px;
+                            position: sticky;
+                            background: white;
+                            }
+                            [name='branch_id'] select {
+                            display: none;
+                            }
+                            .stick-td{
+                            position: -webkit-sticky;
+                            position: sticky;
+                            left: 0;
+                            background: #f9f9f9;
+                            font-weight: 900;
+                            }
+                            .stick-evaluation-td{
+                            position: -webkit-sticky;
+                            position: sticky;
+                            left: 280px;
+                            background: #f9f9f9;
+                            width: 250px;
+                            word-break: break-word;
+                            }
+                            .table-responsive{
+                            overflow: auto;
+                            width: 100%;
+                            }
+                            .table-scroll{
+                            overflow-x: scroll;
+                            width: max-content;
+                            }
+                            .competition-td{
+                            word-break: break-word;
+                            text-align: right;
+                            }
+                            .evaluation-head{
+                            font-size: 16px;
+                            font-weight: 900;
+                            }
+                            @media only screen and (max-width: 600px) {
+                                .report_panel{
+                                    left: 0px;
+                                    width: 100%;
+                                }
+                                .report_panel .btn-primary{
+                                    padding: 6px !important;
+                                }
+                                .stick-evaluation-td, .stick-td{
+                                    position: unset;
+                                }
+                                .report-btn-panel{
+                                    position: fixed;
+                                    bottom: 8px;
+                                }
+                            }
+                        </style>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <template id="beta_reports_pdf">
+            <main/>
+            <t t-call="web.basic_layout">
+                <t t-raw="template_area"/>
+            </t>
+        </template>
+        <!--CHANGE THIS-->
+        <record id="evaluation_sheet_comparison_reports_pdf_action" model="ir.actions.report">
+            <field name="name">Evaluation Sheet Comparison</field>
+            <field name="model">beta.day.book</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">evaluation_sheet_comparison.beta_reports_pdf</field>
+            <field name="report_file">evaluation_sheet_comparison.beta_reports_pdf</field>
+            <field name="binding_model_id" ref="evaluation_sheet_comparison.model_beta_evaluation_sheet_comparison"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="beta_reports_base.beta_reports_paper_format_portrait"/>
+        </record>
+
+        <record id="evaluation_sheet_comparison_action" model="ir.actions.act_window">  <!--CHANGE THIS-->
+            <field name="name">Evaluation Sheet Comparison</field>  <!--CHANGE THIS-->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">beta.evaluation.sheet.comparison</field>  <!--CHANGE THIS-->
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context"
+                   eval="{'default_report_id': ref('evaluation_sheet_comparison.evaluation_sheet_comparison_reports_pdf_action')}"/>  <!--CHANGE THIS-->
+        </record>
+<!--        <menuitem id="evaluation_sheet_comparison_menu"-->
+<!--                  action="evaluation_sheet_comparison.evaluation_sheet_comparison_action"/>-->
+    </data>
+</odoo>

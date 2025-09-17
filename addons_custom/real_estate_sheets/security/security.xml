@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="group_evaluation_budgeting_confirm" model="res.groups">
+            <field name="name">Show Evaluation Sheet, Term Sheet &amp; Budgeting Confirm Button</field>
+        </record>
+    </data>
+</odoo>

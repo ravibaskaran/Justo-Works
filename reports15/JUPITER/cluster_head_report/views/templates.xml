@@ -1,0 +1,1401 @@
+<odoo>
+    <!--CHANGE THIS-->
+    <template id="cluster_head_report">
+        <div id="wrapwrap" class="page mb80"
+             style="padding-right: 15px;padding-left: 15px;">
+            <style type="text/css">
+                #details-tbl{
+                border: none;
+                }
+                #details-tbl tr th{
+                padding: 5px 10px;
+                border: none;
+                border-top: 1px solid #dee2e6;
+                border-bottom: 1px solid #dee2e6;
+                }
+                #details-tbl tr td{
+                padding: 3px 10px;
+                border: none;
+                border-bottom: 1px solid #dee2e6;
+                }
+                .text-right{
+                text-align:right !important;
+                }
+                @media print {
+                a{
+                text-decoration: none !important;
+                color: inherit !important;
+                }
+                }
+                table a{
+                text-decoration: none !important;
+                color: inherit !important;
+                }
+                .gross_w{
+                    width: 8rem;
+                }
+                .cancel_w{
+                    width: 8rem;
+                }
+                .net_w{
+                    width: 8rem;
+                }
+
+            </style>
+            <div id="a3_landscape_print" class="mb24 mt24">
+                <style t-if="report_type=='pdf'">th{white-space: nowrap;}</style>
+                <center>
+                    <h4 class="text-center mb20">Cluster Head Wise Booking Report</h4>
+                </center>
+            </div>
+            <table id="tableId" rules="groups" frame="hsides" border="1"
+                   class="table table-bordered table-striped"
+                   style="width: max-content; font-size:12px; border-top: 2px solid black; margin-top:10px; min-width: 100%;">
+                <style>
+                    .table thead th{
+                    background: #bedbf5;
+                    color: black;
+                    border: none;
+                    border-radius: 0;
+                    outline: 1px solid white;
+                    }
+                    .template_div .table thead{
+                    top: 118px;
+                    position: sticky;
+                    background: white;
+                    z-index: 999;
+                    }
+                    .table td{
+                    padding: .8px 5px !important;
+                    }
+                    .cluster-tds{
+                    background: #6495ED;
+                    border-radius: 0;
+                    border-right: 1px solid gray !important;
+                    color: black;
+                    }
+                    .cluster-tds2{
+                    background: #e5dfdf;
+                    border-radius: 0;
+                    border-right: 1px solid gray !important;
+                    color: black;
+                    }
+                    .total-tds{
+                    background: #787878;
+                    border-radius: 0;
+                    border-right: 1px solid darkgrey !important;
+                    color: white;
+                    }
+                    .project_sticky{
+                    min-width: 300px !important;
+                    max-width: 300px !important;
+                    position: sticky !important;
+                    left: 0px !important;
+                    }
+                    .target_sticky{
+                    min-width: 100px !important;
+                    max-width: 100px !important;
+                    position: sticky !important;
+                    left: 300px !important;
+                    }
+                    .achieved_sticky{
+                    min-width: 100px !important;
+                    max-width: 100px !important;
+                    position: sticky !important;
+                    left: 400px !important;
+                    }
+                </style>
+                <t t-set="col_row_1_colspan" t-value="6"/>
+                <t t-set="col_row_2_colspan" t-value="3"/>
+                <t t-set="col_row_3_colspan" t-value="4"/>
+                <t t-if="gross">
+                    <t t-set="col_row_1_colspan" t-value="col_row_1_colspan-2"/>
+                    <t t-set="col_row_2_colspan" t-value="col_row_2_colspan-1"/>
+                    <t t-set="col_row_3_colspan" t-value="col_row_3_colspan-1"/>
+                </t>
+                <t t-if="cancelled">
+                    <t t-set="col_row_1_colspan" t-value="col_row_1_colspan-2"/>
+                    <t t-set="col_row_2_colspan" t-value="col_row_2_colspan-1"/>
+                    <t t-set="col_row_3_colspan" t-value="col_row_3_colspan-1"/>
+                </t>
+                <t t-if="net">
+                    <t t-set="col_row_1_colspan" t-value="col_row_1_colspan-2"/>
+                    <t t-set="col_row_2_colspan" t-value="col_row_2_colspan-1"/>
+                    <t t-set="col_row_3_colspan" t-value="col_row_3_colspan-1"/>
+                </t>
+
+
+                <t t-if="month_wise">
+                    <thead>
+                        <tr>
+                            <th rowspan="3" class="text-center project_sticky align-middle">
+                                PROJECT
+                            </th>
+                            <th rowspan="3" class="text-center target_sticky align-middle">
+                                TARGET
+                            </th>
+                            <th rowspan="3" class="text-center achieved_sticky align-middle">
+                                ACHIEVED
+                            </th>
+
+
+                            <t t-foreach="doc['month_vals']" t-as="month_vals">
+                                <th t-att-colspan="col_row_1_colspan" class="text-center ">
+                                    <t t-esc="month_vals.strftime('%b-%y')"/>
+                                </th>
+                            </t>
+                            <th t-att-colspan="col_row_1_colspan" class="text-center ">
+                                Month Total
+                            </th>
+                        </tr>
+                        <tr>
+                            <t t-foreach="doc['month_keys']" t-as="month_key">
+                                <th t-att-colspan="col_row_2_colspan" class="text-center">Unit Sold (Nos.)</th>
+                                <th t-att-colspan="col_row_2_colspan" class="text-center">Units Sold (AV In Cr.)</th>
+                            </t>
+                            <th t-att-colspan="col_row_2_colspan" class="text-center">Unit Sold (Nos.)</th>
+                            <th t-att-colspan="col_row_2_colspan" class="text-center">Units Sold (AV In Cr.)</th>
+                        </tr>
+                        <tr>
+                            <t t-foreach="doc['month_keys']" t-as="month_key">
+                                <t t-if="not gross">
+                                    <th class="text-center gross_w">Gross</th>
+                                </t>
+                                <t t-if="not cancelled">
+                                    <th class="text-center cancel_w">Cancelled</th>
+                                </t>
+                                <t t-if="not net">
+                                    <th class="text-center net_w">Net</th>
+                                </t>
+                                <t t-if="not gross">
+                                    <th class="text-center gross_w">Gross</th>
+                                </t>
+                                <t t-if="not cancelled">
+                                    <th class="text-center cancel_w">Cancelled</th>
+                                </t>
+                                <t t-if="not net">
+                                    <th class="text-center net_w">Net</th>
+                                </t>
+                            </t>
+                            <t t-if="not gross">
+                                <th class="text-center gross_w">Gross</th>
+                            </t>
+                            <t t-if="not cancelled">
+                                <th class="text-center cancel_w">Cancelled</th>
+                            </t>
+                            <t t-if="not net">
+                                <th class="text-center net_w">Net</th>
+                            </t>
+                            <t t-if="not gross">
+                                <th class="text-center gross_w">Gross</th>
+                            </t>
+                            <t t-if="not cancelled">
+                                <th class="text-center cancel_w">Cancelled</th>
+                            </t>
+                            <t t-if="not net">
+                                <th class="text-center net_w">Net</th>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="data" t-value="doc['data']"/>
+                        <t t-set="total_style"
+                           t-value="'padding-bottom: 6px !important; padding-top: 4px !important;'"/>
+                        <tr class="h6">
+                            <td class="text-center total-tds project_sticky" t-att-style="total_style">TOTAL</td>
+                            <td class="text-center total-tds target_sticky" t-att-style="total_style">
+                                <t t-esc="data['target']"/>
+                            </td>
+                            <td class="text-center total-tds achieved_sticky" t-att-style="total_style">
+                                <t
+                                        t-esc="'{:.2f}'.format(data['booking_count'] / data['target'] * 100  if data['target'] != 0 else 100)"/>
+                                %
+                            </td>
+                            <t t-set="total_gross_bookings_count" t-value="0"/>
+                            <t t-set="total_cancelled_bookings_count" t-value="0"/>
+                            <t t-set="total_net_bookings_count" t-value="0"/>
+                            <t t-set="total_gross_bookings_value" t-value="0"/>
+                            <t t-set="total_cancelled_bookings_value" t-value="0"/>
+                            <t t-set="total_net_bookings_value" t-value="0"/>
+                            <t t-foreach="doc['month_keys']" t-as="month_key">
+                                <td t-if="not gross" class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data[month_key + '_gross_bookings_count']"/>
+                                    <t t-set="total_gross_bookings_count"
+                                       t-value="total_gross_bookings_count + data[month_key + '_gross_bookings_count']"/>
+                                </td>
+                                <td t-if="not cancelled" class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data[month_key+'_cancelled_bookings_count']"/>
+                                    <t t-set="total_cancelled_bookings_count"
+                                       t-value="total_cancelled_bookings_count + data[month_key + '_cancelled_bookings_count']"/>
+
+                                </td>
+                                <td t-if="not net" class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data[month_key+'_net_bookings_count']"/>
+                                    <t t-set="total_net_bookings_count"
+                                       t-value="total_net_bookings_count + data[month_key + '_net_bookings_count']"/>
+
+                                </td>
+                                <t t-if="not gross">
+                                    <td class="text-right total-tds" t-att-style="total_style">
+                                        <t t-esc="'{:.2f}'.format(data[month_key+'_gross_bookings_value'])"/>
+                                        <t t-set="total_gross_bookings_value"
+                                           t-value="total_gross_bookings_value + data[month_key + '_gross_bookings_value']"/>
+                                    </td>
+                                </t>
+                                <td t-if="not cancelled" class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data[month_key+'_cancelled_bookings_value'])"/>
+                                    <t t-set="total_cancelled_bookings_value"
+                                       t-value="total_cancelled_bookings_value + data[month_key + '_cancelled_bookings_value']"/>
+
+                                </td>
+                                <td t-if="not net" class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data[month_key+'_net_bookings_value'])"/>
+                                    <t t-set="total_net_bookings_value"
+                                       t-value="total_net_bookings_value + data[month_key + '_net_bookings_value']"/>
+
+                                </td>
+                            </t>
+                            <t t-if="not gross">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="total_gross_bookings_count"/>
+                                </td>
+                            </t>
+                            <td t-if="not cancelled" class="text-center total-tds" t-att-style="total_style">
+                                <t t-esc="total_cancelled_bookings_count"/>
+                            </td>
+                            <td t-if="not net" class="text-center total-tds" t-att-style="total_style">
+                                <t t-esc="total_net_bookings_count"/>
+                            </td>
+                            <t t-if="not gross">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(total_gross_bookings_value)"/>
+                                </td>
+                            </t>
+                            <td t-if="not cancelled" class="text-right total-tds" t-att-style="total_style">
+                                <t t-esc="'{:.2f}'.format(total_cancelled_bookings_value)"/>
+                            </td>
+                            <td t-if="not net" class="text-right total-tds" t-att-style="total_style">
+                                <t t-esc="'{:.2f}'.format(total_net_bookings_value)"/>
+                            </td>
+                        </tr>
+                        <t t-set="direction2" t-value="'yyy'"/>
+                        <t t-set="direction" t-value="'d-none'"/>
+                        <t t-if="summary_wise">
+                            <t t-set="direction2" t-value="'d-none'"/>
+                            <t t-set="direction" t-value="'yyy'"/>
+                        </t>
+                        <t t-set="cluster_id" t-value="1"/>
+                        <t t-set="id" t-value="1"/>
+                        <t t-foreach="data['data']" t-as="cluster">
+                            <t t-set="cluster_data" t-value="data['data'][cluster]"/>
+                            <!--     Month wise not Summary then no cluster & cluster head projects only & when summary no data!-->
+                            <tr class="font-weight-bold">
+                                <td class="parent text-left cluster-tds project_sticky"
+                                    t-att-id="'debit' + str(cluster_id)"
+                                    style="font-weight:bold;padding-left: 10px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 200px;">
+                                    <span t-att-id="'cluster_debit' + str(cluster_id)"
+                                          t-att-class="'cluster o_trial_reports_foldable 1 o_trial_reports_caret_icon down ' + direction2">
+                                        <i t-att-class="'fa fa-fw fa-caret-down'"
+                                           role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                    </span>
+                                    <span t-att-id="'cluster_debit' + str(cluster_id)"
+                                          t-att-class="'cluster o_trial_reports_foldable 1 o_trial_reports_caret_icon right  ' + direction">
+                                        <i t-att-class="'fa fa-fw fa-caret-right'"
+                                           role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                    </span>
+                                    <t t-esc="cluster.name"/>
+                                </td>
+                                <td class="text-center cluster-tds target_sticky">
+                                    <t t-esc="cluster_data['target']"/>
+                                </td>
+                                <td class="text-center cluster-tds achieved_sticky">
+                                    <t
+                                            t-esc="'{:.2f}'.format(cluster_data['booking_count'] / cluster_data['target'] * 100  if cluster_data['target'] != 0 else 100)"/>
+                                    %
+                                </td>
+                                <t t-set="cluster_gross_bookings_count" t-value="0"/>
+                                <t t-set="cluster_cancelled_bookings_count" t-value="0"/>
+                                <t t-set="cluster_net_bookings_count" t-value="0"/>
+                                <t t-set="cluster_gross_bookings_value" t-value="0"/>
+                                <t t-set="cluster_cancelled_bookings_value" t-value="0"/>
+                                <t t-set="cluster_net_bookings_value" t-value="0"/>
+
+                                <t t-foreach="doc['month_keys']" t-as="month_key">
+                                    <t t-if="not gross">
+                                        <td class="text-center cluster-tds ">
+                                            <t t-esc="cluster_data[month_key+'_gross_bookings_count']"/>
+                                            <t t-set="cluster_gross_bookings_count"
+                                               t-value="cluster_gross_bookings_count + cluster_data[month_key + '_gross_bookings_count']"/>
+                                        </td>
+                                    </t>
+                                    <td t-if="not cancelled" class="text-center cluster-tds">
+                                        <t t-esc="cluster_data[month_key+'_cancelled_bookings_count']"/>
+                                        <t t-set="cluster_cancelled_bookings_count"
+                                           t-value="cluster_cancelled_bookings_count + cluster_data[month_key + '_cancelled_bookings_count']"/>
+                                    </td>
+                                    <td t-if="not net" class="text-center cluster-tds">
+                                        <t t-esc="cluster_data[month_key+'_net_bookings_count']"/>
+                                        <t t-set="cluster_net_bookings_count"
+                                           t-value="cluster_net_bookings_count + cluster_data[month_key + '_net_bookings_count']"/>
+                                    </td>
+                                    <t t-if="not gross">
+                                        <td class="text-right cluster-tds">
+                                            <t t-esc="'{:.2f}'.format(cluster_data[month_key+'_gross_bookings_value'])"/>
+                                            <t t-set="cluster_gross_bookings_value"
+                                               t-value="cluster_gross_bookings_value + cluster_data[month_key + '_gross_bookings_value']"/>
+                                        </td>
+                                    </t>
+                                    <td t-if="not cancelled" class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data[month_key+'_cancelled_bookings_value'])"/>
+                                        <t t-set="cluster_cancelled_bookings_value"
+                                           t-value="cluster_cancelled_bookings_value + cluster_data[month_key + '_cancelled_bookings_value']"/>
+                                    </td>
+                                    <td t-if="not net" class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data[month_key+'_net_bookings_value'])"/>
+                                        <t t-set="cluster_net_bookings_value"
+                                           t-value="cluster_net_bookings_value + cluster_data[month_key + '_net_bookings_value']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not gross">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_gross_bookings_count"/>
+                                    </td>
+                                </t>
+                                <td t-if="not cancelled" class="text-center cluster-tds">
+                                    <t t-esc="cluster_cancelled_bookings_count"/>
+                                </td>
+                                <td t-if="not net" class="text-center cluster-tds">
+                                    <t t-esc="cluster_net_bookings_count"/>
+                                </td>
+                                <t t-if="not gross">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_gross_bookings_value)"/>
+                                    </td>
+                                </t>
+                                <td t-if="not cancelled" class="text-right cluster-tds">
+                                    <t t-esc="'{:.2f}'.format(cluster_cancelled_bookings_value)"/>
+                                </td>
+                                <td t-if="not net" class="text-right cluster-tds">
+                                    <t t-esc="'{:.2f}'.format(cluster_net_bookings_value)"/>
+                                </td>
+                            </tr>
+
+                            <t t-foreach="cluster_data['data']" t-as="cluster_head">
+                                <!--                        <t t-foreach="data['data'][cluster]['data']" t-as="clusters">-->
+                                <t t-set="clusters" t-value="data['data'][cluster]['data'][cluster_head]"/>
+                                <!--                        <t t-esc="clusters"/>   -->
+
+                                <t t-if="summary_wise"><!-- Cluster Head Month Wise Summary-->
+                                    <tr t-att-class="'d-none font-weight-bold cluster_child' + str(cluster_id)">
+                                        <td class="parent text-left cluster-tds2 project_sticky"
+                                            t-att-id="'debit' + str(id)"
+                                            style="font-weight:bold;padding-left: 10px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 200px;">
+
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon down ' + direction2 + ' pdebit' + str(id) + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-down'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon right  ' + direction + ' pdebit' + str(id) + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-right'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+                                            <t t-esc="cluster_head.name"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2 target_sticky">
+                                            <t t-esc="clusters['target']"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2 achieved_sticky">
+                                            <t
+                                                    t-esc="'{:.2f}'.format(clusters['booking_count'] / clusters['target'] * 100  if clusters['target'] != 0 else 100)"/>
+                                            %
+                                        </td>
+                                        <t t-set="cluster_gross_bookings_count" t-value="0"/>
+                                        <t t-set="cluster_cancelled_bookings_count" t-value="0"/>
+                                        <t t-set="cluster_net_bookings_count" t-value="0"/>
+                                        <t t-set="cluster_gross_bookings_value" t-value="0"/>
+                                        <t t-set="cluster_cancelled_bookings_value" t-value="0"/>
+                                        <t t-set="cluster_net_bookings_value" t-value="0"/>
+
+                                        <t t-foreach="doc['month_keys']" t-as="month_key">
+                                            <t t-if="not gross">
+                                                <td class="text-center cluster-tds2">
+                                                    <t t-esc="clusters[month_key+'_gross_bookings_count']"/>
+                                                    <t t-set="cluster_gross_bookings_count"
+                                                       t-value="cluster_gross_bookings_count + clusters[month_key + '_gross_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-center cluster-tds2">
+                                                <t t-esc="clusters[month_key+'_cancelled_bookings_count']"/>
+                                                <t t-set="cluster_cancelled_bookings_count"
+                                                   t-value="cluster_cancelled_bookings_count + clusters[month_key + '_cancelled_bookings_count']"/>
+                                            </td>
+                                            <td t-if="not net" class="text-center cluster-tds2">
+                                                <t t-esc="clusters[month_key+'_net_bookings_count']"/>
+                                                <t t-set="cluster_net_bookings_count"
+                                                   t-value="cluster_net_bookings_count + clusters[month_key + '_net_bookings_count']"/>
+                                            </td>
+                                            <t t-if="not gross">
+                                                <td class="text-right cluster-tds2">
+                                                    <t t-esc="'{:.2f}'.format(clusters[month_key+'_gross_bookings_value'])"/>
+                                                    <t t-set="cluster_gross_bookings_value"
+                                                       t-value="cluster_gross_bookings_value + clusters[month_key + '_gross_bookings_value']"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters[month_key+'_cancelled_bookings_value'])"/>
+                                                <t t-set="cluster_cancelled_bookings_value"
+                                                   t-value="cluster_cancelled_bookings_value + clusters[month_key + '_cancelled_bookings_value']"/>
+                                            </td>
+                                            <td t-if="not net" class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters[month_key+'_net_bookings_value'])"/>
+                                                <t t-set="cluster_net_bookings_value"
+                                                   t-value="cluster_net_bookings_value + clusters[month_key + '_net_bookings_value']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="cluster_gross_bookings_count"/>
+                                            </td>
+                                        </t>
+                                        <td t-if="not cancelled" class="text-center cluster-tds2">
+                                            <t t-esc="cluster_cancelled_bookings_count"/>
+                                        </td>
+                                        <td t-if="not net" class="text-center cluster-tds2">
+                                            <t t-esc="cluster_net_bookings_count"/>
+                                        </td>
+                                        <t t-if="not gross">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(cluster_gross_bookings_value)"/>
+                                            </td>
+                                        </t>
+                                        <td t-if="not cancelled" class="text-right cluster-tds2">
+                                            <t t-esc="'{:.2f}'.format(cluster_cancelled_bookings_value)"/>
+                                        </td>
+                                        <td t-if="not net" class="text-right cluster-tds2">
+                                            <t t-esc="'{:.2f}'.format(cluster_net_bookings_value)"/>
+                                        </td>
+                                    </tr>
+                                    <!--                                <t t-foreach="cluster_data['data']" t-as="cluster">-->
+                                    <t t-foreach="clusters['data']" t-as="project">
+                                        <t t-set="project_data" t-value="clusters['data'][project]"/>
+                                        <tr t-att-class="'d-none cdebit' + str(id)">
+                                            <td class="project_sticky" style="
+    background-color: white;
+">
+                                                <t t-esc="project_data['name']"/>
+                                            </td>
+                                            <td class="text-center target_sticky" style="
+    background-color: white;
+">
+                                                <t t-esc="project_data['target']"/>
+                                            </td>
+                                            <td class="text-center achieved_sticky" style="
+    background-color: white;
+">
+                                                <t t-esc="project_data['achieved_percentage']"/>%
+                                            </td>
+                                            <t t-set="gross_bookings_count" t-value="0"/>
+                                            <t t-set="cancelled_bookings_count" t-value="0"/>
+                                            <t t-set="net_bookings_count" t-value="0"/>
+                                            <t t-set="gross_bookings_value" t-value="0"/>
+                                            <t t-set="cancelled_bookings_value" t-value="0"/>
+                                            <t t-set="net_bookings_value" t-value="0"/>
+                                            <t t-foreach="doc['month_keys']" t-as="month_key">
+                                                <t t-if="not gross">
+                                                    <td class="text-center">
+                                                        <t t-esc="project_data[month_key+'_gross_bookings_count']"/>
+                                                        <t t-set="gross_bookings_count"
+                                                           t-value="gross_bookings_count + project_data[month_key + '_gross_bookings_count']"/>
+                                                    </td>
+                                                </t>
+                                                <td t-if="not cancelled" class="text-center">
+                                                    <t t-esc="project_data[month_key+'_cancelled_bookings_count']"/>
+                                                    <t t-set="cancelled_bookings_count"
+                                                       t-value="cancelled_bookings_count + project_data[month_key + '_cancelled_bookings_count']"/>
+                                                </td>
+                                                <td t-if="not net" class="text-center">
+                                                    <t t-esc="project_data[month_key+'_net_bookings_count']"/>
+                                                    <t t-set="net_bookings_count"
+                                                       t-value="net_bookings_count + project_data[month_key + '_net_bookings_count']"/>
+                                                </td>
+                                                <t t-if="not gross">
+                                                    <td class="text-right">
+                                                        <t t-esc="'{:.2f}'.format(project_data[month_key+'_gross_bookings_value'])"/>
+                                                        <t t-set="gross_bookings_value"
+                                                           t-value="gross_bookings_value + project_data[month_key + '_gross_bookings_value']"/>
+                                                    </td>
+                                                </t>
+                                                <td t-if="not cancelled" class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data[month_key+'_cancelled_bookings_value'])"/>
+                                                    <t t-set="cancelled_bookings_value"
+                                                       t-value="cancelled_bookings_value + project_data[month_key + '_cancelled_bookings_value']"/>
+                                                </td>
+                                                <td t-if="not net" class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data[month_key+'_net_bookings_value'])"/>
+                                                    <t t-set="net_bookings_value"
+                                                       t-value="net_bookings_value + project_data[month_key + '_net_bookings_value']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-center">
+                                                    <t t-esc="gross_bookings_count"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-center">
+                                                <t t-esc="cancelled_bookings_count"/>
+                                            </td>
+                                            <td t-if="not net" class="text-center ">
+                                                <t t-esc="net_bookings_count"/>
+                                            </td>
+                                            <t t-if="not gross">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(gross_bookings_value)"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-right">
+                                                <t t-esc="'{:.2f}'.format(cancelled_bookings_value)"/>
+                                            </td>
+                                            <td t-if="not net" class="text-right">
+                                                <t t-esc="'{:.2f}'.format(net_bookings_value)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-set="id" t-value="id + 1"/>
+                                </t>
+                                <!-- Month Wise Not Summmary: Clusters Head-->
+                                <t t-else="">
+                                    <tr t-att-class="'font-weight-bold cluster_child' + str(cluster_id)">
+                                        <td class="parent text-left cluster-tds2 project_sticky"
+                                            t-att-id="'debit' + str(id)"
+                                            style="font-weight:bold;padding-left: 10px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 200px;">
+
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon down ' + direction2 + ' pdebit' + str(id) + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-down'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon right  ' + direction + ' pdebit' + str(id) + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-right'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+                                            <t t-esc="cluster_head.name"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2 target_sticky">
+                                            <t t-esc="clusters['target']"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2 achieved_sticky">
+                                            <t
+                                                    t-esc="'{:.2f}'.format(clusters['booking_count'] / clusters['target'] * 100  if clusters['target'] != 0 else 100)"/>
+                                            %
+                                        </td>
+                                        <t t-set="cluster_gross_bookings_count" t-value="0"/>
+                                        <t t-set="cluster_cancelled_bookings_count" t-value="0"/>
+                                        <t t-set="cluster_net_bookings_count" t-value="0"/>
+                                        <t t-set="cluster_gross_bookings_value" t-value="0"/>
+                                        <t t-set="cluster_cancelled_bookings_value" t-value="0"/>
+                                        <t t-set="cluster_net_bookings_value" t-value="0"/>
+
+                                        <t t-foreach="doc['month_keys']" t-as="month_key">
+                                            <t t-if="not gross">
+                                                <td class="text-center cluster-tds2">
+                                                    <t t-esc="clusters[month_key+'_gross_bookings_count']"/>
+                                                    <t t-set="cluster_gross_bookings_count"
+                                                       t-value="cluster_gross_bookings_count + clusters[month_key + '_gross_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-center cluster-tds2">
+                                                <t t-esc="clusters[month_key+'_cancelled_bookings_count']"/>
+                                                <t t-set="cluster_cancelled_bookings_count"
+                                                   t-value="cluster_cancelled_bookings_count + clusters[month_key + '_cancelled_bookings_count']"/>
+                                            </td>
+                                            <td t-if="not net" class="text-center cluster-tds2">
+                                                <t t-esc="clusters[month_key+'_net_bookings_count']"/>
+                                                <t t-set="cluster_net_bookings_count"
+                                                   t-value="cluster_net_bookings_count + clusters[month_key + '_net_bookings_count']"/>
+                                            </td>
+                                            <t t-if="not gross">
+                                                <td class="text-right cluster-tds2">
+                                                    <t t-esc="'{:.2f}'.format(clusters[month_key+'_gross_bookings_value'])"/>
+                                                    <t t-set="cluster_gross_bookings_value"
+                                                       t-value="cluster_gross_bookings_value + clusters[month_key + '_gross_bookings_value']"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters[month_key+'_cancelled_bookings_value'])"/>
+                                                <t t-set="cluster_cancelled_bookings_value"
+                                                   t-value="cluster_cancelled_bookings_value + clusters[month_key + '_cancelled_bookings_value']"/>
+                                            </td>
+                                            <td t-if="not net" class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters[month_key+'_net_bookings_value'])"/>
+                                                <t t-set="cluster_net_bookings_value"
+                                                   t-value="cluster_net_bookings_value + clusters[month_key + '_net_bookings_value']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="cluster_gross_bookings_count"/>
+                                            </td>
+                                        </t>
+                                        <td t-if="not cancelled" class="text-center cluster-tds2">
+                                            <t t-esc="cluster_cancelled_bookings_count"/>
+                                        </td>
+                                        <td t-if="not net" class="text-center cluster-tds2">
+                                            <t t-esc="cluster_net_bookings_count"/>
+                                        </td>
+                                        <t t-if="not gross">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(cluster_gross_bookings_value)"/>
+                                            </td>
+                                        </t>
+                                        <td t-if="not cancelled" class="text-right cluster-tds2">
+                                            <t t-esc="'{:.2f}'.format(cluster_cancelled_bookings_value)"/>
+                                        </td>
+                                        <td t-if="not net" class="text-right cluster-tds2">
+                                            <t t-esc="'{:.2f}'.format(cluster_net_bookings_value)"/>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="clusters['data']" t-as="project">
+                                        <t t-set="project_data" t-value="clusters['data'][project]"/>
+                                        <tr t-att-class="'cdebit' + str(id)">
+                                            <td class="project_sticky" style="background-color: white;">
+                                                <t t-esc="project_data['name']"/>
+                                            </td>
+                                            <td class="text-center target_sticky" style="background-color: white;">
+                                                <t t-esc="project_data['target']"/>
+                                            </td>
+                                            <td class="text-center achieved_sticky" style="background-color: white;">
+                                                <t t-esc="project_data['achieved_percentage']"/>%
+                                            </td>
+                                            <t t-set="gross_bookings_count" t-value="0"/>
+                                            <t t-set="cancelled_bookings_count" t-value="0"/>
+                                            <t t-set="net_bookings_count" t-value="0"/>
+                                            <t t-set="gross_bookings_value" t-value="0"/>
+                                            <t t-set="cancelled_bookings_value" t-value="0"/>
+                                            <t t-set="net_bookings_value" t-value="0"/>
+                                            <t t-foreach="doc['month_keys']" t-as="month_key">
+                                                <t t-if="not gross">
+                                                    <td class="text-center">
+                                                        <t t-esc="project_data[month_key + '_gross_bookings_count']"/>
+                                                        <t t-set="gross_bookings_count"
+                                                           t-value="gross_bookings_count + project_data[month_key + '_gross_bookings_count']"/>
+                                                    </td>
+                                                </t>
+                                                <td t-if="not cancelled" class="text-center">
+                                                    <t t-esc="project_data[month_key+'_cancelled_bookings_count']"/>
+                                                    <t t-set="cancelled_bookings_count"
+                                                       t-value="cancelled_bookings_count + project_data[month_key + '_cancelled_bookings_count']"/>
+                                                </td>
+                                                <td t-if="not net" class="text-center">
+                                                    <t t-esc="project_data[month_key+'_net_bookings_count']"/>
+                                                    <t t-set="net_bookings_count"
+                                                       t-value="net_bookings_count + project_data[month_key + '_net_bookings_count']"/>
+                                                </td>
+                                                <t t-if="not gross">
+                                                    <td class="text-right">
+                                                        <t t-esc="'{:.2f}'.format(project_data[month_key+'_gross_bookings_value'])"/>
+                                                        <t t-set="gross_bookings_value"
+                                                           t-value="gross_bookings_value + project_data[month_key + '_gross_bookings_value']"/>
+                                                    </td>
+                                                </t>
+                                                <td t-if="not cancelled" class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data[month_key+'_cancelled_bookings_value'])"/>
+                                                    <t t-set="cancelled_bookings_value"
+                                                       t-value="cancelled_bookings_value + project_data[month_key + '_cancelled_bookings_value']"/>
+                                                </td>
+                                                <td t-if="not net" class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data[month_key+'_net_bookings_value'])"/>
+                                                    <t t-set="net_bookings_value"
+                                                       t-value="net_bookings_value + project_data[month_key + '_net_bookings_value']"/>
+                                                </td>
+
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-center">
+                                                    <t t-esc="gross_bookings_count"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-center">
+                                                <t t-esc="cancelled_bookings_count"/>
+                                            </td>
+                                            <td t-if="not net" class="text-center ">
+                                                <t t-esc="net_bookings_count"/>
+                                            </td>
+                                            <t t-if="not gross">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(gross_bookings_value)"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="not cancelled" class="text-right">
+                                                <t t-esc="'{:.2f}'.format(cancelled_bookings_value)"/>
+                                            </td>
+                                            <td t-if="not net" class="text-right">
+                                                <t t-esc="'{:.2f}'.format(net_bookings_value)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-set="id" t-value="id + 1"/>
+                                </t>
+                            </t>
+<!--                        Month wise Summary-->
+                            <t t-set="cluster_id" t-value="cluster_id + 1"/>
+                        </t>
+                    </tbody>
+                </t>
+                <t t-else="">
+                    <thead>
+                        <tr>
+                            <th colspan="3"/>
+                            <th t-att-colspan="col_row_1_colspan" class="text-center">
+                                <t t-esc="date.strftime('%d-%b-%Y')"/>
+                            </th>
+                            <th t-att-colspan="col_row_1_colspan" class="text-center">
+                                <t t-esc="date.strftime('%b-%y')"/>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th rowspan="3" class="text-center align-middle">PROJECT</th>
+                            <th rowspan="3" class="text-center align-middle">TARGET</th>
+                            <th rowspan="3" class="text-center align-middle">ACHIEVED</th>
+                            <th t-att-colspan="col_row_1_colspan" class="text-center">FOR THE DAY</th>
+                            <th t-att-colspan="col_row_1_colspan" class="text-center">FOR THE MONTH</th>
+                        </tr>
+                        <tr>
+                            <th t-att-colspan="col_row_2_colspan" class="text-center">Unit Sold (Nos.)</th>
+                            <th t-att-colspan="col_row_2_colspan" class="text-center">Units Sold (AV In Cr.)</th>
+                            <th t-att-colspan="col_row_2_colspan" class="text-center">Unit Sold (Nos.)</th>
+                            <th t-att-colspan="col_row_2_colspan" class="text-center">Units Sold (AV In Cr.)</th>
+                        </tr>
+                        <tr>
+                            <t t-if="not gross">
+                                <th class="text-center">Gross</th>
+                            </t>
+                            <t t-if="not cancelled">
+                                <th class="text-center">Cancelled</th>
+                            </t>
+                            <t t-if="not net">
+                                <th class="text-center">Net</th>
+                            </t>
+                            <t t-if="not gross">
+                                <th class="text-center">Gross</th>
+                            </t>
+                            <t t-if="not cancelled">
+                                <th class="text-center">Cancelled</th>
+                            </t>
+                            <t t-if="not net">
+                                <th class="text-center">Net</th>
+                            </t>
+                            <t t-if="not gross">
+                                <th class="text-center">Gross</th>
+                            </t>
+                            <t t-if="not cancelled">
+                                <th class="text-center">Cancelled</th>
+                            </t>
+                            <t t-if="not net">
+                                <th class="text-center">Net</th>
+                            </t>
+                            <t t-if="not gross">
+                                <th class="text-center">Gross</th>
+                            </t>
+                            <t t-if="not cancelled">
+                                <th class="text-center">Cancelled</th>
+                            </t>
+                            <t t-if="not net">
+                                <th class="text-center">Net</th>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="data" t-value="doc['data']"/>
+                        <t t-set="total_style"
+                           t-value="'padding-bottom: 6px !important; padding-top: 4px !important;'"/>
+                        <tr class="h6">
+                            <td class="text-center total-tds" t-att-style="total_style">TOTAL</td>
+                            <td class="text-center total-tds" t-att-style="total_style">
+                                <t t-esc="data['target']"/>
+                            </td>
+                            <td class="text-center total-tds" t-att-style="total_style">
+                                <t
+                                        t-esc="'{:.2f}'.format(data['booking_count'] / data['target'] * 100  if data['target'] != 0 else 100)"/>
+                                %
+                            </td>
+                            <t t-if="not gross">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data['day_gross_bookings_count']"/>
+                                </td>
+                            </t>
+                            <t t-if="not cancelled">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data['day_cancelled_bookings_count']"/>
+                                </td>
+                            </t>
+                            <t t-if="not net">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data['day_net_bookings_count']"/>
+                                </td>
+                            </t>
+                            <t t-if="not gross">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data['day_gross_bookings_value'])"/>
+                                </td>
+                            </t>
+                            <t t-if="not cancelled">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data['day_cancelled_bookings_value'])"/>
+                                </td>
+                            </t>
+                            <t t-if="not net">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data['day_net_bookings_value'])"/>
+                                </td>
+                            </t>
+                            <t t-if="not gross">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data['month_gross_bookings_count']"/>
+                                </td>
+                            </t>
+                            <t t-if="not cancelled">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data['month_cancelled_bookings_count']"/>
+                                </td>
+                            </t>
+                            <t t-if="not net">
+                                <td class="text-center total-tds" t-att-style="total_style">
+                                    <t t-esc="data['month_net_bookings_count']"/>
+                                </td>
+                            </t>
+                            <t t-if="not gross">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data['month_gross_bookings_value'])"/>
+                                </td>
+                            </t>
+                            <t t-if="not cancelled">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data['month_cancelled_bookings_value'])"/>
+                                </td>
+                            </t>
+                            <t t-if="not net">
+                                <td class="text-right total-tds" t-att-style="total_style">
+                                    <t t-esc="'{:.2f}'.format(data['month_net_bookings_value'])"/>
+                                </td>
+                            </t>
+                        </tr>
+                        <t t-set="direction2" t-value="'yyy'"/>
+                        <t t-set="direction" t-value="'d-none'"/>
+                        <t t-if="summary_wise">
+                            <t t-set="direction2" t-value="'d-none'"/>
+                            <t t-set="direction" t-value="'yyy'"/>
+                        </t>
+                        <t t-set="cluster_id" t-value="1"/>
+                        <t t-set="id" t-value="1"/>
+                        <t t-foreach="data['data']" t-as="cluster">
+                            <t t-set="cluster_data" t-value="data['data'][cluster]"/>
+                            <!--No Month Summary is empty & No summary does not cluster section-->
+                            <tr class="font-weight-bold">
+                                <td class="parent text-left cluster-tds" title="Click to expand/collapse"
+                                    t-att-id="'debit' + str(cluster_id)"
+                                    style="font-weight:bold;padding-left: 10px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 200px;">
+                                    <!--      Cluster else month  expand and fold-->
+                                    <span t-att-id="'cluster_debit' + str(cluster_id)"
+                                          t-att-class="'cluster o_trial_reports_foldable 1 o_trial_reports_caret_icon down ' + direction2">
+                                        <i t-att-class="'fa fa-fw fa-caret-down'"
+                                           role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                    </span>
+                                    <span t-att-id="'cluster_debit' + str(cluster_id)"
+                                          t-att-class="'cluster o_trial_reports_foldable 1 o_trial_reports_caret_icon right  ' + direction">
+                                        <i t-att-class="'fa fa-fw fa-caret-right'"
+                                           role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                    </span>
+
+
+                                    <t t-esc="cluster.name"/>
+                                </td>
+                                <td class="text-center cluster-tds">
+                                    <t t-esc="cluster_data['target']"/>
+                                </td>
+                                <td class="text-center cluster-tds">
+                                    <t
+                                            t-esc="'{:.2f}'.format(cluster_data['booking_count'] / cluster_data['target'] * 100  if cluster_data['target'] != 0 else 100)"/>
+                                    %
+                                </td>
+                                <t t-if="not gross">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_data['day_gross_bookings_count']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not cancelled">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_data['day_cancelled_bookings_count']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not net">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_data['day_net_bookings_count']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not gross">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data['day_gross_bookings_value'])"/>
+                                    </td>
+                                </t>
+                                <t t-if="not cancelled">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data['day_cancelled_bookings_value'])"/>
+                                    </td>
+                                </t>
+                                <t t-if="not net">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data['day_net_bookings_value'])"/>
+                                    </td>
+                                </t>
+                                <t t-if="not gross">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_data['month_gross_bookings_count']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not cancelled">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_data['month_cancelled_bookings_count']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not net">
+                                    <td class="text-center cluster-tds">
+                                        <t t-esc="cluster_data['month_net_bookings_count']"/>
+                                    </td>
+                                </t>
+                                <t t-if="not gross">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data['month_gross_bookings_value'])"/>
+                                    </td>
+                                </t>
+                                <t t-if="not cancelled">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data['month_cancelled_bookings_value'])"/>
+                                    </td>
+                                </t>
+                                <t t-if="not net">
+                                    <td class="text-right cluster-tds">
+                                        <t t-esc="'{:.2f}'.format(cluster_data['month_net_bookings_value'])"/>
+                                    </td>
+                                </t>
+                            </tr>
+                            <t t-foreach="cluster_data['data']" t-as="cluster_head">
+                                <!--                        <t t-foreach="data['data'][cluster]['data']" t-as="clusters">-->
+                                <t t-set="clusters" t-value="data['data'][cluster]['data'][cluster_head]"/>
+                                <!--                        <t t-esc="clusters"/>   -->
+                                <!--                             <t t-set="id2" t-value="1"/>-->
+
+
+                                <!-- Cluster wise Expansion in summary   -->
+                                <!--                            Not Month Summary-->
+                                <t t-if="summary_wise">
+                                    <tr t-att-class="'d-none font-weight-bold cluster_child' + str(cluster_id)">
+                                        <td class="parent text-left cluster-tds2" title="Click to expand/collapse"
+                                            t-att-id="'debit' + str(id)"
+                                            style="font-weight:bold;padding-left: 10px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 200px;">
+                                            <!-- Cluster Head else Month expand and Fold-->
+<!--                                                ♦ Cluster head first row  ♦-->
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon down ' + direction2 + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-down'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon right  ' + direction + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-right'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+
+
+                                            <t t-esc="cluster_head.name"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2">
+                                            <t t-esc="clusters['target']"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2">
+                                            <t
+                                                    t-esc="'{:.2f}'.format(clusters['booking_count'] / clusters['target'] * 100  if clusters['target'] != 0 else 100)"/>
+                                            %
+                                        </td>
+                                        <t t-if="not gross">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['day_gross_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['day_cancelled_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['day_net_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['day_gross_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['day_cancelled_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['day_net_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['month_gross_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['month_cancelled_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['month_net_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['month_gross_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['month_cancelled_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['month_net_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                    <!--                                <t t-foreach="cluster_data['data']" t-as="clusters">-->
+                                    <t t-foreach="clusters['data']" t-as="project">
+                                        <t t-set="project_data" t-value="clusters['data'][project]"/>
+                                        <tr t-att-class="'d-none cdebit' + str(id)">
+                                            <!--                                        <t t-esc="project_data"/>-->
+                                            <!--                                        <t t-esc="project"/>-->
+                                            <!--                                        <t t-esc="cluster"/>-->
+                                            <td
+                                                    style="padding-left: 20px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 10px;">
+                                                <t t-esc="project_data['name']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-esc="project_data['target']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-esc="project_data['achieved_percentage']"/>%
+                                            </td>
+                                            <t t-if="not gross">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['day_gross_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['day_cancelled_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['day_net_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['day_gross_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['day_cancelled_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['day_net_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['month_gross_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['month_cancelled_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['month_net_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['month_gross_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['month_cancelled_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['month_net_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                        <!--                                <t t-set="id2" t-value="id2 + 1"/>-->
+
+
+                                    </t>
+                                    <t t-set="id" t-value="id + 1"/>
+                                    <!--                                </t>-->
+                                </t>
+                                <!-- not Month not Summmary : Clusters Head-->
+                                <t t-else="">
+                                    <tr t-att-class="'font-weight-bold cluster_child' + str(cluster_id)">
+                                        <td class="parent text-left cluster-tds2" title="Click to expand/collapse"
+                                            t-att-id="'debit' + str(id)"
+                                            style="font-weight:bold;padding-left: 10px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;max-width: 200px;">
+                                            <!-- Cluster Head else Month expand and Fold-->
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon down ' + direction2 + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-down'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+                                            <span t-att-id="'debit' + str(id)"
+                                                  t-att-class="'o_trial_reports_foldable 1 o_trial_reports_caret_icon right  ' + direction + ' pdebit' + str(id) + ' cluster_debit' + str(cluster_id)">
+                                                <i t-att-class="'fa fa-fw fa-caret-right'"
+                                                   role="img" aria-label="Fold" title="Fold" style="width: 30px;"></i>
+                                            </span>
+
+
+                                            <t t-esc="cluster_head.name"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2">
+                                            <t t-esc="clusters['target']"/>
+                                        </td>
+                                        <td class="text-center cluster-tds2">
+                                            <t
+                                                    t-esc="'{:.2f}'.format(clusters['booking_count'] / clusters['target'] * 100  if clusters['target'] != 0 else 100)"/>
+                                            %
+                                        </td>
+                                        <t t-if="not gross">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['day_gross_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['day_cancelled_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['day_net_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['day_gross_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['day_cancelled_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['day_net_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['month_gross_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['month_cancelled_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-center cluster-tds2">
+                                                <t t-esc="clusters['month_net_bookings_count']"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not gross">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['month_gross_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not cancelled">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['month_cancelled_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="not net">
+                                            <td class="text-right cluster-tds2">
+                                                <t t-esc="'{:.2f}'.format(clusters['month_net_bookings_value'])"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                    <t t-foreach="clusters['data']" t-as="project">
+                                        <t t-set="project_data" t-value="clusters['data'][project]"/>
+                                        <tr t-att-class="'cdebit' + str(id)">
+                                            <td
+                                                    style="padding-left: 20px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 10px;">
+                                                <t t-esc="project_data['name']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-esc="project_data['target']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-esc="project_data['achieved_percentage']"/>%
+                                            </td>
+                                            <t t-if="not gross">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['day_gross_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['day_cancelled_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['day_net_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['day_gross_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['day_cancelled_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['day_net_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['month_gross_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['month_cancelled_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-center">
+                                                    <t t-esc="project_data['month_net_bookings_count']"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not gross">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['month_gross_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not cancelled">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['month_cancelled_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="not net">
+                                                <td class="text-right">
+                                                    <t t-esc="'{:.2f}'.format(project_data['month_net_bookings_value'])"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                    <t t-set="id" t-value="id + 1"/>
+                                </t>
+                            </t>
+                            <t t-set="cluster_id" t-value="cluster_id + 1"/>
+                        </t>
+                    </tbody>
+                </t>
+
+            </table>
+            <script>
+                $(document).ready(function(){
+                console.log('get function');
+                $('.o_trial_reports_caret_icon.down').click(function(ev) {
+                console.log('sachin',$(this))
+
+                if($(this).hasClass('cluster')){
+                    var elementId = $(this).attr('id');
+                    console.log($('.o_trial_reports_caret_icon.right.p'+ elementId));
+                    $('.cluster_child' + elementId.replace('cluster_debit','')).addClass('d-none');
+                    $('.o_trial_reports_caret_icon.down.'+ elementId).click()
+                    $('#'+ elementId +'.cluster.o_trial_reports_caret_icon.right').removeClass('d-none');
+                    $('#'+ elementId +'.cluster.o_trial_reports_caret_icon.down').addClass('d-none');
+                }
+                else{
+
+                    console.log(ev,'Closed in else');
+                    console.log('this', this);
+                    var elementId = $(this).attr('id');
+                    console.log('Element ID:', elementId);
+
+                    // Hide all elements with the ID as their class
+                    $('.c' + elementId).addClass('d-none');
+                    $('.o_trial_reports_caret_icon.right.p' + elementId).removeClass('d-none');
+                    $('.o_trial_reports_caret_icon.down.p' + elementId).addClass('d-none');
+                }
+
+                });
+
+                $('.o_trial_reports_caret_icon.right').click(function(ev) {
+                //console.log('sachin right',$(this));
+                if($(this).hasClass('cluster')){
+                    var elementId = $(this).attr('id');
+                    console.log("id",elementId);
+                    //$('.o_trial_reports_caret_icon.down.p'+ elementId.replace('cluster','')).click()
+                    //console.log('.o_trial_reports_caret_icon.down.'+ elementId);
+                    //console.log($('.o_trial_reports_caret_icon.down.'+ elementId));
+                    $('.cluster_child' + elementId.replace('cluster_debit','')).removeClass('d-none');
+                    $('#'+ elementId +'.cluster.o_trial_reports_caret_icon.down').removeClass('d-none');
+                    $('#'+ elementId +'.cluster.o_trial_reports_caret_icon.right').addClass('d-none');
+                    //$('.o_trial_reports_caret_icon.right.'+ elementId).click()
+                }
+                else{
+                    console.log(ev,'Opened in else');
+                    console.log('this', this);
+                    var elementId = $(this).attr('id');
+                    console.log('Elementads ID:Opened', elementId);
+
+                    // Hide all elements with the ID as their class
+                    $('.c' + elementId).removeClass('d-none');
+                    $('.o_trial_reports_caret_icon.down.p' + elementId).removeClass('d-none');
+                    $('.o_trial_reports_caret_icon.right.p' + elementId).addClass('d-none');
+                }
+                });
+                })
+
+            </script>
+        </div>
+    </template>
+</odoo>

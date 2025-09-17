@@ -1,0 +1,16 @@
+Documentation - Project Fetch API
+-------------------------------
+
+url :   /project/fetch_record_details
+methode:  POST
+
+Body(json):
+
+#################################################################
+
+{"params": {
+    "login": "api",
+    "password": ""
+    }
+}
+#################################################################

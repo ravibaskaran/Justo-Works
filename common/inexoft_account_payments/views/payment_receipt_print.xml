@@ -1,0 +1,274 @@
+<odoo>
+    <template id="account.report_payment_receipt_document">
+        <t t-call="web.basic_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <div style="border:1px solid black;">
+                <t t-if="res_company">
+                    <table>
+                        <tr>
+                            <td colspan="3"/>
+                        </tr>
+                    </table>
+                    <div style="margin-top:8px" class="">
+                        <div class="row">
+                            <div style="float:left;padding-left:20px;padding-top:3px;" class="col-2 mb4">
+                                <img style="width: 120px;" t-if="res_company.logo"
+                                     t-att-src="image_data_uri(res_company.logo)" alt="Logo"/>
+                            </div>
+                            <div t-if="'branch_id' in o.env.user._fields and o.branch_id" class="col-8 mb4 text-center">
+                                <t t-set="hbr" t-value="0"/>
+                                <t t-if="'branch_vat' not in o.branch_id._fields">
+                                    <h6 class="directprint-h6" t-esc="o.company_id.name"/>
+                                    <t t-if="o.branch_id.branch_contactname">
+                                        <span class="f-1rem" t-esc="o.branch_id.branch_contactname"/>
+                                        <br/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="hbr" t-value="hbr+1"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-if="o.branch_id.branch_contactname">
+                                        <span class="f-1rem" t-esc="o.branch_id.branch_contactname"/>
+                                        <br/>
+                                    </t>
+                                    <t t-else="">
+                                        <h6 class="directprint-h6" t-esc="o.company_id.name"/>
+                                    </t>
+                                </t>
+                                <span class="f-1rem">
+                                    <span t-esc="o.branch_id.branch_street"/>
+                                    <span t-esc="o.branch_id.branch_street2"/>
+                                    <span t-esc="o.branch_id.branch_city"/>
+                                    <br/>
+                                    Ph:<span t-esc="o.branch_id.branch_phone"/>,
+                                    <span t-esc="o.branch_id.branch_Mobile"/>
+                                    <br/>
+                                    <span t-esc="o.branch_id.branch_state_id.name"/>
+                                    , Code:
+                                    <span t-esc="o.branch_id.branch_state_id.l10n_in_tin"/>
+                                    ,
+                                    <span t-esc="o.branch_id.branch_country_id.name"/>
+                                    <br/>
+                                    GSTIN/UIN:
+                                    <span t-if="'branch_vat' in o.branch_id._fields" t-esc="o.branch_id.branch_vat"/>
+                                    <span t-else="" t-esc="o.company_id.vat"/>
+                                    <br/>
+                                    <t t-if="o.company_id.company_registry">
+                                        CIN:
+                                        <span t-esc="o.company_id.company_registry"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="hbr" t-value="hbr+1"/>
+                                    </t>
+                                    <t t-if="hbr &gt; 0" t-raw="'&lt;br/&gt;'*hbr"/>
+                                </span>
+                            </div>
+                            <div t-else="" class="col-8 mb4 text-center">
+                                <h4 style="margin:0;color:#1155cc;font-size: 1.2rem;">
+                                    <span t-esc="res_company.name"/>
+                                </h4>
+                                <p style="margin-bottom:0;">
+                                    <span t-esc="res_company.street"/>,
+                                    <span t-esc="res_company.street2"/>,
+                                    <span t-esc="res_company.city"/>,
+                                    <span t-esc="res_company.state_id.name"/>,
+                                    <span t-esc="res_company.country_id.name"/>-
+                                    <span t-esc="res_company.zip"/>
+
+                                </p>
+                                <p style="margin-bottom:0;">
+                                    <span style="padding-right:15px">Phone :
+                                        <span t-esc="res_company.phone"/>
+                                    </span>
+                                    Email :
+                                    <span t-esc="res_company.email"/>
+                                </p>
+                                <p>
+                                    <span class="list-inline-item d-inline">
+                                        GSTIN
+                                        :
+                                    </span>
+                                    <span t-esc="res_company.vat"/>
+                                </p>
+                            </div>
+                            <div class="col-2 mb4">
+                            </div>
+                        </div>
+                        <div class="row zero_min_height">
+                            <div class="col-12">
+                                <div style="border-bottom: 1px solid #000;"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <table>
+                    <tr>
+                        <td colspan="3"/>
+                    </tr>
+                </table>
+                <div class="page" style="">
+                    <t t-if="o.payment_type == 'inbound' and o.partner_type == 'customer'">
+                        <h3 class="text-center">
+                            <strong style="font-size: 27px;font-weight: 600;"><t t-if="o.is_retention">Retention</t>
+                                Receipt Voucher
+                            </strong>
+                        </h3>
+                    </t>
+                    <t t-if="o.payment_type == 'outbound' and o.partner_type == 'supplier'">
+                        <h3 class="text-center">
+                            <strong style="font-size: 27px;font-weight: 600;">Payment Voucher</strong>
+                        </h3>
+                    </t>
+                    <div class="row" style="margin:0px 0;margin-top:-10px;padding-left:20px">
+                        <div class="col-6" style="padding: 0;">
+                            Vr.No:
+                            <span t-field="o.name"/>
+                        </div>
+                        <div class="col-6 text-right" style="padding: 0;padding-right:20px">
+                            Date:
+                            <span t-field="o.date"/>
+                        </div>
+                    </div>
+                    <table width="100%" class=" table-sm">
+                        <thead>
+                            <tr style="border-top:1px solid black;border-bottom:1px solid black;">
+                                <th colspan="2" style="padding-left:20px">
+                                    <span>Description</span>
+                                </th>
+                                <th style="padding-right:20px" class="text-right"
+                                    t-if="o.journal_id.type != 'cash' or (o.journal_id.type == 'cash' and o.payment_type == 'inbound')">
+                                    <span>Receipt</span>
+                                </th>
+                                <th style="padding-right:20px" width="18%" class="text-right"
+                                    t-if="o.journal_id.type != 'cash' or (o.journal_id.type == 'cash' and o.payment_type == 'outbound')">
+                                    <span>Payment</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="receipt_total" t-value="0"/>
+                            <t t-set="payment_total" t-value="0"/>
+                            <t t-foreach="o.line_ids" t-as="line">
+                                <tr style="border-bottom: solid 1px #dee2e6;"
+                                    t-if="line.account_id.name.lower() != 'cash'">
+                                    <td colspan="2" style="padding-left:20px">
+                                        <span t-field="line.account_id.name"/>
+                                        -
+                                        <span t-field="o.partner_id.name"/>
+                                    </td>
+                                    <td style="padding-right:20px" class="text-right"
+                                        t-if="o.journal_id.type != 'cash' or (o.journal_id.type == 'cash' and o.payment_type == 'inbound')">
+                                        <span t-field="line.credit"/>
+                                        <t t-set="payment_total" t-value="payment_total + line.credit"/>
+                                    </td>
+                                    <td style="padding-right:20px" class="text-right"
+                                        t-if="o.journal_id.type != 'cash' or (o.journal_id.type == 'cash' and o.payment_type == 'outbound')">
+                                        <span t-field="line.debit"/>
+                                        <t t-set="receipt_total" t-value="receipt_total + line.debit"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <table width="100%" style="border-bottom: solid 1px black;margin-top:100px;">
+                        <tbody>
+                            <tr t-if="o.ref">
+                                <td class="text-left" style="padding-left:20px" colspan="3">(<t t-esc="o.ref"/>)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left:20px;padding-bottom:7px;" colspan="3">
+                                    <t t-foreach="o.reconciled_invoice_ids" t-as="inv">
+                                        (Bill Number :
+                                        <t t-esc="inv.name"/>
+                                        Bill Value :
+                                        <t t-esc="inv.amount_total"/>
+                                        Amount Due :<t t-esc="inv.amount_residual"/>)
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:63%;padding-left:20px">
+                                    Total(In words) :
+                                    <t t-esc="o.currency_id.amount_to_text(o.amount)"/>
+                                    Only
+                                </td>
+                                <td style="width:8.5%" class="">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="padding-right:20px" class="text-right"
+                                    t-if="o.journal_id.type != 'cash' or (o.journal_id.type == 'cash' and o.payment_type == 'inbound')">
+                                    <strong>
+                                        <t t-esc="o.currency_id.symbol"/>
+                                        <t t-esc="'{:.2f}'.format(payment_total)"/>
+                                    </strong>
+                                </td>
+                                <td style="width:18%padding-right:20px" class="text-right"
+                                    t-if="o.journal_id.type != 'cash' or (o.journal_id.type == 'cash' and o.payment_type == 'outbound')">
+                                    <strong>
+                                        <t t-esc="o.currency_id.symbol"/>
+                                        <t t-esc="'{:.2f}'.format(receipt_total)"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="width:100%;padding-top:60px;padding-bottom:15px;">
+                        <table width="100%">
+                            <tr>
+                                <td style="width:33.33%;text-align:center;line-height:1;">
+                                    <div>
+                                        ----------------------
+                                        <br/>
+                                        Prepared By
+                                    </div>
+                                </td>
+                                <td style="width:33.33%;text-align:center;line-height:1;">
+                                    <div>
+                                        ----------------------
+                                        <br/>
+                                        Authorised by
+                                    </div>
+                                </td>
+                                <td style="width:33.33%;text-align:center;line-height:1;">
+                                    <div>
+                                        ----------------------
+                                        <br/>
+                                        Signature
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <record id="voucher_reports_paper_format" model="report.paperformat">
+        <field name="name">Voucher Reports Paper Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">28</field>
+        <field name="dpi">99</field>
+    </record>
+
+      <report
+            id="account.action_report_payment_receipt"
+            model="account.payment"
+            string="Payment Receipt"
+            report_type="qweb-pdf"
+            name="account.report_payment_receipt"
+            file="account.report_payment_receipt"
+            menu="True"
+            paperformat="voucher_reports_paper_format"
+        />
+</odoo>

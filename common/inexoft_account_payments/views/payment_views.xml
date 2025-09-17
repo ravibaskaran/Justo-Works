@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <record id="view_account_payment_kanban_inherit" model="ir.ui.view">
+            <field name="name">account.payment.kanban.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban[@class='o_kanban_mobile']" position="attributes">
+                    <attribute name="create">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_form_inherit" model="ir.ui.view">
+            <field name="name">view_account_payment_form_inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_internal_transfer']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bank_reference']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')], 'invisible': [('journal_type', '!=', 'bank')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='cheque_reference']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')], 'invisible': [('journal_type', '!=', 'bank')]}</attribute>
+                </xpath>
+                <xpath expr="//group[@name='group2']" position="inside">
+                    <field name="journal_type" invisible="1"/>
+                    <field name="analytic_account_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_vendor_payment" model="ir.actions.act_window">
+            <field name="name">Vendor Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{
+                    'default_payment_type': 'outbound',
+                    'default_partner_type': 'supplier',
+                    'res_partner_search_mode': 'supplier',
+                }
+            </field>
+            <field name="view_id" ref="account.view_account_payment_tree"/>
+<!--            <field name="domain">[('payment_type','=','outbound'),('partner_type','=','supplier')]</field>-->
+            <field name="domain">[('partner_type','=','supplier')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Register a vendor payment
+                </p>
+            </field>
+        </record>
+
+        <record id="action_customer_receipt" model="ir.actions.act_window">
+            <field name="name">Customer Receipt</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{
+                'default_payment_type': 'inbound',
+                'default_partner_type': 'customer',
+                'res_partner_search_mode': 'customer',
+                }
+            </field>
+            <field name="view_id" ref="account.view_account_payment_tree"/>
+<!--            <field name="domain">[('payment_type','=','inbound'),('partner_type','=','customer')]</field>-->
+            <field name="domain">[('partner_type','=','customer')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Register a customer receipt
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="payments_main_menu" name="Transactions" parent="account.menu_finance" sequence="2"/>
+        <menuitem id="payments_root_menu" name="Transactions" parent="payments_main_menu"/>
+        <menuitem id="customer_receipt_menu" parent="payments_root_menu" name="Customer Receipt"
+                  action="action_customer_receipt" sequence="2"/>
+        <menuitem id="vendor_payment_menu" parent="payments_root_menu" name="Vendor Payments"
+                  action="action_vendor_payment" sequence="3"/>
+    </data>
+</odoo>

@@ -1,0 +1,267 @@
+<odoo>
+    <record id="customer_form" model="ir.ui.view">
+        <field name="name">customer.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="sheet" position="before">
+                <div class="alert mb-0" role="alert" style="background: #8bc4fc;" attrs="{'invisible': [('is_vendor','!=',True)]}">
+                    <center><h2 style="font-weight: 500;">Vendor</h2></center>
+                </div>
+                <div class="alert mb-0" role="alert" style="background: #8bc4fc;" attrs="{'invisible': [('is_channel_employee','!=',True)]}">
+                    <center><h2 style="font-weight: 500;">Channel Partner- Employee</h2></center>
+                </div>
+                <div class="alert mb-0" role="alert" style="background: #8bc4fc;" attrs="{'invisible': [('is_channel','!=',True)]}">
+                    <center><h2 style="font-weight: 500;">Channel Partner</h2></center>
+                </div>
+<!--                <div class="alert alert-primary mb-0" role="alert" attrs="{'invisible': [('is_developer','!=',True)]}">-->
+<!--                    <center><h4>Developer</h4></center>-->
+<!--                </div>-->
+                <div class="alert mb-0" role="alert" style="background: #8bc4fc;" attrs="{'invisible': [('is_tenant','!=',True)]}">
+                    <center><h2 style="font-weight: 500;">Customer</h2></center>
+                </div>
+                <div class="alert mb-0" role="alert" style="background: #8bc4fc;" attrs="{'invisible': [('is_owner','!=',True)]}">
+                    <center><h2 style="font-weight: 500;">Developer</h2></center>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="bank_name"/>
+                <field name="ifsc_code"/>
+                <field name="account_number"/>
+                <field name="tds_applicable" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('is_vendor', '!=', True)]}"/>
+                <field name="gender" attrs="{'invisible': ['|', '|', ('is_owner','=',True), ('is_vendor','=',True), ('is_channel','=',True)]}"/>
+                <field name="dob" attrs="{'invisible': ['|', '|', ('is_owner','=',True), ('is_vendor','=',True), ('is_channel','=',True)]}"/>
+                <field name="credit_days" attrs="{'invisible': [('is_tenant','!=',True), ('is_vendor','!=',True)]}"/>
+                <field name="is_channel" invisible="1"/>
+                <field name="is_channel_employee" invisible="1"/>
+                <field name="is_owner" invisible="1"/>
+                <field name="is_vendor" invisible="1"/>
+            </xpath>
+            <xpath expr="//group/group[2]" position="after">
+                <table style="margin: 0 !important;" class="o_group o_inner_group" attrs="{'invisible': [('is_vendor','!=',True)]}">
+                    <tbody>
+                        <tr>
+                            <td class="o_td_label">
+                                <strong>MSMF Registered
+                                </strong>
+                            </td>
+                            <td>
+                                <field name="msmf_registered"/>
+                                <field name="msmf_value" style="width: 93%;" attrs="{'invisible': [('msmf_registered','!=',True)]}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">GSTIN</attribute>
+            </xpath>
+            <xpath expr="//field[@name='type']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="after">
+                    <field name="contact_person_name" attrs="{'invisible': [('is_vendor','!=',True)]}"/>
+<!--                    <field name="service_type" attrs="{'invisible': [('is_vendor','!=',True)]}"/>-->
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <group attrs="{'invisible': [('is_channel','!=',True)]}">
+                    <field name="owner_name" string="Owner Name" attrs="{'invisible': [('is_channel','!=',True)]}"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+                <attribute name="string">Occupation</attribute>
+                <attribute name="attrs">{'invisible': ['|','|',('is_company', '=', True), ('is_owner','=',True), ('is_vendor','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="rera_number" attrs="{'invisible': [('is_channel','!=', True)], 'required': [('is_channel','=', True)]}"/>
+                <field name="pan_number" string="PAN"/>
+                <field name="aadhar_number" attrs="{'invisible': [('is_owner','=', True)]}"/>
+                <field name="income" attrs="{'invisible': [('is_tenant','!=', True)]}"/>
+                <field name="supplier_rank" invisible="1"/>
+                <field name="customer_rank" invisible="1"/>
+                <div class="o_td_label">
+                    <label for="declaration" string="Tax Declaration"
+                           attrs="{'invisible': [('is_vendor','!=',True)]}"/>
+                    <label for="declaration" string="IT Declaration"
+                           attrs="{'invisible': [('is_channel_employee','!=',True)]}"/>
+                </div>
+<!--                <field name="declaration"-->
+<!--                       attrs="{'invisible': ['|','|','|','|',('is_owner','=', True),('is_channel','=',True),('is_tenant','=',True),('is_developer','=',True),('customer_rank','&gt;', 0)]}"-->
+<!--                       nolabel="1"/>-->
+                <field name="declaration"
+                       attrs="{'invisible': [('is_channel_employee','!=',True),('is_vendor','!=',True)]}"
+                       nolabel="1"/>
+                <field name="service_type" attrs="{'invisible': [('is_vendor','!=',True)]}"/>
+                <field name="region_id" widget="many2many_tags" attrs="{'invisible': [('is_vendor','!=',True)]}" domain="[('is_parent','=',True)]" context="{'default_is_parent': True}"/>
+                <field name="channel_id" string="CP Id" attrs="{'invisible': [('is_channel','!=',True)]}" readonly="1" force_save="1"/>
+                <field name="cp_employee_id" attrs="{'invisible': [('is_channel_employee','!=',True)]}"/>
+                <field name="parent_channel_id" string="CP Id" readonly="1" force_save="1" attrs="{'invisible': [('is_channel_employee','!=',True)]}"/>
+            </xpath>
+            <xpath expr="//span[@name='address_name']" position="before">
+                <field name="developer_code" attrs="{'invisible': [('is_owner','!=', True)]}" readonly="1" force_save="1"/>
+                <field name="vendor_code" attrs="{'invisible': [('is_vendor','!=', True)]}"/>
+                <field name="customer_code" readonly="1" force_save="1" attrs="{'invisible': [('is_tenant','!=', True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ssn_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|','|','|',('is_vendor','=',True), ('is_channel','=', True), ('is_owner','=', True), ('is_tenant','=', True)]}</attribute>
+                <attribute name="placeholder">Channel Partner</attribute>
+                <attribute name="context">{'default_is_company': True, 'show_vat': True, 'default_is_channel': True}</attribute>
+                <attribute name="domain">[('is_company', '=', True),('is_channel','=', True)]</attribute>
+            </xpath>
+            <xpath expr="//span[@name='address_name']/b[1]" position="replace">
+                <b>Address</b>
+            </xpath>
+            <xpath expr="//field[@name='type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='title']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting_disabled']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_channel_employee','=',True), ('is_tenant','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="attrs">{'required': [('is_owner','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="attrs">{'required': [('is_owner','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="attrs">{'required': [('is_owner','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="attrs">{'required': [('is_owner','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="attributes">
+                <attribute name="attrs">{'required': [('is_owner','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="attributes">
+                <attribute name="attrs">{'required': [('is_owner','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form/sheet/field[@name='type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form/sheet/field[@name='type']" position="after">
+                <separator class="my-0" string="ADDRESS"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="l10n_in_view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">l10n_in_view_partner_form_inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_in.l10n_in_view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_channel_employee','=',True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_tree_inherit" model="ir.ui.view">
+        <field name="name">view_partner_tree_inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='activity_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account.res_partner_action_supplier" model="ir.actions.act_window">
+        <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_supplier_rank': 1, 'default_is_vendor': True}
+        </field>
+        <field name="domain">[('is_vendor','=',True)]</field>
+    </record>
+    <record id="res_partner_action_supplier" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_supplier_rank': 1, 'default_is_vendor': True}
+        </field>
+        <field name="domain">[('is_vendor','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new supplier in your address book
+            </p>
+            <p>
+                Software helps you easily track all activities related to a supplier.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_supplier_real_estate" name="Vendors" action="res_partner_action_supplier"
+              parent="itsys_real_estate.menu_masters" sequence="100"/>
+    <menuitem id="menu_supplier_real_estate_accounting" name="Vendors" action="res_partner_action_supplier"
+              parent="account_vouchers.menu_master_custom_menu" sequence="50"/>
+<!--    <menuitem id="menu_res_partners_customers_accounting" action="itsys_real_estate.action_partner_form_tenant"-->
+<!--              parent="account_vouchers.menu_master_custom_menu" sequence="100"/>-->
+
+    <record id="channel_view_action" model="ir.actions.act_window">
+        <field name="name">Channel Partners</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="domain">[('is_channel','=',True)]</field>
+        <field name="context">{'default_is_channel': True,'default_is_company': True, 'create': 0, 'edit': 0}</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+    <menuitem id="menu_channel_partner" name="Channel Partner" action="channel_view_action"
+              parent="itsys_real_estate.menu_masters" sequence="30"/>
+
+    <record id="channel_employee_view_action" model="ir.actions.act_window">
+        <field name="name">Channel Partner- Employee</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="domain">[('is_channel_employee','=',True)]</field>
+        <field name="context">{'default_is_channel_employee': True, 'create': 0, 'edit': 0}</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+    <menuitem id="menu_channel_partner_employee" name="Channel Partner- Employee" action="channel_employee_view_action"
+              parent="itsys_real_estate.menu_masters" sequence="40"/>
+
+<!--    <record id="developer_view_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Developers</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="res_model">res.partner</field>-->
+<!--        <field name="domain">[('is_owner','=',True)]</field>-->
+<!--        <field name="context">{'is_owner': True}</field>-->
+<!--        <field name="view_mode">tree,form</field>-->
+<!--    </record>-->
+<!--    <menuitem id="menu_developer_partner" name="Developers" action="developer_view_action"-->
+<!--              parent="itsys_real_estate.menu_masters" sequence="50"/>-->
+</odoo>

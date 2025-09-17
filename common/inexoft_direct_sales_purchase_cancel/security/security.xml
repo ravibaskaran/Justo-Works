@@ -1,0 +1,33 @@
+<odoo>
+    <data noupdate="1">
+         <record model="ir.module.category" id="module_category_inex_cancel_purchase">
+            <field name="name">Direct Purchase,Sales Cancel</field>
+            <field name="sequence">120</field>
+        </record>
+        <record id="group_cancel_direct_sale_purchase" model="res.groups">
+            <field name="name">Cancel Direct Sales &amp; Purchase</field>
+            <field name="implied_ids" eval="[(4, ref('stock_picking_cancel_extended.group_picking_cancel'))]"/>
+             <field name="category_id" ref="module_category_inex_cancel_purchase"/>
+        </record>
+        <record id="group_inex_cancel_purchase" model="res.groups">
+            <field name="name">Purchase Cancel</field>
+            <field name="category_id" ref="module_category_inex_cancel_purchase"/>
+            <field name="implied_ids" eval="[(4, ref('stock_picking_cancel_extended.group_picking_cancel'))]"/>
+        </record>
+        <record id="group_inex_cancel_sales" model="res.groups">
+            <field name="name">Sales Cancel</field>
+            <field name="category_id" ref="module_category_inex_cancel_purchase"/>
+            <field name="implied_ids" eval="[(4, ref('stock_picking_cancel_extended.group_picking_cancel'))]"/>
+        </record>
+        <record id="group_inex_purchase_set_to_draft" model="res.groups">
+            <field name="category_id" ref="module_category_inex_cancel_purchase"/>
+            <field name="name">Purchase Set To Draft </field>
+            <field name="implied_ids" eval="[(4, ref('stock_picking_cancel_extended.group_picking_cancel'))]"/>
+        </record>
+        <record id="group_inex_sales_set_to_draft" model="res.groups">
+            <field name="category_id" ref="module_category_inex_cancel_purchase"/>
+            <field name="name">Sales Set To Draft </field>
+            <field name="implied_ids" eval="[(4, ref('stock_picking_cancel_extended.group_picking_cancel'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,8 @@
+<odoo>
+  <data>
+      <record id="base.action_country" model="ir.actions.act_window">
+          <field name="domain">[('code', '=', 'IN')]</field>
+      </record>
+      <menuitem id="country_master" name="Countries" parent="itsys_real_estate.menu_masters" action="base.action_country" sequence="110"/>
+  </data>
+</odoo>

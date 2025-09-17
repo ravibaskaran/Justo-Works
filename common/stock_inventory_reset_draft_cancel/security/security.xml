@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+         <record model="res.groups" id="receipt_issue_reset_draft_group">
+            <field name="name">Stock Receipt, Issue Note Reset to Draft</field>
+        </record>
+    </data>
+</odoo>

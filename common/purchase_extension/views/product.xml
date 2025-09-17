@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add By lot as default -->
+        <record id="stock.product_template_action_product" model="ir.actions.act_window">
+            <field name="context">
+                {"search_default_consumable": 1, 'default_detailed_type': 'product','default_tracking':'lot','default_purchase_method':'purchase'}
+            </field>
+        </record>
+
+        <!-- Inherited Product Template to add a flag For serial generation in odoo -->
+        <record id="product_template_inherit_add_flag" model="ir.ui.view">
+            <field name="name">product_template_inherit_add_flag</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+
+                <!-- Generate Serial Number -->
+                <xpath expr="//div[@name='options']" position="inside">
+                    <span groups="purchase_extension.group_generate_serial_number" class="d-inline-block" attrs="{'invisible':[('tracking','!=','lot')]}">
+                            <field name="generate_serial_number" sting="Generate Serial No."/>
+                            <label for="generate_serial_number" string="Generate Serial No."/>
+                    </span>
+                </xpath>
+
+                <xpath expr="//field[@name='l10n_in_hsn_code']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

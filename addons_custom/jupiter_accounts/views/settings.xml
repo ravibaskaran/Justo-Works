@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_jupiter_accounts" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.jupiter_accounts</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='account_vendor_bills']" position="after">
+                    <h2 class="">Developer Invoice Creation State</h2>
+                    <div class="app_settings_block">
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="developer_invoice_creation_state"/>
+                                    <div class="text-muted">
+                                        Developer Invoice Creation State
+                                    </div>
+                                    <field name="developer_invoice_creation_state"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

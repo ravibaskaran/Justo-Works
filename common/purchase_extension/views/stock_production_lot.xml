@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ♦ ▼ Inherited 'Stock Production Form Add new field'. ▼ ♦ -->
+        <record id="stock_production_lot_add_new_fields" model="ir.ui.view">
+            <field name="name">stock_production_lot_add_new_fields</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="p_rate" string="Purchase Rate"/>
+                    <field name="sales_rate" string="Sales Rate"/>
+                    <field name="packing" string="Packing"/>
+                    <field name="expiry" string="Expiry"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

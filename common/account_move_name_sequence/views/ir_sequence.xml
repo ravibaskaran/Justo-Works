@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ♦ ▼ Inherited 'Sequence to add a new field'. ▼ ♦-->
+    <record id="inherit_sequence_view" model="ir.ui.view">
+        <field name="name">inherit_sequence_view</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="base.sequence_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_range_ids']" position="after">
+                <group string="Financial year date range" attrs="{'invisible': [('use_date_range', '=', False)]}">
+                    <group>
+                        <span colspan="2">Financial Year date range: %%(fyear_range)s</span>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

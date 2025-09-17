@@ -1,0 +1,105 @@
+<odoo>
+    <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+        <field name="context">{'chat_icon': True}</field>
+    </record>
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">view_employee_form_inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//form" position="inside">
+                 <style>
+                    .o_field_many2manytags[name="project_ids"] {
+                        max-height: 70px;
+                        min-height: 50px;
+                        overflow-y: auto;
+                        width: 100%;
+                    }
+                     .o_field_widget.o_field_many2manytags[name="project_ids"] .badge {
+                        height: 19px;
+                        }
+                </style>
+            </xpath>
+
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="string">Parent</attribute>
+            </xpath>
+            <xpath expr="//page[@name='public']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']/group/group[6]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']/group/group[7]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='address_home_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='private_email']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='bank_account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='div_km_home_work']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//label[@for='km_home_work']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']/group/group[1]" position="attributes">
+                <attribute name="string">Permanent Address</attribute>
+            </xpath>
+            <xpath expr="//field[@name='private_email']" position="before">
+                <field name="city"/>
+                <field name="zip"/>
+                <field name="state_id"/>
+            </xpath>
+            <xpath expr="//field[@name='private_email']" position="after">
+                <field name="corporate_email"/>
+                <field name="mobile"/>
+                <field name="pan_number"/>
+            </xpath>
+            <xpath expr="//label[@for='barcode']" position="attributes">
+                <attribute name="string">Emp Code</attribute>
+            </xpath>
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="branch"/>
+                <field name="joining_date"/>
+                <xpath expr="//field[@name='departure_date']" position="move"/>
+                <field name="project_ids" widget="many2many_tags" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='departure_date']" position="attributes">
+                <attribute name="string">Relieving Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="grade"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="active_status"/>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="ctc" groups="real_estate_extension.group_user_ctc_show"/>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="location"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,844 @@
+<odoo>
+    <data>
+        <record id="evaluation_sheet_view_form" model="ir.ui.view">
+            <field name="name">evaluation_sheet_view_form</field>
+            <field name="model">evaluation.sheet</field>
+            <field name="arch" type="xml">
+                <form string="evaluation_sheet_form">
+                    <header>
+                        <button groups="real_estate_sheets.group_evaluation_budgeting_confirm"
+                                string="Confirm" states="draft" class="oe_highlight"
+                                name="action_confirm" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="form_editable" invisible="1"/>
+                            <field name="developer_id" context="{'default_is_owner': True}" required="1" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="developer_credentials" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="project_location" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="location_grade" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="developer_source" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <group style="margin: 0 !important;">
+                            <field name="cc_status" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <group style="margin: 0 !important;">
+                            <group>
+                                <field name="rera_number" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            </group>
+                            <group class="evaluation_remark_group">
+                                <field name="remarks" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group style="margin-bottom: 0 !important;">
+                            <field name="analysis_competition_source" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="project_name" required="1" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="no_of_wings" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="each_tower_storey" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="apartment_type_ids" widget="many2many_tags" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <table style="margin: 0 !important;" class="o_group o_inner_group">
+                            <tbody>
+                                <tr>
+                                    <td class="o_td_label">
+                                        <strong>No. of Apartments<br/>(Best scenario)
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <field name="apartments_no_best" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="o_td_label">
+                                        <strong>No. of Apartments<br/>(Worst scenario)
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <field name="apartments_no_worst" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <group style="margin: 0 !important;">
+                            <field name="saleable_area" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="tentative_unit_sales_price" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="total_value" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="total_value_worst" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <table style="margin: 0 !important;" class="o_group o_inner_group">
+                            <tbody>
+                                <tr>
+                                    <td class="o_td_label">
+                                        <strong>Expected Timeline of Project</strong>
+                                    </td>
+                                    <td style="width: 30%;">
+                                        <field style="width: 80%" name="expected_timeline" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                        Years
+                                    </td>
+                                    <td class="o_td_label" style="min-width: 100px !important;">
+                                        <strong>Possession</strong>
+                                    </td>
+                                    <td>
+                                        <field name="possession_date" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <group style="margin-top: 0 !important;">
+                            <field name="mandate_nature" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="construction_stage" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="analytic_account_id" invisible="1" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <separator string="FINANCIAL STATUS" colspan="4"/>
+                        <group>
+                            <field name="loan_details" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="mortgage_partners" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="finance_partners" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <separator string="ACTIVITIES TO BE PERFORMED BY JUSTO FOR DEVELOPER" colspan="4"/>
+                        <group>
+                            <field name="hiring" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="marketing_atl" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="marketing_btl" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <separator string="KEY ASSUMPTIONS" colspan="4"/>
+                        <group>
+                            <field name="gross_justo_commission" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="net_justo_commission" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="avg_sales_team_incentive" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                            <field name="commission_retention" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                        </group>
+                        <div class="text-right pr-5 py-2">
+                            <span class="p-3 rounded note-nb">
+                                <strong>*</strong> All amount (₹) figures are in lakhs
+                            </span>
+                        </div>
+                        <notebook class="evaluation_sheet_notebook">
+                            <page name="commission_billing" string="JUSTO's Commission Billing">
+                                <group>
+                                    <group>
+                                        <field name="signing_amount" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                        <field name="retainer_month" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                        <field name="forecast_date" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="retainer_fee" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                        <field name="forecast_month" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                    </group>
+                                </group>
+                                <div class="row">
+                                    <field name="commission_generate_button" class="m-auto" widget="generate_button_toggle"
+                                           nolabel="1" attrs="{'invisible': [('form_editable', '=', False)]}"/>
+                                </div>
+                                <group>
+                                    <field name="monthly_retainer_fee" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" text="Total"/>
+                                            <field name="amount" readonly="1" force_save="1" sum="Total"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <table style="margin: 0 !important;" class="o_group o_inner_group">
+                                    <tbody>
+                                        <tr>
+                                            <td class="o_td_label">
+                                                <strong attrs="{'invisible': [('activate', '=', True)]}">Deactivating Reason
+                                                </strong>
+                                            </td>
+                                            <td colspan="2">
+                                                <field name="deactivating_reason"
+                                                       attrs="{'invisible': [('activate', '=', True)], 'required': [('activate', '=', False)], 'readonly': [('form_editable', '=', False)]}"/>
+                                            </td>
+                                            <td>
+                                                <div class="row float-right mr-0 pr-5">
+                                                    <span attrs="{'invisible': [('activate', '=', False)]}" class="py-2 bg-info pr-5 pl-3 rounded-left">Activated</span>
+                                                    <span attrs="{'invisible': [('activate', '=', True)]}" class="py-2 bg-danger pr-5 pl-3 rounded-left">Deactivated</span>
+                                                    <span attrs="{'invisible': [('activate', '=', False)]}" class="pt-2 pl-3 pb-1 border border-info rounded-right">
+                                                        <field name="activate" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </span>
+                                                    <span attrs="{'invisible': [('activate', '=', True)]}" class="pt-2 pl-3 pb-1 border border-danger rounded-right">
+                                                        <field name="activate" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <field name="cost_sheet_header" class="cost_sheet_header d-none"/>
+                                <field name="apartment_type_count" invisible="1"/>
+                                <separator string="COST SHEET" colspan="4"/>
+                                <group>
+                                    <field name="cost_sheet_lines" nolabel="1" class="cost_sheet_lines" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0" decoration-bf="line_identifier in (5, 10)">
+                                            <field name="labels" readonly="1" force_save="1"/>
+                                            <field name="cost_col_1" attrs="{'column_invisible': [('parent.apartment_type_count', '&lt;', 1)], 'readonly': [('line_identifier', 'in', (5, 10, 11, 12))]}" force_save="1"/>
+                                            <field name="cost_col_2" attrs="{'column_invisible': [('parent.apartment_type_count', '&lt;', 2)], 'readonly': [('line_identifier', 'in', (5, 10, 11, 12))]}" force_save="1"/>
+                                            <field name="cost_col_3" attrs="{'column_invisible': [('parent.apartment_type_count', '&lt;', 3)], 'readonly': [('line_identifier', 'in', (5, 10, 11, 12))]}" force_save="1"/>
+                                            <field name="cost_col_4" attrs="{'column_invisible': [('parent.apartment_type_count', '&lt;', 4)], 'readonly': [('line_identifier', 'in', (5, 10, 11, 12))]}" force_save="1"/>
+                                            <field name="cost_col_5" attrs="{'column_invisible': [('parent.apartment_type_count', '&lt;', 5)], 'readonly': [('line_identifier', 'in', (5, 10, 11, 12))]}" force_save="1"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page name="sales_forecast" string="Sales Forecast">
+                                <group>
+                                    <field name="sales_forecast_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="booking" sum="Total" attrs="{'readonly': [('booking_enable', '=', False)]}" force_save="1"/>
+                                            <field name="registration" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                            <field name="booking_enable" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page name="man_power_forecast" string="Man Power">
+                                <separator string="MAN POWER FORECAST" colspan="4"/>
+                                <field name="tab_identifier" class="d-none"/>
+                                <group>
+                                    <field name="man_power_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" digits="[16,0]" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="site_head" digits="[16,0]" sum="Total" class="site_head_man_power"/>
+                                            <field name="cluster_head" digits="[16,0]" sum="Total"/>
+                                            <field name="sourcing" digits="[16,0]" sum="Total"/>
+                                            <field name="closing" digits="[16,0]" sum="Total"/>
+                                            <field name="crm" digits="[16,0]" sum="Total"/>
+                                            <field name="others" digits="[16,0]" sum="Total"/>
+                                            <field name="man_power_total" digits="[16,0]" sum="Total"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <separator string="MAN POWER COST PER INDIVIDUAL" colspan="4"/>
+                                <div class="o_list_view man_power_cost_individual">
+                                    <div class="table-responsive">
+                                        <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                                               style="table-layout: fixed;">
+                                            <thead>
+                                                <tr>
+                                                    <th class="o_column_sortable o_list_number_th text-left">Man Power
+                                                        Cost
+                                                    </th>
+                                                    <th class="o_column_sortable o_list_number_th text-right">Unit Cost
+                                                        in Rs. Lakhs Per Month
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ui-sortable">
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        Site Head
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="site_head" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        Cluster Head
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="cluster_head" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        Sourcing
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="sourcing" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        Closing
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="closing" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        CRM
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="crm" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        Others
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="others" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <separator colspan="4"/>
+                                <separator string="TOTAL MAN POWER COST" colspan="4"/>
+                                <field name="man_power_cost_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                        <field name="site_head" sum="Total"/>
+                                        <field name="cluster_head" sum="Total"/>
+                                        <field name="sourcing" sum="Total"/>
+                                        <field name="closing" sum="Total"/>
+                                        <field name="crm" sum="Total"/>
+                                        <field name="others" sum="Total"/>
+                                        <field name="man_power_total" sum="Total"/>
+                                        <field name="line_identifier" invisible="1"/>
+                                    </tree>
+                                    <form>
+                                        <field name="month_year" readonly="1" force_save="1" nolabel="1"/>
+                                        <group>
+                                            <group>
+                                                <field name="site_head" readonly="1" force_save="1"/>
+                                                <field name="cluster_head" readonly="1" force_save="1"/>
+                                                <field name="sourcing" readonly="1" force_save="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="closing" readonly="1" force_save="1"/>
+                                                <field name="crm" readonly="1" force_save="1"/>
+                                                <field name="others" readonly="1" force_save="1"/>
+                                                <field name="man_power_total" readonly="1" force_save="1"/>
+                                                <field name="line_identifier" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <footer/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page name="profit_and_loss" string="Profit &amp; Loss Statement">
+                                <div class="row">
+                                    <span class="o_horizontal_separator col-8 mx-0">INCOME</span>
+                                    <div class="col-4 pt-3">
+                                        <span class="float-right pr-2">
+                                            <strong class="pr-5 border-right mr-2">Signing Amount</strong>
+                                            <field name="signing_amount" class="balance_amount_profit_loss" readonly="1" force_save="1"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <group>
+                                    <field name="profit_loss_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="booking" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="registration" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="avg_ticket_size"/>
+                                            <field name="sales_value" sum="Total"/>
+                                            <field name="retainer_fee" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="billing" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="total_revenue" readonly="1" force_save="1"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <div class="o_list_view total_revenue_div" style="margin: -48px 1px 1px 1px;">
+                                    <div class="w-100" style="height: 25px">
+                                        <field name="total_revenue" class="total_revenue_td float-right font-weight-bold pr-1" style="color: black;"/>
+                                    </div>
+                                </div>
+                                <separator string="EXPENSES" colspan="4"/>
+                                <group>
+                                    <field name="profit_loss_expense_lines" class="profit_loss_expense_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="admin_exp" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="manpower_cost" string="Manpower Cost" sum="Total" readonly="1"
+                                                   force_save="1"/>
+                                            <field name="sales_incentive" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="other_expenses" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="marketing_expenses" sum="Total"/>
+                                            <field name="total_expense" sum="Total"/>
+                                            <field name="revenue_expense_diff" sum="Total" readonly="1" force_save="1"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page name="cash_flow" class="cash_flow_page" string="Cash Flow Statement">
+                                <div class="cash_flow_signing_block o_list_view font-weight-bold" style="margin: 1px 1px 1px 1px;">
+                                    <div class="table-responsive">
+                                        <table class="w-100"
+                                               style="table-layout: fixed;">
+                                            <tbody class="ui-sortable">
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        <span class="o_horizontal_separator">INFLOW</span>
+                                                        <span class="float-right">Signing Amount:</span>
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="signing_amount" readonly="1" force_save="1"/>
+                                                    </td>
+                                                    <td/>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="signing_gst_inflow" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="signing_gross_inflow" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <group>
+                                    <field name="cash_flow_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1"/>
+                                            <field name="retainer_fee" readonly="1" force_save="1"/>
+                                            <field name="collection" readonly="1" force_save="1"/>
+                                            <field name="gst_inflow"/>
+                                            <field name="gross_inflow"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <div class="o_list_view" style="margin: -25px 1px 1px 1px;">
+                                    <div class="table-responsive cash_flow_totals">
+                                        <table class="financial_wise_totals o_list_table table table-sm table-hover table-striped o_list_table_ungrouped font-weight-bold"
+                                               style="table-layout: fixed;">
+                                            <tbody class="ui-sortable">
+                                                <tr class="o_data_row">
+                                                    <td class="o_data_cell o_field_cell o_list_number text-left">
+                                                        Total(Include Signing Amount GST)
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="cf_retainer_fee_total" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="cf_collection_total" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="cf_gst_inflow_total" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                    <td class="o_data_cell o_field_cell o_list_number text-right">
+                                                        <field name="cf_gross_inflow_total" attrs="{'readonly': [('form_editable', '=', False)]}"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <separator string="OUTFLOW" colspan="4"/>
+                                <group>
+                                    <field name="cash_flow_expense_lines" class="cash_flow_expense_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="admin_exp" sum="Total"/>
+                                            <field name="manpower_cost" string="Manpower Cost" sum="Total"/>
+                                            <field name="sales_incentive" sum="Total"/>
+                                            <field name="other_expenses" sum="Total"/>
+                                            <field name="gst_outflow" sum="Total"/>
+                                            <field name="gross_outflow" sum="Total"/>
+                                            <field name="in_outflow_diff" sum="Total"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                        <form>
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1"/>
+                                            <group>
+                                                <group>
+                                                    <field name="admin_exp" readonly="1" force_save="1"/>
+                                                    <field name="manpower_cost" readonly="1" force_save="1"/>
+                                                    <field name="sales_incentive" readonly="1" force_save="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="other_expenses" readonly="1" force_save="1"/>
+                                                    <field name="gst_outflow" readonly="1" force_save="1"/>
+                                                    <field name="gross_outflow" readonly="1" force_save="1"/>
+                                                    <field name="in_outflow_diff" readonly="1" force_save="1"/>
+                                                    <field name="line_identifier" readonly="1" force_save="1"/>
+                                                </group>
+                                            </group>
+                                            <footer/>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+                            <page name="walk_in_projections" string="Walk in Projections">
+                                <separator string="LEAD DETAILS" colspan="4"/>
+                                <group>
+                                    <field name="walk_in_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="booking" readonly="1" force_save="1" sum="Total"/>
+                                            <field name="walk_ins" digits="[16,0]" sum="Total"/>
+                                            <field name="cp_walk_ins" digits="[16,0]" sum="Total"/>
+                                            <field name="direct_walk_ins" digits="[16,0]" sum="Total"/>
+                                            <field name="digital_walk_ins" digits="[16,0]" sum="Total"/>
+                                            <field name="no_of_digital_leads" digits="[16,0]" sum="Total"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page name="productivity_ratio" string="Productivity Ratio">
+                                <group>
+                                    <field name="productivity_ratio_lines" nolabel="1" attrs="{'readonly': [('form_editable', '=', False)]}">
+                                        <tree editable="bottom" create="0" delete="0">
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1" text="Total"/>
+                                            <field name="operating_margin_ratio" sum="Total"/>
+                                            <field name="total_expenses" sum="Total"/>
+                                            <field name="revenue" sum="Total"/>
+                                            <field name="manpower_cost" sum="Total"/>
+                                            <field name="inflow_outflow" sum="Total"/>
+                                            <field name="line_identifier" invisible="1"/>
+                                        </tree>
+                                        <form>
+                                            <field name="month_year" readonly="1" force_save="1" nolabel="1"/>
+                                            <group>
+                                                <group>
+                                                    <field name="operating_margin_ratio" readonly="1" force_save="1"/>
+                                                    <field name="total_expenses" readonly="1" force_save="1"/>
+                                                    <field name="revenue" readonly="1" force_save="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="manpower_cost" readonly="1" force_save="1"/>
+                                                    <field name="inflow_outflow" readonly="1" force_save="1"/>
+                                                    <field name="line_identifier" readonly="1" force_save="1"/>
+                                                </group>
+                                            </group>
+                                            <footer/>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <script>
+                        $(document).ready(function(){
+                            if(window.innerWidth &lt; 1000){
+                                $('.total_revenue_td').addClass('d-none')
+                            }
+                            $('.cash_flow_page').click(function(){
+                                setTimeout(function(){
+                                    setWidthTotals()
+                                })
+                            })
+                            function setWidthTotals(){
+                                $('[name="cash_flow_lines"] table thead th').each(function(index, td){
+                                    $($('.cash_flow_totals tbody tr:first td')[index]).css('width',$(td).css('width'))
+                                    $($('.cash_flow_totals tbody tr:first td')[index]).css('min-width',$(td).css('width'))
+                                    $($('.cash_flow_totals tbody tr:first td')[index]).css('max-width',$(td).css('width'))
+                                })
+                            };
+                            $('[name="profit_loss_lines"] .table-responsive').on('scroll', function() {
+                                const remainingScroll = $(this)[0].scrollWidth - $(this).outerWidth() - $(this).scrollLeft();
+                                const threshold = 25;
+                                if (remainingScroll &lt;= threshold) {
+                                    $('.total_revenue_td').removeClass('d-none');
+                                    $('.total_revenue_div').css('margin', '-63px 1px 1px 1px');
+                                }
+                                else{
+                                    $('.total_revenue_td').addClass('d-none')
+                                }
+                            });
+                            $('[name="cash_flow_lines"] .table-responsive').on('scroll', function() {
+                                $('.cash_flow_totals').scrollLeft($(this).scrollLeft());
+                                $('.cash_flow_signing_block .table-responsive').scrollLeft($(this).scrollLeft());
+                            });
+                            $('.cash_flow_totals').on('scroll', function() {
+                                $('[name="cash_flow_lines"] .table-responsive').scrollLeft($(this).scrollLeft());
+                                $('.cash_flow_signing_block .table-responsive').scrollLeft($(this).scrollLeft());
+                            });
+                            $('.cash_flow_signing_block .table-responsive').on('scroll', function() {
+                                $('[name="cash_flow_lines"] .table-responsive').scrollLeft($(this).scrollLeft());
+                                $('.cash_flow_totals').scrollLeft($(this).scrollLeft());
+                            });
+                            change_cost_sheet_header()
+                            $('input.cost_sheet_header').change(function(){
+                                change_cost_sheet_header()
+                            })
+                        })
+                        function change_cost_sheet_header(){
+                            var values = $('.cost_sheet_header').text().split('~');
+                            $('.cost_sheet_lines thead tr th').each(function(i, obj){
+                                if(i > 0){
+                                    $(this).empty()
+                                    $(this).append(values[i - 1])
+                                }
+                            })
+                        }
+                        $("input.o_field_number ").on("click", function() {
+                            $(this).select();
+                        });
+                        $("input.o_field_number ").on("change", function() {
+                            var value = $(this).val()
+                            if(value != '' &amp;&amp; String(parseFloat(value)) != 'NaN'){
+                                $(this).val(parseFloat(value));
+                            }
+                        });
+                    </script>
+                    <style>
+                        [name="cash_flow_lines"] .table-responsive
+                        {
+                            scrollbar-width: none; /* Hide scrollbar for Firefox */
+                        }
+                        [name="cash_flow_lines"] .table-responsive::-webkit-scrollbar
+                        {
+                            width: 0; /* Hide the scrollbar */
+                            background-color: transparent; /* Optional: Set the background color behind the scrollbar area */
+                        }
+                        .evaluation_sheet_notebook .o_field_one2many .o_list_table {
+                            table-layout: auto !important;
+                        }
+                        .evaluation_remark_group .o_td_label{
+                            min-width: 100px !important;
+                        }
+                        .o_form_view .o_group.o_inner_group > tbody > tr > td.o_td_label:not(.evaluation_remark_group
+                        .o_td_label){
+                            min-width: 210px !important;
+                        }
+                        th[data-name='month_year'] {
+                            width: 25% !important;
+                            min-width: 25% !important;
+                            max-width: 25% !important;
+                        }
+                        th[data-name='man_power_total'] {
+                            width: 12% !important;
+                            min-width: 12% !important;
+                            max-width: 12% !important;
+                        }
+                        span[name='expected_timeline'] {
+                            width: unset !important;
+                        }
+                        th[data-name='revenue_expense_diff']::after,
+                        th[data-name='in_outflow_diff']::after {
+                            display: none !important;
+                        }
+
+                        .profit_loss_expense_lines td:not(td[name='marketing_expenses'],td[name='revenue_expense_diff'], .marketing_expenses),
+                        .cash_flow_expense_lines td {
+                            background: #98ccff47 !important;
+                            border-top: 1px solid #98ccff47;
+                            color: black;
+                        }
+                        .profit_loss_expense_lines th:not(th[data-name='marketing_expenses'],th[data-name='revenue_expense_diff']),
+                        .cash_flow_expense_lines th {
+                            background: #59adff47 !important;
+                            border-top: 1px solid #a2a2a24d;
+                            color: black;
+                        }
+                        th[data-name='revenue_expense_diff'],
+                        th[data-name='in_outflow_diff'] {
+                            border-bottom: 2px solid #9dcdfdb0 !important;
+                            background: #9dcdfdb0 !important;
+                            border-top: 1px solid #a2a2a24d;
+                            border-left: 1px solid #9dcdfdb0 !important;
+                            color: black;
+                        }
+                        td[name='revenue_expense_diff'],
+                        td[name='in_outflow_diff'] {
+                            background: #9dcdfd99 !important;
+                            border-top: 1px solid #a2a2a24d;
+                            color: black;
+                        }
+
+                        .profit_loss_expense_lines tfoot td:last-child,
+                        .cash_flow_expense_lines tfoot td:last-child{
+                            background: #9dcdfd99 !important;
+                        }
+                        .profit_loss_expense_lines tfoot td:last-child,
+                        .cash_flow_expense_lines tfoot td:last-child{
+                            background: #9dcdfdb0 !important;
+                            border-top: 1px solid #a2a2a24d;
+                            color: black;
+                        }
+                        div[name='sales_forecast_lines'] td[name='booking']:not(.o_readonly_modifier),
+                        div[name='sales_forecast_lines'] input[name='booking'],
+                        div[name='man_power_lines'] tbody td:not(.o_readonly_modifier),
+                        div[name='man_power_lines'] td input,
+                        div[name='profit_loss_expense_lines'] td[name='marketing_expenses'],
+                        div[name='profit_loss_expense_lines'] input[name='marketing_expenses'],
+                        .man_power_cost_individual tr input,
+                        .cost_sheet_lines td:not(.o_readonly_modifier), .cost_sheet_lines input
+                        {
+                            background: #002bff21;
+                            color: black;
+                        }
+                        div[name='sales_forecast_lines'] th[data-name='booking'],
+                        div[name='sales_forecast_lines'] tfoot td:nth-child(2),
+                        div[name='man_power_lines'] th:not([data-name='month_year'], [data-name='man_power_total']),
+                        div[name='man_power_lines'] tfoot td:not(td:first-child, td:nth-child(8)),
+                        div[name='profit_loss_expense_lines'] th[data-name='marketing_expenses'],
+                        div[name='profit_loss_expense_lines'] tfoot td:nth-child(6),
+                        .man_power_cost_individual th:last-child, .cost_sheet_lines th:not(th:first-child)
+                        {
+                            background: #002bff36 !important;
+                            color: black;
+                        }
+                        .table td {
+                            background: #001fff12;
+                            color: black;
+                        }
+                        .table th {
+                            background: #0400ff24;
+                            color: black;
+                        }
+                        .o_list_view .o_list_table tfoot {
+                            background: #0400ff24;
+                            color: black;
+                        }
+                        .note-nb{
+                            background: #cff6ffad;
+                        }
+                        .cash_flow_totals td{
+                            background: #cdccf0 !important;
+                        }
+                        [name='cash_flow_lines'] tfoot{
+                            display: none;
+                        }
+                        [name='cash_flow_lines'] table thead th:not(th:first-child) {
+                            max-width: 150px !important;
+                            width: 150px !important;
+                            min-width: 150px !important;
+                            white-space: unset !important;
+                        }
+                        [name='cash_flow_lines'] table thead th:first-child {
+                            max-width: 60% !important;
+                            width: 60% !important;
+                            min-width: 60% !important;
+                        }
+                        [name='profit_loss_lines'] table thead th:not(th:first-child) {
+                            max-width: 130px !important;
+                            width: 130px !important;
+                            min-width: 130px !important;
+                            white-space: unset !important;
+                        }
+                        [name='profit_loss_lines'] table thead th:first-child {
+                            max-width: 30% !important;
+                            width: 30% !important;
+                            min-width: 30% !important;
+                        }
+                        .cash_flow_totals td:not(td:first-child) {
+                            width: 150px;
+                        }
+                        .cash_flow_signing_block td:not(td:first-child) {
+                            width: 150px;
+                        }
+                        .o_button_generate_toggle {
+                          transition: color .5s ease-in-out, box-shadow .5s ease-in-out, transform .5s ease-in-out, font-weight .5s ease-in-out;
+                        }
+                        .o_button_generate_toggle:hover {
+                            box-shadow: inset 127px 0 0 0 #ffffff;
+                            color: #004589 !important;
+                            transform: scale3d(1.05, 1.05, 1.05);
+                            font-weight: 600;
+                        }
+                    </style>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluation_sheet_view_kanban" model="ir.ui.view">
+            <field name="name">evaluation.sheet.kanban</field>
+            <field name="model">evaluation.sheet</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" group_create="0" sample="1">
+                    <field name="developer_id"/>
+                    <field name="project_location"/>
+                    <field name="project_name"/>
+                    <field name="total_value"/>
+                    <field name="expected_timeline"/>
+                    <field name="construction_stage"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-12">
+                                        <strong><span>Number: <field name="name"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row mb4">
+                                    <div class="col-12">
+                                        <strong><span>Project: <field name="project_name"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>Developer: <field name="developer_id"/></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        Total Value(lakhs): <field name="total_value" widget='monetary'/>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="float-right">
+                                            Stage: <field name="construction_stage"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="evaluation_sheet_view_tree" model="ir.ui.view">
+            <field name="name">evaluation_sheet_view_tree</field>
+            <field name="model">evaluation.sheet</field>
+            <field name="arch" type="xml">
+                <tree string="evaluation_sheet_tree" decoration-danger="activate == False">
+                    <field name="name"/>
+                    <field name="developer_id"/>
+                    <field name="project_location"/>
+                    <field name="project_name"/>
+                    <field name="total_value"/>
+                    <field name="expected_timeline"/>
+                    <field name="construction_stage"/>
+                    <field name="activate" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="evaluation_sheet_filter" model="ir.ui.view">
+            <field name="name">evaluation.sheet.search</field>
+            <field name="model">evaluation.sheet</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Top Search">
+                    <group>
+                        <field name="name"/>
+                        <field name="developer_id"/>
+                        <field name="project_location"/>
+                        <field name="project_name"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter name="developer" string="Developer Name" domain="[]"  context="{'group_by':'developer_id'}"/>
+                        <filter name="location" string="Location of Project" domain="[]"  context="{'group_by':'project_location'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="evaluation_sheet_action" model="ir.actions.act_window">
+            <field name="name">Project Evaluation Sheet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">evaluation.sheet</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+        </record>
+
+        <record id="evaluation_sheet_export" model="ir.actions.server">
+            <field name="name">Export</field>
+            <field name="model_id" ref="real_estate_sheets.model_evaluation_sheet"/>
+            <field name="state">code</field>
+            <field name="code">action = env["evaluation.sheet"].action_export_form()</field>
+            <field name="binding_model_id" ref="real_estate_sheets.model_evaluation_sheet"/>
+        </record>
+    </data>
+</odoo>

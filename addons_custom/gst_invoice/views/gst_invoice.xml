@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gst_invoice.customer_invoice_list_action" model="ir.actions.act_window">
+            <field name="context">{'create':0,'edit':0,'search_default_filter_by_gst_status': 1,'default_move_type':
+                'out_invoice','default_direct_move_type' : 'outgoing'}
+            </field>
+        </record>
+    </data>
+</odoo>

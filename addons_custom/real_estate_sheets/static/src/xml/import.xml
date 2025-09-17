@@ -1,0 +1,11 @@
+<odoo>
+    <templates>
+        <t t-extend="ListView.buttons" t-name="real_estate_sheets.buttons">
+            <t t-jquery="button.o_list_button_add" t-operation="after">
+                <button type="object" class="btn btn-primary import_your_action" style="margin-left:10px;">
+                    Import
+                </button>
+            </t>
+        </t>
+    </templates>
+</odoo>

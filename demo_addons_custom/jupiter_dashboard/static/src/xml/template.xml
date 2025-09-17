@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template">
+    <t t-name="JupiterDashboard">
+        <div class="jupiter_dashboard container-fluid px-5 pt-5 position-relative">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+                  integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+                  crossorigin="anonymous" referrerpolicy="no-referrer"/>
+            <select id="financial_year_selection">
+            </select>
+            <div class="row">
+                <div class="col-xl-4 col-md-12">
+                    <div class="card mat-stat-card">
+                        <div class="card-block">
+                            <div class="row align-items-center b-b-default py-1">
+                                <h6 class="col-sm-12 text-center pt-2">
+                                    Booking
+                                    <span class="legend-dots bg-primary"/>
+                                    Gross
+                                    <span class="legend-dots bg-danger"/>
+                                    Cancelled
+                                    <span class="legend-dots bg-success"/>
+                                    Net
+                                </h6>
+                            </div>
+                            <div class="row align-items-center b-b-default">
+                                <div class="col-sm-6 b-r-default p-b-7">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-day text-c-purple f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">Today
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="today_booking_gross"
+                                                          class="booking-count-bars gross-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="today_booking_cancelled"
+                                                          class="booking-count-bars cancelled-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="today_booking_net" class="booking-count-bars net-bar"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 p-b-7">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-week text-c-green f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">This Week
+
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="week_booking_gross" class="booking-count-bars gross-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="week_booking_cancelled"
+                                                          class="booking-count-bars cancelled-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="week_booking_net" class="booking-count-bars net-bar"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-6 p-b-7 b-r-default">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-alt text-c-red f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">This Month
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="month_booking_gross"
+                                                          class="booking-count-bars gross-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="month_booking_cancelled"
+                                                          class="booking-count-bars cancelled-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="month_booking_net" class="booking-count-bars net-bar"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 p-b-7">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-check text-c-blue f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">
+                                            <span class="fin_year_string"/>
+
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="year_booking_gross" class="booking-count-bars gross-bar"/>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="year_booking_cancelled"
+                                                          class="booking-count-bars cancelled-bar"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 text-center">
+                                                    <span id="year_booking_net" class="booking-count-bars net-bar"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-12">
+                    <div class="card mat-stat-card">
+                        <div class="card-block">
+                            <div class="row align-items-center b-b-default py-1">
+                                <h6 class="col-sm-12 text-center pt-2">Registration</h6>
+                            </div>
+                            <div class="row align-items-center b-b-default">
+                                <div class="col-sm-6 b-r-default p-b-24 p-t-23">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-day text-c-purple f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">
+                                            <h3 id="today_registration_count"/>
+                                            <p class="text-muted m-b-0">Today</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 p-b-24 p-t-23">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-week text-c-green f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">
+                                            <h3 id="this_week_registration_count"/>
+                                            <p class="text-muted m-b-0">This Week</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-6 p-b-24 p-t-23 b-r-default">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-alt text-c-red f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">
+                                            <h3 id="this_month_registration_count"/>
+                                            <p class="text-muted m-b-0">This Month</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 p-b-24 p-t-23">
+                                    <div class="row align-items-center text-center">
+                                        <div class="col-4 p-r-0">
+                                            <i class="fas fa-calendar-check text-c-blue f-24"/>
+                                        </div>
+                                        <div class="col-8 p-l-0">
+                                            <h3 id="year_registration_count"/>
+                                            <p class="text-muted m-b-0">
+                                                <span class="fin_year_string"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-12">
+                    <div class="card mat-clr-stat-card text-white green ">
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-3 text-center bg-c-green">
+                                    <i class="fas fa-star mat-icon f-24"/>
+                                </div>
+                                <div class="col-9 cst-cont">
+                                    <h1>
+                                        <span id="year_booking_value"/>
+                                        <span class="value-in-lakh">*In Lakhs
+                                        </span>
+                                    </h1>
+                                    <img src="/jupiter_dashboard/static/src/img/circle.953c9ca0.svg"
+                                         class="card-img-absolute" alt="circle"/>
+                                    <span class="header-top-string">Booking Value</span>
+
+                                    <span class="fin_year_string header-bottom-string"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mat-clr-stat-card text-white blue">
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-3 text-center bg-c-blue">
+                                    <i class="fas fa-trophy mat-icon f-24"/>
+                                </div>
+                                <div class="col-9 cst-cont">
+                                    <h1>
+                                        <span id="year_registration_value"/>
+                                        <span class="value-in-lakh">*In Lakhs
+                                        </span>
+                                    </h1>
+                                    <img src="/jupiter_dashboard/static/src/img/circle.953c9ca0.svg"
+                                         class="card-img-absolute" alt="circle"/>
+                                    <span class="header-top-string">Registration Value</span>
+                                    <span class="fin_year_string header-bottom-string"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div class="booking-options">
+                            <input type="radio" name="booking_type_select" value="number" id="booking_nos"
+                                   checked="checked"/>
+                            <label for="booking_nos">Nos</label>
+
+                            <input type="radio" name="booking_type_select" value="value" id="booking_value"/>
+                            <label for="booking_value">Value</label>
+                        </div>
+                        <div id="booking_chart"/>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div class="registration-options">
+                            <input type="radio" name="registration_type_select" value="number"
+                                   id="registration_nos"
+                                   checked="checked"/>
+                            <label for="registration_nos">Nos</label>
+
+                            <input type="radio" name="registration_type_select" value="value"
+                                   id="registration_value"/>
+                            <label for="registration_value">Value</label>
+                        </div>
+                        <div id="registration_chart"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-8 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div id="booking_vs_budget_chart"/>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div id="region_wise_booking"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-4 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div id="region_wise_flat_status"/>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div id="registration_vs_budget_chart"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-12 px-2">
+                    <div class="card p-3 pt-5 h-97">
+                        <div id="region_selection" class="btn-group dropleft"
+                             style="position: absolute;right: 20px;z-index: 1;">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                All
+                            </button>
+                            <div class="dropdown-menu" x-placement="left-start">
+                            </div>
+                        </div>
+                        <div id="project_wise_flat_status"/>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .registration-options,
+                .booking-options {
+                display: flex;
+                position: absolute;
+                right: 15px;
+                top: 20px;
+                z-index: 1;
+                }
+                .registration-options input[type="radio"],
+                .booking-options input[type="radio"] {
+                display: none;
+                }
+                .registration-options label{
+                border: 1px solid #448aff;
+                }
+                .booking-options label {
+                border: 1px solid #198754;
+                }
+                .registration-options input[type="radio"]:checked + label{
+                background-color: #448aff;
+                color: white;
+                }
+                .booking-options input[type="radio"]:checked + label {
+                background-color: #198754;
+                color: white;
+                }
+
+                .registration-options label{
+                color: #448aff
+                }
+                .booking-options label {
+                color: #28a745;
+                }
+                .registration-options label,
+                .booking-options label {
+                padding: 3px 12px;
+
+                background-color: white;
+
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+                }
+                .registration-options label:not(:last-child),
+                .booking-options label:not(:last-child) {
+                border-right: none;
+                }
+                .registration-options label:first-of-type,
+                .booking-options label:first-of-type {
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+                }
+                .registration-options label:last-child,
+                .booking-options label:last-child {
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+                }
+                .h-97{
+                height: 97%;
+                }
+                .b-r-default {
+                border-right: 1px solid #d6d6d6;
+                }
+
+                .p-b-24 {
+                padding-bottom: 26px !important;
+                }
+                .p-t-23 {
+                padding-top: 26px !important;
+                }
+                .text-c-purple {
+                color: #536dfe;
+                }
+                .text-c-green {
+                color: #11c15b;
+                }
+                .text-c-red {
+                color: #ff5252;
+                }
+                .text-c-blue {
+                color: #448aff;
+                }
+                .text-c-purple {
+                color: #536dfe;
+                }
+                .text-c-green {
+                color: #11c15b;
+                }
+                .text-c-red {
+                color: #ff5252;
+                }
+                .text-c-blue {
+                color: #448aff;
+                }
+                .b-b-default {
+                border-bottom: 1px solid #d6d6d6;
+                }
+                .f-24 {
+                font-size: 24px;
+                }
+                .mat-stat-card .card-block {
+                padding: 0 15px;
+                }
+                .mat-clr-stat-card.green {
+                background-color: #32ed80;
+                }
+
+                .mat-clr-stat-card {
+                overflow: hidden;
+                }
+                .mat-clr-stat-card .card-block {
+                padding: 0 15px;
+                }
+                .bg-c-green {
+                background: #11c15b;
+                }
+                .mat-clr-stat-card .card-block .cst-cont {
+                padding-top: 35px;
+                padding-bottom: 34px;
+                }
+                .cst-cont h5{
+                position: relative;
+                }
+                .card .card-block p {
+                line-height: 1.4;
+                }
+                .m-b-0 {
+                margin-bottom: 0px;
+                }
+                p {
+                font-size: 13px;
+                }
+                .mat-clr-stat-card.blue {
+                background-color: #91baff;
+                }
+
+                .mat-clr-stat-card {
+                overflow: hidden;
+                }
+                .bg-c-blue {
+                background: #448aff;
+                }
+                .mat-clr-stat-card .card-block .mat-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                }
+                .card {
+                border-radius: 5px;
+                -webkit-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+                box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+                border: none;
+                margin-bottom: 16px;
+                -webkit-transition: all 0.3s ease-in-out;
+                transition: all 0.3s ease-in-out;
+                }
+                .p-b-7{
+                padding-bottom: 7px;
+                }
+
+                #financial_year_selection{
+                width: 10rem;
+                position: absolute;
+                top: 7px;
+                right: 28px;
+                background: #f8f9fa;
+                color: black;
+                border: none;
+                font-weight: 700;
+                border-bottom: 2px solid #145cd5;
+                }
+                .legend-dots{
+                width: 1rem;
+                height: 1rem;
+                border-radius: 100%;
+                display: inline-block;
+                vertical-align: text-bottom;
+                vertical-align: middle;
+                }
+                .legend-dots.bg-primary{
+                margin-left: 2.5rem;
+
+                }
+                .legend-dots.bg-danger,.legend-dots.bg-success{
+                margin-left: .5rem;
+                }
+                .booking-count-bars{
+                width: 100%;
+                margin-bottom: 1px;
+                display: inline-block;
+                padding: 0px 0.4em;
+                font-size: 15px;
+                font-weight: 700;
+                white-space: nowrap;
+                vertical-align: baseline;
+                border-radius: 0.25rem;
+                transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+                box-shadow 0.15s ease-in-out;
+                }
+                .gross-bar{
+                background: rgba(70, 128, 255, 0.2);
+                border-color: #cbdbff;
+                color: #4680ff;
+                }
+                .cancelled-bar{
+                background: rgba(255, 82, 82, 0.2);
+                border-color: #ffcfcf;
+                color: #ff5252;
+                }
+                .net-bar{
+                background: rgba(156, 204, 101, 0.2);
+                border-color: #e3f1d4;
+                color: #1bbb1a;
+                }
+                .value-in-lakh{
+                color: white;
+                font-size: 11px;
+                padding-left: 5px;
+                position: absolute;
+                }
+                .card-img-absolute{
+                height: 158px;
+                position: absolute;
+                right: 0;
+                top: -53px;
+                }
+                .header-top-string{
+                position: absolute;
+                right: 30px;
+                top: 7px;
+                color: black;
+                }
+                .header-bottom-string{
+                position: absolute;
+                right: 36px;
+                bottom: 11px;
+                font-size: medium;
+                font-weight: 600;
+                color: black;
+                }
+                #region_selection .dropdown-toggle{
+                width: 12rem;
+                text-align: left;
+                }
+                #region_selection .dropdown-menu{
+                position: absolute;
+                will-change: transform;
+                top: 0px; left: 0px;
+                transform: translate3d(-177px, 0px, 0px);
+                }
+            </style>
+        </div>
+    </t>
+</templates>

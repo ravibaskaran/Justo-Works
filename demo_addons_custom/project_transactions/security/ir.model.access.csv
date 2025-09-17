@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_building_create_inventory,project_transactions.building_create_inventory,model_building_create_inventory,,1,1,1,1
+access_project_assigning,project_transactions.project_assigning,model_project_assigning,,1,1,1,1
+access_project_assigning_flats,project_transactions.project_assigning_flats,model_project_assigning_flats,,1,1,1,1
+access_loan_status_marking,project_transactions.loan_status_marking,model_loan_status_marking,,1,1,1,1
+access_loan_stage,project_transactions.loan_stage,model_loan_stage,,1,1,1,1
+access_project_registration,project_transactions.project_registration,model_project_registration,,1,1,1,1
+access_registration_attachment_line,project_transactions.registration_attachment_line,model_registration_attachment_line,,1,1,1,1
+access_project_employee_assigning,project_transactions.project_employee_assigning,model_project_employee_assigning,,1,1,1,1
+access_project_employee_assigning_line,project_transactions.project_employee_assigning_line,model_project_employee_assigning_line,,1,1,1,1
+access_project_target,project_transactions.project_target,model_project_target,,1,1,1,1
+access_project_target_line,project_transactions.project_target_line,model_project_target_line,,1,1,1,1

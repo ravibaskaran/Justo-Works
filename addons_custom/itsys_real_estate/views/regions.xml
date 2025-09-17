@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- regions -->
+        <record id="regions_tree_view" model="ir.ui.view">
+            <field name="name">regions.tree</field>
+            <field name="model">regions</field>
+            <field name="arch" type="xml">
+                <tree string="regions">
+                    <field name="name"/>
+                    <field name="region_id" invisible="context.get('default_is_parent') == True"/>
+                </tree>
+            </field>
+        </record>
+        <record id="regions_form_view" model="ir.ui.view">
+            <field name="name">regions.form</field>
+            <field name="model">regions</field>
+            <field name="arch" type="xml">
+                <form string="regions">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="region_id"
+                                       attrs="{'invisible': [('is_parent', '=', True)], 'required': [('is_parent', '=', False)]}"
+                                       domain="[('is_parent','=',True)]" context="{'default_is_parent': True}"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="is_parent" invisible="1"/>
+                                <field name="code" readonly="1" force_save="1"/>
+                            </group>
+                            <group attrs="{'invisible': [('is_parent', '=', False)]}">
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': country_id}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook attrs="{'invisible': [('is_parent', '=', False)]}">
+                            <page string="Geolocation">
+                                <group>
+                                    <field name="latlng_ids" invisible="1">
+                                        <tree editable="bottom">
+                                            <field name="lat" />
+                                            <field name="lng" />
+                                            <field name="url" invisible="1"/>
+                                            <field name="unit_id" />
+                                            <field name="state" />
+                                        </tree>
+                                    </field>
+                                    <field name="map" widget="place_autocomplete" class="" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="regions_form_action" model="ir.actions.act_window">
+            <field name="name">Regions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">regions</field>
+            <field name="view_id" ref="regions_tree_view"/>
+            <field name="domain">[('is_parent','=',True)]</field>
+            <field name="context">{'default_is_parent': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Cluster
+                </p>
+<!--                    Click to add a new Regions-->
+            </field>
+            <!--<field name="search_view_id" ref="view_regions_search"/>-->
+        </record>
+        <record id="sub_regions_form_action" model="ir.actions.act_window">
+            <field name="name">Clusters</field>
+<!--            <field name="name">Regions</field>-->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">regions</field>
+            <field name="view_id" ref="regions_tree_view"/>
+            <field name="domain">[('is_parent','=',False)]</field>
+            <field name="context">{'default_is_parent': False}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Sub Cluster
+                </p>
+<!--                    Click to add a new Regions-->
+            </field>
+            <!--<field name="search_view_id" ref="view_regions_search"/>-->
+        </record>
+        <data noupdate="1">
+            <record id="sequence_region_master" model="ir.sequence">
+                <field name="name">Region Sequence</field>
+                <field name="code">region.master.sequence</field>
+                <field name="prefix">REG</field>
+                <field eval="1" name="number_next"/>
+                <field eval="1" name="number_increment"/>
+                <field eval="False" name="use_date_range"/>
+                <field eval="False" name="company_id"/>
+                <field name="padding">4</field>
+            </record>
+            <record id="sequence_cluster_master" model="ir.sequence">
+                <field name="name">Cluster Sequence</field>
+                <field name="code">cluster.master.sequence</field>
+                <field name="prefix">CLS</field>
+                <field eval="1" name="number_next"/>
+                <field eval="1" name="number_increment"/>
+                <field eval="False" name="use_date_range"/>
+                <field eval="False" name="company_id"/>
+                <field name="padding">4</field>
+            </record>
+        </data>
+        <menuitem action="regions_form_action" id="menu_regions_form_action" parent="itsys_real_estate.menu_masters" sequence="120" />
+        <menuitem action="sub_regions_form_action" id="menu_sub_regions_form_action" parent="itsys_real_estate.menu_masters" sequence="130" />
+    </data>
+</odoo>

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_configurations,jupiter_accounts.project_configurations,model_project_configurations,,1,1,1,1
+access_employee_incentive_move,jupiter_accounts.employee_incentive_move,model_employee_incentive_move,,1,1,1,1
+access_incentive_generation,jupiter_accounts.incentive_generation,model_incentive_generation,,1,1,1,1
+access_incentive_generation_line,jupiter_accounts.incentive_generation_line,model_incentive_generation_line,,1,1,1,1
+access_incentive_period,jupiter_accounts.incentive_period,model_incentive_period,,1,1,1,1
+access_opening_updater,jupiter_accounts.opening_updater,model_opening_updater,,1,1,1,1
+access_minimum_advance_line,jupiter_accounts.minimum_advance_line,model_minimum_advance_line,,1,1,1,1

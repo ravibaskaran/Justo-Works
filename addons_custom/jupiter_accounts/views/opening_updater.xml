@@ -1,0 +1,22 @@
+<odoo>
+    <record id="opening_updater_view_form" model="ir.ui.view">
+        <field name="name">opening_updater_view_form</field>
+        <field name="model">opening.updater</field>
+        <field name="arch" type="xml">
+            <form string="opening_updater_form">
+                <sheet>
+                    <group>
+                        <field name="amount"/>
+                        <field name="type" required="1"/>
+                        <field name="account_id" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="update_opening" type="object"
+                        string="Update" class="btn-primary" data-hotkey="u"/>
+                    <button special="cancel" data-hotkey="c" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

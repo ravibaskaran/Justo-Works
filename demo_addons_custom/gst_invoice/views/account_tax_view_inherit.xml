@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="account_tax_included_in_price" model="ir.ui.view">
+            <field name="name">account.tax.inherit.included.in.price</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type_tax_use']" position="after">
+                    <field name="included_in_price" attrs="{'invisible':[('type_tax_use','not in',('sale','purchase'))]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

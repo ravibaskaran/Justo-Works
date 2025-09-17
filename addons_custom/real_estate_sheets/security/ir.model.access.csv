@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_evaluation_sheet,real_estate_sheets.evaluation_sheet,model_evaluation_sheet,,1,1,1,1
+access_evaluation_sheet_line,real_estate_sheets.evaluation_sheet_line,model_evaluation_sheet_line,,1,1,1,1
+access_developer_source,real_estate_sheets.developer_source,model_developer_source,,1,1,1,1
+access_construction_stage,real_estate_sheets.construction_stage,model_construction_stage,,1,1,1,1
+access_competition_sheet,real_estate_sheets.competition_sheet,model_competition_sheet,,1,1,1,1
+access_term_sheet,real_estate_sheets.term_sheet,model_term_sheet,,1,1,1,1
+access_term_sheet_template,real_estate_sheets.term_sheet_template,model_term_sheet_template,,1,1,1,1
+access_evaluation_configuration,real_estate_sheets.evaluation_configuration,model_evaluation_configuration,,1,1,1,1
+access_budget_sheet,real_estate_sheets.budget_sheet,model_budget_sheet,,1,1,1,1
+access_budget_sheet_line,real_estate_sheets.budget_sheet_line,model_budget_sheet_line,,1,1,1,1
+access_competition_sheet_import,real_estate_sheets.competition_sheet_import,model_competition_sheet_import,,1,1,1,1

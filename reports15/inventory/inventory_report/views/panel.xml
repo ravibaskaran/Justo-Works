@@ -1,0 +1,269 @@
+<odoo>
+    <data>
+        <record id="inventory_view" model="ir.ui.view">  <!--CHANGE THIS-->
+            <field name="name">inventory_view</field>  <!--CHANGE THIS-->
+            <field name="model">report.inventory</field>  <!--CHANGE THIS-->
+            <field name="arch" type="xml">
+                <form string="inventory_form">
+                    <div class="beta_main_panel" report="Report" style="background: white;">  <!--CHANGE THIS-->
+                        <div class="m-0 row report_panel">
+                            <div class="col-3 my-auto">
+                                <a role="button" style="color: #FFFFFF; border-radius:6px; padding: 0.60rem 2rem;"
+                                   title="Download Excel" id="beta_excel_print"
+                                   class="btn btn-primary fa fa-file-excel-o mr-1">
+                                    Excel
+                                </a>
+                                <a role="button" style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 2rem"
+                                   title="Print" class="btn btn-primary fa fa-print mr-1" type="button"
+                                   id="beta_direct_print">
+                                    Print
+                                </a>
+                                <button style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 2rem"
+                                        name="beta_pdf_print" type="object"
+                                        class="btn btn-primary fa fa-file-pdf-o" context="{'landscape': True}">
+                                    PDF
+                                </button>
+                                <div style="padding-top: 3px;padding-left: 96px;" class="row">
+                                    <button name="get_html" type="object"
+                                            style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 30px"
+                                            class="btn btn-primary o_panel_get_report_beta">
+                                        Get Report
+                                    </button>
+                                </div>
+                            </div>
+                            <field name="report_id" invisible="1"/>
+                            <div class="col-9">
+                                <div class="row mr-3">
+                                    <div class="col-4">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Type </strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="type" required="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 pr-0">
+                                                <strong>Include Zero</strong>
+                                            </div>
+                                            <div class="col-6 pl-0">
+                                                <field name="include_zero" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 pr-0">
+                                                <strong>Cost Based on Last Purchase</strong>
+                                            </div>
+                                            <div class="col-6 pl-0">
+                                                <field name="last_purchase_cost"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong attrs="{'invisible':[('type','!=','date')]}">Date</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="date" attrs="{'invisible':[('type','!=','date')]}"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong >CategoryWise </strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="category"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row">
+                                            <div class="col-8" >
+                                                <field name="category_ids" widget="many2many_tags" attrs="{'invisible':[('category','!=',True)]}"
+                                                       options="{'no_create': True,'no_quick_create': True,'no_create_edit': True,'no_open': True} "/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="layout" widget="boolean" invisible="1"/>
+                            <div class="fold_toggler bg-primary">
+                                <i class="fold_toggler_i fa fa-caret-up"/>
+                            </div>
+                        </div>
+                        <div class="mt-4 template_div">
+                            <div class="beta_template_area"/>
+                            <field name="template_area" class="d-none"/>
+                        </div>
+                        <script>
+                            $(document).ready(function(){
+                                $('.beta_template_area').append($('[name="template_area"]').val());
+                                $('.dropdown_hide .dropdown-menu').removeClass('show');
+                                if ($("div[name='layout'] input").prop('checked')){
+                                    $('.layout_icon').click();
+                                }
+                                $('.fold_toggler').click(function(){
+                                if($('.report_panel').hasClass('report_panel_folded')){
+                                $('.report_panel').removeClass('report_panel_folded')
+                                $('.template_div').removeClass('template_div_folded')
+                                $('.table thead').css('top', '109px')
+                                $('.fold_toggler_i').css('transform','rotate(360deg)')
+                                }else{
+                                $('.report_panel').addClass('report_panel_folded')
+                                $('.template_div').addClass('template_div_folded')
+                                $('.o_web_client header').css('z-index', '2')
+                                $('.table thead').css('top', '0px')
+                                $('.fold_toggler_i').css('transform','rotate(180deg)')
+                                }
+                                })
+
+                            })
+                        </script>
+                        <style>
+                            html .o_web_client > .o_action_manager > .o_action > .o_content{
+                            overflow: overlay;
+                            }
+                            .o_form_view {
+                            padding: 0 0 14px 0px !important;
+                            background: #f9f9f9;
+                            }
+                            .report_panel{
+                            padding-bottom: 1rem;
+                            box-shadow: 0px 6px 7px #0000003b;
+                            padding-top: 14px;
+                            background: white;
+                            position: fixed;
+                            width: 98%;
+                            z-index: 1;
+                            top: 45px;
+                            max-height: 150px;
+                            transition: top 1s;
+                            }
+                            .template_div{
+                            padding-top: 8rem;
+                            }
+                            .o_field_widget.o_field_many2manytags .o_tag_color_0{
+                            box-shadow: inset 0 0 0 1px #777777;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge{
+                            font-size: 11px;
+                            height: 17px;
+                            }
+                            .o_field_many2manytags {
+                            max-height: 70px;
+                            height: 70px;
+                            overflow-y: auto;
+                            width: 100%;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge {
+                            font-size: 11px;
+                            max-width: 95%;
+                            }
+                            .o_form_view .o_datepicker {
+                            width: 100% !important;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge .o_badge_text{
+                            text-overflow: ellipsis;
+                            width: 90%;
+                            }
+                            .template_div .table thead{
+                            top: 95px;
+                            position: sticky;
+                            background: white;
+                            }
+                            [name='branch_id'] select {
+                            display: none;
+                            }
+                            .fold_toggler{
+                            background: #ffffff;
+                            padding: 0.2rem 0.75rem;
+                            position: absolute;
+                            opacity: 0.9;
+                            bottom: -30px;
+                            right: 45px;
+                            border-bottom: 1px solid #d5d5d5;
+                            border-left: 1px solid #d5d5d5;
+                            border-right: 1px solid #d5d5d5;
+                            border-bottom-left-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            }
+                            .o_form_view.o_form_nosheet.o_form_editable .beta_main_panel{
+                                position:relative;
+                                z-index:0;
+                            }
+                            .o_form_view.o_form_nosheet.o_form_editable .m-0.row.report_panel{
+                                z-index:2;
+                            }
+                            .o_form_view.o_form_nosheet.o_form_editable .mt-4.template_div{
+                                position:relative;
+                                z-index:1;
+                            }
+                            .fold_toggler:hover{
+
+                            }
+                            .report_panel_folded{
+                            z-index: 1;
+                            top: -70px;;
+                            }
+                            .template_div_folded{
+                            padding-top: 0.5rem;
+                            z-index: 0;
+                            transition:1s;
+                            }
+                            header .o_main_navbar{
+                            transition: z-index 1s;
+                            }
+                            .fold_toggler_i{
+                            animation: blink 2s linear infinite;
+                            }
+                            @keyframes blink{
+                            0%{opacity: 0;}
+                            25%{opacity: .5;}
+                            50%{opacity: 1;}
+                            75%{opacity: .5;}
+                            100%{opacity: 0;}
+                            }
+
+                        </style>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <template id="beta_reports_pdf">
+            <main/>
+            <t t-call="web.basic_layout">
+                <style>
+                    .dropdown_hide{display: none;}
+                </style>
+                <t t-raw="template_area"/>
+            </t>
+        </template>
+
+        <!--CHANGE THIS-->
+        <record id="inventory_pdf_action" model="ir.actions.report">
+            <field name="name">Report</field>
+            <field name="model">report.inventory</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">inventory_report.beta_reports_pdf</field>
+            <field name="report_file">inventory_report.beta_reports_pdf</field>
+            <field name="binding_model_id" ref="inventory_report.model_report_inventory"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="beta_reports_base.beta_reports_paper_format_portrait"/>
+        </record>
+
+        <record id="inventory_action" model="ir.actions.act_window">  <!--CHANGE THIS-->
+            <field name="name">Report</field>  <!--CHANGE THIS-->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.inventory</field>  <!--CHANGE THIS-->
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context"
+                   eval="{'default_report_id': ref('inventory_report.inventory_pdf_action')}"/>  <!--CHANGE THIS-->
+        </record>
+    </data>
+</odoo>

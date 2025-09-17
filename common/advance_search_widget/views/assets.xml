@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web_digital_sign_backend" name="web_digital_sign assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/advance_search_widget/static/src/css/product_autocomplete.css"/>
+            <script type="text/javascript" src="/advance_search_widget/static/src/js/product_autocomplete_many2one.js"/>
+        </xpath>
+    </template>
+    <template id="web_digital_sign_common" name="web_digital_sign_common assets" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/advance_search_widget/static/src/js/jquery.js"/>
+        </xpath>
+    </template>
+</odoo>

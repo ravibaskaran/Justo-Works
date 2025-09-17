@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+            <record id="view_move_tree" model="ir.ui.view">
+            <field name="name">account.move.tree</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" string="Journal Entries" decoration-muted="state == 'cancel'">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="ref" optional="show"/>
+                    <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount_total_signed" sum="Total Amount" string="Total"/>
+                    <field name="state"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+</odoo>

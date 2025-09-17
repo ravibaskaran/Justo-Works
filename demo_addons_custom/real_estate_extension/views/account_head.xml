@@ -1,0 +1,74 @@
+<odoo>
+    <!-- Account Head Type -->
+    <record id="account_type_real_estate_extension" model="ir.ui.view">
+        <field name="name">account_type_real_estate_extension</field>
+        <field name="model">account.account.type</field>
+        <field name="inherit_id" ref="account.view_account_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='include_initial_balance']" position="after">
+                <field name="prefix" required="1"/>
+                <field name="next_number"/>
+                <field name="sequence"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Account Head -->
+    <record id="view_account_list_inherit" model="ir.ui.view">
+        <field name="name">view_account_list_inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_read_account']" position="replace"/>
+            <xpath expr="//field[@name='reconcile']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_form_inherit" model="ir.ui.view">
+        <field name="name">view_account_form_inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="attributes">
+                <attribute name="domain">[('company_id', '=', company_id), ('type_tax_use', 'in', ('sale', 'purchase'))]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']" position="after">
+                <page name="internal_notes" string="Internal Notes">
+                    <field name="comment" placeholder="Internal note..."/>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='deprecated']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='cash_flow_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='allowed_journal_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='code']" position="attributes">
+                <attribute name="class"/>
+            </xpath>
+            <xpath expr="//field[@name='user_type_id']" position="attributes">
+                <attribute name="string">Account Type</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <style>
+                    @media (max-width: 500px) {
+                        input[name='code']{
+                            width: 80vw !important;
+                        }
+                    }
+                </style>
+            </xpath>
+        </field>
+    </record>
+</odoo>

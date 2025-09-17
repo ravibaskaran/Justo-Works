@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="building_form_create_inventory" model="ir.ui.view">
+            <field name="name">building_form_create_inventory</field>
+            <field name="model">building</field>
+            <field name="inherit_id" ref="itsys_real_estate.building_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_create_inventory" type="object" string="Create Inventory" class="oe_highlight" data-hotkey="i"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

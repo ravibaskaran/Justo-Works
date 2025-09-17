@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_rs" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.rs</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Real Estate" string="Real Estate" data-key="itsys_real_estate" >
+                    <h2>Booking</h2>
+                    <div class="row mt16 o_settings_container" >
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="booking_backdate_allowed_days"/>
+                                <div class="row">
+                                    <div class="text-muted col-md-8">
+                                        Set here number of days backdate booking allowed
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="booking_backdate_allowed_days"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container" >
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="booking_draft_checking_hours"/>
+                                <div class="row">
+                                    <div class="text-muted col-md-8">
+                                        Set here hours of draft booking need to check and block
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="booking_draft_checking_hours"/> Hours
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Ownership Contracts</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Contracts Income Account</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    Set default Income Account for properties
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="income_account" class="col-lg-3 o_light_label"/>
+                                        <field name="income_account" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Rental Contracts</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Security Deposit</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    Set default Security Deposit account for properties
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <field name="security_deposit_account" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Revenue</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    Revenue Account used in contracts
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="revenue_account" class="col-lg-3 o_light_label"/>
+                                        <field name="revenue_account" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[5]" position="after">
+                <h2>Mail Configurations</h2>
+                <div class="row mt16 o_settings_container" name="Mail Configurations">
+                    <div class="col-12 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_project_creation_mail_to_hr" class="o_light_label"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_project_creation_mail_to_hr" string="Enable Project Creation Mail To HR"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_project_creation_mail_to_hr', '=', False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="mail_hr_users" string="HR Users"/>
+                            <div class="mt8">
+                                <field name="mail_hr_users" widget="many2many_tags" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_term_sheet_mail" class="o_light_label"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_term_sheet_mail" string="Enable Mail on Term Sheet Confirmation"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_term_sheet_mail', '=', False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="term_sheet_mail_users" string="Term Sheet Mail Users"/>
+                            <div class="mt8">
+                                <field name="term_sheet_mail_users" widget="many2many_tags" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_booking_reset_mail" class="o_light_label"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_booking_reset_mail" string="Enable Mail on Booking Reset"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_booking_reset_mail', '=', False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="booking_reset_mail_users" string="Booking Reset Mail Users"/>
+                            <div class="mt8">
+                                <field name="booking_reset_mail_users" widget="many2many_tags" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_booking_wo_registration_mail" class="o_light_label"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_booking_wo_registration_mail" string="Enable Booking Without Registration Mail To CRM"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_booking_wo_registration_mail', '=', False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="booking_wo_registration_mail_frequency" string="Booking Without Registration Mail Frequency"/>
+                            <div class="mt8">
+                                <field name="booking_wo_registration_mail_frequency" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_real_estate_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'itsys_real_estate'}</field>
+    </record>
+
+    <menuitem id="menu_real_estate_config"
+              name="Settings" parent="itsys_real_estate.menu_settings"
+              sequence="1000"
+              groups="base.group_system"
+              action="action_real_estate_config"/>
+
+</odoo>

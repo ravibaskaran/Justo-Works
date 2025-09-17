@@ -1,0 +1,5 @@
+<odoo>
+    <record id="group_jupiter_dashboard_deux" model="res.groups">
+        <field name="name">Jupiter Dashboard II</field>
+    </record>
+</odoo>

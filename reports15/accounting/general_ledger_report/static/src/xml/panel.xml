@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="general_ledger_report.button">
+        <div class="o_list_buttons o_panel_report_buttons">
+            <button style="color: #FFFFFF; border-radius:0;padding: 0.50rem 2rem;"
+                    title="Download Excel" id="excel_print" class="btn btn-primary fa fa-file-excel-o">
+                Excel
+            </button>
+
+            <button style="color: #FFFFFF; border-radius:0;padding: 0.50rem 2rem"
+                    title="Print" class="btn btn-primary fa fa-print" type="button" id="direct_print">
+                Print
+            </button>
+            <button style="color: #FFFFFF; border-radius:0;padding: 0.50rem 2rem"
+                    type="button" class="btn btn-primary o_pdf_print fa fa-file-pdf-o">
+                PDF
+            </button>
+            <div style="padding-top: 3px;padding-left: 96px;" class="row">
+                <button style="color: #FFFFFF; border-radius:0;padding: 0.50rem 30px"
+                        type="button" class="btn btn-primary o_panel_get_report">
+                    Get Report
+                </button>
+            </div>
+            <style>
+                .o_cp_top{display: none !important}
+                .o_report_buttons{display:none !important }
+                .o_control_panel{margin-top:2px;min-height: 27px;}
+                .o_cp_searchview{display:none !important;}
+                .o_control_panel .o_cp_bottom_left{width:30%}
+                .o_control_panel .o_cp_bottom_right{width:69%}
+                .select2-container-multi .select2-choices {
+                min-height: 70px;
+                max-height: 70px;
+                overflow: auto;
+                }
+                #s2id_branch_ids .select2-choices{
+                min-height: 30px;
+                max-height: 30px;}
+                .select2-container-multi .select2-choices .select2-search-choice {
+                padding: 2px 2px 3px 14px !important;
+                margin: 1px 1px 1px 1px !important;
+                line-height: 10px !important;
+                border-radius: 10px !important;
+                font-size: x-small;
+                }
+                .position-static {
+                position: absolute;
+                right: 10px !important;
+                }
+                .select2-container-multi .select2-search-choice-close {
+                left: 3px;
+                top: 1px;}
+                .select2-container-multi .select2-choices .select2-search-field input {
+                padding: 2px;
+                margin: 0px 0 !important;
+                font-size: 90% !important;
+                }
+                .o_input:hover {
+                cursor: pointer;
+                }
+            </style>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"/>
+        </div>
+    </t>
+
+    <form class="form-inline general_ledger_report_form_unique" t-name="general_ledger_report.report_search">
+        <t t-if="breadcrumbs">
+            <table class="d-none">
+                <tr>
+                    <td style="width:110px;">
+                        <span>Date From</span>
+                    </td>
+                    <td>
+                        <input style="border-left: 3px solid cadetblue;" type="text" id="date_from" name="trip-start"
+                               class="o_input o_general_ledger_date_from"/>
+                        <span id="date_from_star" style="vertical-align: top;color: red;display:none;">*</span>
+                    </td>
+                    <td style="width:25px;">
+                    </td>
+                    <td style="width:70px;">
+                        <span>Accounts</span>
+                    </td>
+                    <td colspan="2" rowspan="3">
+                        <select multiple="multiple" id="account_ids" class="o_input o_general_ledger_account"
+                                style="width:200px">
+                            <!--                        <option>Select Account</option>-->
+                            <t t-foreach="variants" t-as="variant" t-att-value="variant">
+                                <option t-att-data-type="variant">
+                                    <t t-esc="variants[variant]"/>
+                                </option>
+                            </t>
+                        </select>
+                        <span id="date_account_star" style="vertical-align: top;color: red;display:none;">*</span>
+                    </td>
+                    <td>
+                        <span style="padding: 13px;">Opening</span>
+                        <input class="o_general_ledger_with_initial_balance" id="opening_balance" type="checkbox"
+                               name="opening_balance"/>
+                    </td>
+                    <!--All Allowed Branches Selection-->
+                    <td t-if="branch_exists">
+                        <span style="padding: 13px;">All Allowed Branches</span>
+                        <input class="o_select_all_branches" id="all_branches" type="checkbox"
+                               name="all_branches"/>
+                    </td>
+                    <script>
+                        $('#all_branches').click(function(){
+                        var initial = document.getElementById('all_branches');
+                        if(initial.checked){
+                        for (var option of document.getElementById('branch_ids').options){
+                        $(option).prop('selected', true);
+                        $(option).change()
+                        }
+                        }
+                        else{
+                        for (var option3 of document.getElementById('branch_ids').options){
+                        $(option3).prop('selected', false);
+                        $(option).change()
+                        }
+                        $(document.getElementById('branch_ids').options[0]).prop('selected',true)
+                        $(document.getElementById('branch_ids').options[0]).change()
+                        }
+                        });
+                    </script>
+                    <!--All Allowed Branches Selection-->
+                </tr>
+                <tr>
+                    <td style="vertical-align: bottom;padding-bottom: 6px;">
+                        <span>Date To</span>
+                    </td>
+                    <td style="vertical-align: bottom;">
+                        <input style="border-left: 3px solid cadetblue;" type="text" id="date_to" name="trip-start"
+                               class="o_input o_general_ledger_date_to"/>
+                        <span id="date_to_star" style="vertical-align: top;color: red;display:none;">*</span>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td colspan="2" rowspan="2">
+                        <span t-if="branch_exists" style="padding: 0px 2px 0px 15px;">Branch</span>
+                        <select t-if="branch_exists" multiple="multiple" id="branch_ids" class="o_input o_panel_branch"
+                                style="width:200px;margin-left: 14px;">
+                            <option selected="selected" t-att-data-type="default_branch[0]">
+                                <t t-esc="default_branch[1]"/>
+                            </option>
+                            <t t-foreach="branches" t-as="branch" t-att-value="branch">
+                                <option t-att-data-type="branch">
+                                    <t t-esc="branches[branch]"/>
+                                </option>
+                            </t>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <span style="padding-right: 15px;">Day Summary</span>
+                        <input class="o_general_ledger_day_summary" id="day_summary" type="checkbox"
+                               name="day_summary"/>
+                    </td>
+                    <td colspan="5">
+                        <span style="padding-right: 15px;">Month Summary</span>
+
+                        <input class="o_general_ledger_month_summary" id="month_summary" type="checkbox"
+                               name="month_summary"/>
+                    </td>
+                </tr>
+            </table>
+        </t>
+        <t t-else="">
+            <table>
+                <tr>
+                    <td style="width:110px;">
+                        <span>Date From</span>
+                    </td>
+                    <td>
+                        <input style="border-left: 3px solid cadetblue;" type="text" id="date_from" name="trip-start"
+                               class="o_input o_general_ledger_date_from"/>
+                        <span id="date_from_star" style="vertical-align: top;color: red;display:none;">*</span>
+                    </td>
+                    <td style="width:25px;">
+                    </td>
+                    <td style="width:70px;">
+                        <span>Accounts</span>
+                    </td>
+                    <td colspan="2" rowspan="3">
+                        <select multiple="multiple" id="account_ids" class="o_input o_general_ledger_account"
+                                style="width:200px">
+                            <t t-foreach="variants" t-as="variant" t-att-value="variant">
+                                <option t-att-data-type="variant">
+                                    <t t-esc="variants[variant]"/>
+                                </option>
+                            </t>
+                        </select>
+                        <span id="date_account_star" style="vertical-align: top;color: red;display:none;">*</span>
+                    </td>
+                    <td>
+                        <span style="padding: 13px;">Opening</span>
+
+                        <input class="o_general_ledger_with_initial_balance" id="opening_balance" type="checkbox"
+                               name="opening_balance"/>
+                    </td>
+                    <!--All Allowed Branches Selection-->
+                    <td t-if="branch_exists">
+                        <span style="padding: 13px;">All Allowed Branches</span>
+                        <input class="o_select_all_branches" id="all_branches" type="checkbox"
+                               name="all_branches"/>
+                    </td>
+                    <script>
+                        $('#all_branches').click(function(){
+                        var initial = document.getElementById('all_branches');
+                        if(initial.checked){
+                        for (var option of document.getElementById('branch_ids').options){
+                        $(option).prop('selected', true);
+                        $(option).change()
+                        }
+                        }
+                        else{
+                        for (var option3 of document.getElementById('branch_ids').options){
+                        $(option3).prop('selected', false);
+                        $(option).change()
+                        }
+                        $(document.getElementById('branch_ids').options[0]).prop('selected',true)
+                        $(document.getElementById('branch_ids').options[0]).change()
+                        }
+                        });
+                    </script>
+                    <!--All Allowed Branches Selection-->
+
+                </tr>
+                <tr>
+                    <td style="vertical-align: bottom;padding-bottom: 6px;">
+                        <span>Date To</span>
+                    </td>
+                    <td style="vertical-align: bottom;">
+                        <input style="border-left: 3px solid cadetblue;" type="text" id="date_to" name="trip-start"
+                               class="o_input o_general_ledger_date_to"/>
+                        <span id="date_to_star" style="vertical-align: top;color: red;display:none;">*</span>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td colspan="2" rowspan="2">
+                        <span t-if="branch_exists" style="padding: 0px 2px 0px 15px;">Branch</span>
+                        <select t-if="branch_exists" multiple="multiple" id="branch_ids" class="o_input o_panel_branch"
+                                style="width:200px;margin-left: 14px;">
+                            <option selected="selected" t-att-data-type="default_branch[0]">
+                                <t t-esc="default_branch[1]"/>
+                            </option>
+                            <t t-foreach="branches" t-as="branch" t-att-value="branch">
+                                <option t-att-data-type="branch">
+                                    <t t-esc="branches[branch]"/>
+                                </option>
+                            </t>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                        <span style="">Day Summary</span>
+
+                        <input class="o_general_ledger_day_summary" id="day_summary" type="checkbox"
+                               name="day_summary"/>
+                    </td>
+                    <td style="float:right;" colspan="1">
+                        <span style="">Month Summary</span>
+
+                        <input class="o_general_ledger_month_summary" id="month_summary" type="checkbox"
+                               name="month_summary"/>
+                    </td>
+                </tr>
+                <tr class="month_total">
+                    <td/>
+                    <td style="float:right;">
+                        <span>Month Total</span>
+                        <input class="o_general_ledger_month_total" id="month_total" type="checkbox"
+                               name="month_total"/>
+                    </td>
+                </tr>
+            </table>
+        </t>
+    </form>
+</templates>

@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="stock.product_template_action_product" model="ir.actions.act_window">
+            <field name="domain">[('is_property', '!=', True)]</field>
+        </record>
+    </data>
+</odoo>

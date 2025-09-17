@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//button[@name='button_cancel'][2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                   <button name="button_cancel_inx" string="Cancel" type="object" confirm="Are you sure, you want to proceed?"
+                            groups="inexoft_direct_sales_purchase_cancel.group_inex_cancel_purchase"
+                            attrs="{'invisible' :['|', ('move_type', 'not in', ('in_invoice')), '|',('direct_move_type','!=','incoming'), ('state','not in', ('draft'))]}"
+                   />
+                    <button name="button_cancel_inx" string="Cancel" type="object" confirm="Are you sure, you want to proceed?"
+                            groups="inexoft_direct_sales_purchase_cancel.group_inex_cancel_sales"
+                            attrs="{'invisible' :['|', ('move_type', 'not in', ('out_invoice','out_refund')), '|',('direct_move_type','!=','outgoing'), ('state','not in', ('draft'))]}"
+                    />
+                    <button name="button_draft" string="Reset to Draft" type="object"
+                            groups="inexoft_direct_sales_purchase_cancel.group_inex_purchase_set_to_draft"
+                            attrs="{'invisible' :['|', ('move_type', '!=', 'in_invoice'), '|',('direct_move_type','!=','incoming'), ('state','not in', ('posted', 'cancel'))]}"
+                    />
+                    <button name="button_draft" string="Reset to Draft" type="object"
+                    groups="inexoft_direct_sales_purchase_cancel.group_inex_sales_set_to_draft"
+                    attrs="{'invisible' :['|', ('move_type','not in', ('out_invoice','out_refund')), '|',('direct_move_type','!=','outgoing'), ('state','not in', ('posted', 'cancel'))]}"
+                   />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

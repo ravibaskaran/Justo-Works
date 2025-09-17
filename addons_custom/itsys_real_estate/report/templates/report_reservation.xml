@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_reservation_document">
+			<t t-call="web.basic_layout">
+				<div class="page">
+					<style>
+                        *{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;}
+					</style>
+					<link rel="stylesheet" href="/itsys_real_estate/static/src/css/report-style.css"/>
+					<div class="row pb-3 mb-3" style="border-bottom: 1px solid #007bff;">
+						<div class="col-2" style="display: flex; align-items: center;">
+							<img style="width: 125px;" t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo"/>
+						</div>
+						<div class="col-8 text-center">
+							<div>
+								<h4 class="text-primary" t-esc="o.company_id.name"/>
+							</div>
+							<div>
+								<t t-if="o.company_id.street"><span t-esc="o.company_id.street"/>,</t>
+								<t t-if="o.company_id.street2"><span t-esc="o.company_id.street2"/>,</t>
+								<t t-if="o.company_id.city"><span t-esc="o.company_id.city"/>,</t>
+								<t t-if="o.company_id.state_id"><span t-esc="o.company_id.state_id.name"/>,</t>
+								<t t-if="o.company_id.country_id"><span t-esc="o.company_id.country_id.name"/></t>
+								<t t-if="o.company_id.zip">- <span t-esc="o.company_id.zip"/></t>
+							</div>
+                            <div>
+                                <t t-if="o.company_id.phone">Phone: <span t-esc="o.company_id.phone"/></t>
+                                <t t-if="o.company_id.email">Email: <span t-esc="o.company_id.email"/></t>
+                            </div>
+                            <div>
+                                GSTIN: <span t-esc="o.company_id.vat"/>
+                            </div>
+						</div>
+                        <div class="col-2"/>
+					</div>
+
+					<table class="gridtable">
+						<tr>
+							<td align="left" width="25%"><strong>Booking No.</strong></td>
+							<td align="left" width="25%"><span t-field="o.name"/></td>
+							<td align="left" width="25%"><strong>Booking Date</strong></td>
+							<td align="left" width="25%"><span t-field="o.date"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Project</strong></td>
+							<td align="left"><span t-field="o.building"/></td>
+							<td align="left"><strong>Flat</strong></td>
+							<td align="left"><span t-field="o.building_unit"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Unit</strong></td>
+							<td align="left"><span t-field="o.flat_type"/></td>
+							<td align="left"><strong>Balcony Area</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.balcony_area)"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Carpet Area</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.carpet_area)"/></td>
+							<td align="left"><strong>Total Saleable Area Sq. Ft</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.total_saleable_area)"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Parking</strong></td>
+							<td align="left"><span t-if="o.parking">&#x2713;</span></td>
+							<td align="left"><strong>Source of Booking</strong></td>
+							<td align="left"><span t-field="o.source_of_booking"/></td>
+						</tr>
+                        <tr>
+                            <td colspan="4" class="text-white">-</td>
+                        </tr>
+                        <tr>
+							<td align="left"><strong>Applicant Name</strong></td>
+							<td align="left"><span t-field="o.partner_id"/></td>
+							<td align="left"><strong>Co-Applicant Name</strong></td>
+							<td align="left"><span t-field="o.co_partner_id"/></td>
+						</tr>
+                        <tr>
+							<td align="left"><strong>Address &amp; Personal Information</strong></td>
+							<td align="left">
+                                <div t-field="o.street"/>
+                                <div t-field="o.street2"/>
+                                <div>
+                                    <t t-if="o.city"><span t-field="o.city"/>,</t>
+                                    <t t-if="o.state_id"><span t-field="o.state_id"/>,</t>
+                                    <span t-field="o.zip"/>
+                                </div>
+                                <div t-field="o.country_id"/>
+                            </td>
+							<td align="left"><strong>Address &amp; Personal Information</strong></td>
+							<td align="left">
+                                <div t-field="o.co_street"/>
+                                <div t-field="o.co_street2"/>
+                                <div>
+                                    <t t-if="o.co_city"><span t-field="o.co_city"/>,</t>
+                                    <t t-if="o.co_state_id"><span t-field="o.co_state_id"/>,</t>
+                                    <span t-field="o.co_zip"/>
+                                </div>
+                                <div t-field="o.co_country_id"/>
+                            </td>
+						</tr>
+                        <tr>
+                            <td colspan="4" class="text-white">-</td>
+                        </tr>
+                        <tr>
+							<td align="left"><strong>CP Employee Name</strong></td>
+							<td align="left"><span t-field="o.cp_employee_id"/></td>
+							<td align="left"><strong>RERA No.</strong></td>
+							<td align="left"><span t-field="o.rera_no"/></td>
+						</tr>
+                        <tr>
+							<td align="left"><strong>CP Name</strong></td>
+							<td align="left"><span t-field="o.cp_id"/></td>
+							<td align="left"><strong>Developer</strong></td>
+							<td align="left"><span t-field="o.developer_id"/></td>
+						</tr>
+						<tr t-if="o.spot_booking">
+                            <td colspan="4" class="text-primary"><u class="font-weight-bold">Spot Booking</u></td>
+                        </tr>
+                        <tr t-if="o.spot_booking">
+							<td align="left"><strong>Spot Percentage</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.spot_percentage)"/></td>
+							<td align="left"><strong>Spot Amount</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.spot_amount)"/></td>
+						</tr>
+						<tr>
+                            <td colspan="4" class="text-white">-</td>
+                        </tr>
+						<tr>
+							<td align="left"><strong>Agreement Value</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.flat_cost)"/></td>
+							<td align="left"><strong>Advance Amount</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.advance_amount)"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Stamp Duty</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.stamp_duty)"/></td>
+							<td align="left"><strong>Payment Mode</strong></td>
+							<td align="left"><span t-field="o.payment_mode"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Legal Charge</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.legal_charge)"/></td>
+							<td align="left"><strong t-if="o.payment_mode == 'bank'">Payment Type</strong></td>
+							<td align="left"><span t-if="o.payment_mode == 'bank'" t-field="o.payment_type"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Registration Charge</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.registration_charge)"/></td>
+							<td align="left"><strong t-if="o.payment_mode == 'bank'">Document Number</strong></td>
+							<td align="left"><span t-if="o.payment_mode == 'bank'" t-field="o.document_number"/></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Net Amount</strong></td>
+							<td align="left"><span t-esc="'{:.2f}'.format(o.net_amount)"/></td>
+							<td align="left"><strong t-if="o.payment_mode == 'bank'">Document Date</strong></td>
+							<td align="left"><span t-if="o.payment_mode == 'bank'" t-field="o.document_date"/></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="text-primary"><u class="font-weight-bold">Payment Schedule</u></td>
+                        </tr>
+					</table>
+					<table class="gridtable no_border_top_tr">
+						<thead>
+							<tr>
+								<th class="text-right">% of Payment</th>
+								<th>Payment Schedule</th>
+								<th class="text-right">Installment</th>
+								<th class="text-right">TDS</th>
+								<th class="text-right">GST</th>
+								<th class="text-right">Net Amount</th>
+								<th>Payment Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr t-foreach="o.payment_schedule_ids" t-as="line">
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.percentage)"/></td>
+								<td><span t-field="line.payment_schedule"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.installment)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.tds)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.gst)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.net_amount)"/></td>
+								<td><span t-field="line.payment_date"/></td>
+							</tr>
+							<tr>
+								<td colspan="7" class="text-primary"><u class="font-weight-bold">Payment Schedule Monitoring</u></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="gridtable no_border_top_tr">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Mode</th>
+								<th>Description</th>
+								<th class="text-right">OCR</th>
+								<th class="text-right">Bank Payment</th>
+								<th class="text-right">GST</th>
+								<th class="text-right">Net Amount</th>
+								<th class="text-right">Balance</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr t-foreach="o.payment_schedule_monitoring_ids" t-as="line">
+								<td><span t-field="line.date"/></td>
+								<td><span t-field="line.mode"/></td>
+								<td><span t-field="line.description"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.ocr)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.bank_payment)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.gst)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.amount_total)"/></td>
+								<td class="text-right"><span t-esc="'{:.2f}'.format(line.balance)"/></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="gridtable" style="margin-top: -1px;">
+						<tr t-if="o.if_loan">
+							<td colspan="4" class="text-primary"><u class="font-weight-bold">Loan Details</u></td>
+						</tr>
+						<tr t-if="o.if_loan">
+							<td align="left" width="25%"><strong>Preferred Bank</strong></td>
+							<td align="left" width="25%"><span t-field="o.preferred_bank"/></td>
+							<td align="left" width="25%"><strong>Bank Person</strong></td>
+							<td align="left" width="25%"><span t-field="o.bank_person"/></td>
+						</tr>
+						<tr t-if="o.if_loan">
+							<td align="left" width="25%"><strong>Required Amount</strong></td>
+							<td align="left" width="25%"><span t-esc="'{:.2f}'.format(o.required_amount)"/></td>
+							<td align="left" width="25%"><strong>Mobile</strong></td>
+							<td align="left" width="25%"><span t-field="o.mobile"/></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="text-primary"><u class="font-weight-bold">Check List</u></td>
+                        </tr>
+						<tr>
+							<td align="left"><strong>Booking Form Signed</strong></td>
+							<td align="left"><span t-if="o.booking_form_signed">&#x2713;</span></td>
+							<td align="left"><strong>Self-Attested PAN Card</strong></td>
+							<td align="left"><span t-if="o.self_attested_pan_card">&#x2713;</span></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Cost Sheet Signed</strong></td>
+							<td align="left"><span t-if="o.cost_sheet_signed">&#x2713;</span></td>
+							<td align="left"><strong>Self-Attested Aadhaar Card</strong></td>
+							<td align="left"><span t-if="o.self_attested_aadhaar_card">&#x2713;</span></td>
+						</tr>
+						<tr>
+							<td align="left"><strong>Received Photos</strong></td>
+							<td align="left" colspan="3"><span t-if="o.received_photos">&#x2713;</span></td>
+						</tr>
+					</table>
+				</div>
+			</t>
+		</template>
+
+		<template id="report_reservation">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="itsys_real_estate.report_reservation_document" t-lang="o.partner_id.lang"/>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

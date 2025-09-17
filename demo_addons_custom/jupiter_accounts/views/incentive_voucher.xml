@@ -1,0 +1,54 @@
+<odoo>
+    <record id="employee_incentive_move_view_form" model="ir.ui.view">
+        <field name="name">employee_incentive_move_view_form</field>
+        <field name="model">employee.incentive.move</field>
+        <field name="arch" type="xml">
+            <form string="employee_incentive_move_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id" required="1" options="{'no_create': True, 'no_open': True,'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group>
+                            <field name="date" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="closing_manager_amount"/>
+                            <field name="sourcing_manager_amount"/>
+                            <field name="closing_tl_amount"/>
+                        </group>
+                        <group>
+                            <field name="sourcing_tl_amount"/>
+                            <field name="crm_amount"/>
+                            <field name="marketing_amount"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="employee_incentive_move_view_tree" model="ir.ui.view">
+        <field name="name">employee_incentive_move_view_tree</field>
+        <field name="model">employee.incentive.move</field>
+        <field name="arch" type="xml">
+            <tree string="employee_incentive_move_tree">
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="closing_manager_amount"/>
+                <field name="sourcing_manager_amount"/>
+                <field name="closing_tl_amount"/>
+                <field name="sourcing_tl_amount"/>
+                <field name="crm_amount"/>
+                <field name="marketing_amount"/>
+            </tree>
+        </field>
+    </record>
+    <record id="employee_intensive_move_action" model="ir.actions.act_window">
+        <field name="name">Incentive Rate Slab</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.incentive.move</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

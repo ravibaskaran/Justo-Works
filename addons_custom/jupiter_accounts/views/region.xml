@@ -1,0 +1,19 @@
+<odoo>
+    <!-- Configurations in Region form -->
+    <record id="regions_form_view_jupiter_accounts" model="ir.ui.view">
+        <field name="name">regions_form_view_jupiter_accounts</field>
+        <field name="model">regions</field>
+        <field name="inherit_id" ref="itsys_real_estate.regions_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="accounts_configurations" string="Configurations" groups="jupiter_accounts.group_project_configurations">
+                    <group>
+                        <group>
+                            <field name="incentive_type"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

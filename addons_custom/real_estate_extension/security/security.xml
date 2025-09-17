@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="group_user_menu" model="res.groups">
+            <field name="name">Show User Menu</field>
+        </record>
+        <record id="group_user_ctc_show" model="res.groups">
+            <field name="name">Show CTC</field>
+        </record>
+        <record id="group_user_delete_button" model="res.groups">
+            <field name="name">Show Delete Button</field>
+        </record>
+    </data>
+</odoo>

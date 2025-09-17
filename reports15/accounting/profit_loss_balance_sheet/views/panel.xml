@@ -1,0 +1,220 @@
+<odoo>
+    <data>
+        <record id="profit_loss_balance_sheet_view_form" model="ir.ui.view">  <!--CHANGE THIS-->
+            <field name="name">profit_loss_balance_sheet_view_form</field>  <!--CHANGE THIS-->
+            <field name="model">beta.profit.loss.balance.sheet</field>  <!--CHANGE THIS-->
+            <field name="arch" type="xml">
+                <form string="profit_loss_balance_sheet_form">
+                    <div class="beta_main_panel" report="Accounting">  <!--CHANGE THIS-->
+                        <div class="m-0 row report_panel">
+                            <div class="col-3 my-auto">
+                                <a role="button" style="color: #FFFFFF; border-radius:6px; padding: 0.60rem 2rem;"
+                                   title="Download Excel" id="beta_excel_profit_and_loss"
+                                   class="btn btn-primary fa fa-file-excel-o mr-1">
+                                    Excel
+                                </a>
+                                <a role="button" style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 2rem"
+                                   title="Print" class="btn btn-primary fa fa-print mr-1" type="button"
+                                   id="beta_direct_print">
+                                    Print
+                                </a>
+<!--                                <button style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 2rem"-->
+<!--                                        name="beta_pdf_print" type="object"-->
+<!--                                        class="btn btn-primary fa fa-file-pdf-o">-->
+<!--                                    PDF-->
+<!--                                </button>-->
+                                <a role="button" style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 2rem"
+                                   title="PDF Download" class="btn btn-primary fa fa-file-pdf-o mr-1" type="button"
+                                   id="o_profit_loss_balance_sheet_pdf_action">
+                                    PDF
+                                </a>
+                                <div style="padding-top: 3px;padding-left: 96px;" class="row">
+                                    <button name="get_html" type="object"
+                                            style="color: #FFFFFF; border-radius:6px;padding: 0.60rem 30px"
+                                            class="btn btn-primary o_panel_get_report_beta">
+                                        Get Report
+                                    </button>
+                                </div>
+                            </div>
+                            <field name="report_id" invisible="1"/>
+                            <field name="name" class="d-none"/>
+                            <div class="col-9">
+                                <div class="row mr-3">
+                                    <div class="col-4">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Date From</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="date_from" required="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Date To</strong>
+                                            </div>
+                                            <div class="col-8">
+                                                <field name="date_to" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>With Opening</strong>
+                                            </div>
+                                            <div class="col-6">
+                                                <field name="with_opening"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>Summary</strong>
+                                            </div>
+                                            <div class="col-6">
+                                                <field name="summary"/>
+                                            </div>
+                                        </div>
+                                        <field name="report_type" invisible="1"/>
+                                        <div class="row" attrs="{'invisible': [('report_type','!=','profit_loss')]}">
+                                            <div class="col-6">
+                                                <strong>Month Wise</strong>
+                                            </div>
+                                            <div class="col-6">
+                                                <field name="month_wise"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 template_div">
+                            <div class="beta_template_area"/>
+                            <field name="template_area" class="d-none"/>
+                        </div>
+                        <script>
+                            $(document).ready(function(){
+                            $('.beta_template_area').append($('[name="template_area"]').val())
+<!--                            $('span[name="date_from"]').click();-->
+                            $('.beta_main_panel').attr('report', $('input[name="name"]').val())
+                            })
+                        </script>
+                        <style>
+                            html .o_web_client > .o_action_manager > .o_action > .o_content{
+                            overflow: overlay;
+                            }
+                            .o_form_view {
+                            padding: 0 0 14px 0px !important;
+                            background: #f9f9f9;
+                            }
+                            .report_panel{
+                            padding-bottom: 1rem;
+                            box-shadow: 0px 6px 7px #0000003b;
+                            padding-top: 14px;
+                            background: white;
+                            position: fixed;
+                            width: 98%;
+                            z-index: 1;
+                            top: 45px;
+                            max-height: 150px;
+                            }
+                            .template_div{
+                            padding-top: 8rem;
+                            }
+                            .o_field_widget.o_field_many2manytags .o_tag_color_0{
+                            box-shadow: inset 0 0 0 1px #777777;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge{
+                            font-size: 11px;
+                            }
+                            .o_field_many2manytags {
+                            max-height: 70px;
+                            height: 70px;
+                            overflow-y: auto;
+                            width: 100%;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge {
+                            font-size: 11px;
+                            max-width: 95%;
+                            }
+                            .o_form_view .o_datepicker {
+                            width: 100% !important;
+                            }
+                            .o_field_widget.o_field_many2manytags .badge .o_badge_text{
+                            text-overflow: ellipsis;
+                            width: 90%;
+                            }
+                            .template_div .table thead{
+                            top: 95px;
+                            position: sticky;
+                            background: white;
+                            }
+                            [name='branch_id'] select {
+                            display: none;
+                            }
+                        </style>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <template id="profit_loss_beta_reports_pdf">
+            <main/>
+            <t t-call="web.basic_layout">
+                <t t-raw="template_area"/>
+            </t>
+        </template>
+        <template id="balance_sheet_beta_reports_pdf">
+            <main/>
+            <t t-call="web.basic_layout">
+                <t t-raw="template_area"/>
+            </t>
+        </template>
+        <!--CHANGE THIS-->
+        <record id="profit_loss_reports_pdf_action" model="ir.actions.report">
+            <field name="name">Profit Loss</field>
+            <field name="model">beta.profit.loss.balance.sheet</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">profit_loss_balance_sheet.profit_loss_beta_reports_pdf</field>
+            <field name="report_file">profit_loss_balance_sheet.profit_loss_beta_reports_pdf</field>
+            <field name="binding_model_id" ref="profit_loss_balance_sheet.model_beta_profit_loss_balance_sheet"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="beta_reports_base.beta_reports_paper_format_portrait"/>
+        </record>
+        <record id="balance_sheet_reports_pdf_action" model="ir.actions.report">
+            <field name="name">Balance Sheet</field>
+            <field name="model">beta.profit.loss.balance.sheet</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">profit_loss_balance_sheet.balance_sheet_beta_reports_pdf</field>
+            <field name="report_file">profit_loss_balance_sheet.balance_sheet_beta_reports_pdf</field>
+            <field name="binding_model_id" ref="profit_loss_balance_sheet.model_beta_profit_loss_balance_sheet"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="beta_reports_base.beta_reports_paper_format_portrait"/>
+        </record>
+
+        <record id="profit_loss_account_action" model="ir.actions.act_window">  <!--CHANGE THIS-->
+            <field name="name">Profit Loss</field>  <!--CHANGE THIS-->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">beta.profit.loss.balance.sheet</field>  <!--CHANGE THIS-->
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context"
+                   eval="{'default_report_id': ref('profit_loss_balance_sheet.profit_loss_reports_pdf_action'),
+                   'default_report_type': 'profit_loss',
+                   'default_name': 'Profit Loss'}"/>  <!--CHANGE THIS-->
+        </record>
+        <record id="balance_sheet_account_action" model="ir.actions.act_window">  <!--CHANGE THIS-->
+            <field name="name">Balance Sheet</field>  <!--CHANGE THIS-->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">beta.profit.loss.balance.sheet</field>  <!--CHANGE THIS-->
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context"
+                   eval="{'default_report_id': ref('profit_loss_balance_sheet.balance_sheet_reports_pdf_action'),
+                   'default_report_type': 'balance_sheet',
+                   'default_name': 'Balance Sheet'}"/>  <!--CHANGE THIS-->
+        </record>
+<!--        <menuitem id="profit_loss_menu" action="profit_loss_balance_sheet.profit_loss_account_action"/>-->
+<!--        <menuitem id="balance_sheet_menu" action="profit_loss_balance_sheet.balance_sheet_account_action"/>-->
+    </data>
+</odoo>

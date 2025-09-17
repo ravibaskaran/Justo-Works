@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="group_opening_cancel" model="res.groups">
+            <field name="name">Cancel Opening</field>
+        </record>
+    </data>
+</odoo>

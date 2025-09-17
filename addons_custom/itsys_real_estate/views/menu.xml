@@ -1,0 +1,20 @@
+<!--<odoo>-->
+<!--    <menuitem-->
+<!--            id="menu_itsys_real_estate"-->
+<!--            name="Project"-->
+<!--            web_icon="itsys_real_estate,static/description/icon.png"-->
+<!--            sequence="5"/>-->
+
+<!--    <menuitem-->
+<!--            id="menu_building_list"-->
+<!--            name="Property Masters"-->
+<!--            parent="menu_itsys_real_estate"-->
+<!--            sequence="10"/>-->
+<!--    <menuitem-->
+<!--            sequence="40" name="Projects"-->
+<!--            action="building_act1"-->
+<!--            id="menu_building_list_sub"-->
+<!--            parent="menu_building_list"/>-->
+<!--    <menuitem id="wing_master_menu" parent="itsys_real_estate.menu_building_list" action="wing_action" sequence="50"/>-->
+<!--    <menuitem id="unit_master_menu" parent="itsys_real_estate.menu_building_list" action="unit_action" sequence="60"/>-->
+<!--</odoo>-->

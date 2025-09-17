@@ -1,0 +1,1387 @@
+<odoo>
+        <template id="report_supplier_purchase">
+<!--        <t t-call="web.html_container">-->
+<!--            <t t-call="web.basic_layout">-->
+
+                <div id="wrapwrap" class="page mb80" style="padding-right: 15px;padding-left: 15px;">
+                   <style type="text/css">
+                #details-tbl{
+                border: none;
+                }
+                tr th{
+                padding: 5px 10px;
+                border: none;
+                border-top: 1px solid ;
+                border-bottom: 1px solid ;
+                }
+                #details-tbl tr td{
+                padding: 3px 10px;
+                border: none;
+                border-bottom: 1px solid ;
+                }
+                .text-right{
+                text-align:right !important;
+                }
+                .text-left{
+                text-align:left !important;
+                }
+                .text-center{
+                text-align:center !important;
+                }
+                thead { display: table-header-group; }
+                .table-striped tbody tr:nth-of-type(odd) {
+                background-color: rgba(0, 0, 0, 0.05) !important;
+                }
+                .daybook-table tr td{word-break: break-all; !important}
+                .pagebreak{page-break-after:always}
+                html,body{height:99% !important}
+                @media pdf {
+                a{
+                text-decoration: none !important;
+                color: inherit !important;
+                }
+                thead {display: table-row-group;}
+                tbody tr:nth-of-type(#{$table-striped-order}) {
+                background-color: $table-accent-bg;}
+                .pagebreak{page-break-after:always
+                }
+                }
+                @media print {
+                a{
+                text-decoration: none !important;
+                color: inherit !important;
+                }
+                #branch{padding:0 !important;height: 145px;}
+                .company_name{padding-top:0px !important}
+                .pagebreak{page-break-after:always}}
+                .header_company{display: none;}
+                @media print{
+                .header_company{display: unset;}
+                }
+                @media pdf{
+                .header_company{display: unset;}
+                }
+            </style>
+
+
+                     <t t-if="res_company" >
+                <div class="header header_company" >
+                    <table class="" width="100%">
+                        <tr class="company_info" style="height:130px !important;">
+                            <td id="logo_company" class="text-center logo_company" colspan="0"
+                                style="float: left;position: absolute;">
+                                <div id="img_logo" style="float:left;padding-top: 3px;padding-left: 20px;" class="mb4">
+                                    <img style="width: 100px;" t-if="res_company.logo"
+                                         t-att-src="image_data_uri(res_company.logo)" alt="Logo"/>
+                                </div>
+                            </td>
+                            <td colspan="4" style="float: left;width: 100%;text-align: center;">
+                                <table width="100%" style="margin-top: 12px;text-align:center"
+                                       class="mb4 text-center">
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <h4 style="margin:0;color:#1155cc;font-size: 1.2rem;">
+                                                <span t-esc="res_company.name"/>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <p style="margin-bottom:0;">
+                                                <span t-esc="res_company.street"/>,
+                                                <span t-esc="res_company.street2"/>,
+                                                <span t-esc="res_company.city"/>,
+                                                <span t-esc="res_company.state_id.name"/>,
+                                                <span t-esc="res_company.country_id.name"/>-
+                                                <span t-esc="res_company.zip"/>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <p style="margin-bottom:0;">
+                                                <span t-if="res_company.phone" style="padding-right:15px">Phone :
+                                                    <span t-esc="res_company.phone"/>
+                                                </span>
+                                                <span t-if="res_company.email">
+                                                    Email :
+                                                    <span t-esc="res_company.email"/>
+                                                </span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <p t-if="res_company.vat">
+                                                <span class="list-inline-item d-inline">
+                                                    GSTIN
+                                                    :
+                                                </span>
+                                                <span t-esc="res_company.vat"/>
+                                            </p>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center"><span  t-if="branch_name!=''">Branch : <t t-esc="branch_name"/></span></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div class="row zero_min_height">
+                                    <div class="col-12">
+                                        <div style="border-bottom: 1px solid #000;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+                 <div class="mb24 mt24" id="dvData">
+                    <h4 class="text-center mb20" style="text-align:center">Supplier Purchase</h4>
+                    <h6 class="text-center" style="text-align:center">Date : <t t-esc="date_from" /> - <t t-esc="date_to" /></h6>
+
+                 </div>
+               <table id="tableId2" rules="groups" frame="hsides" border="1"  class="table table-bordered table-striped"   style="width: 100%;font-size:12px;border-top: 2px solid black;margin-top:10px;">
+                   <style> .table td{ padding: .8px !important;} </style>
+                   <t t-if="isbranch">
+                        <t t-if="case == 1">
+                    <thead>
+                        <th class="text-center" style="width: 5%">Sl.No</th>
+
+                        <th class="text-center" style="width: 12%">Invoice No</th>
+                        <th class="text-center" style="width: 9%">Date</th>
+                        <th class="text-center" style="width: 27%">Supplier</th>
+                        <th class="text-center" style="width: 9%">Description</th>
+                        <th class="text-center" style="width: 8%">HSC Code</th>
+                        <th class="text-center" style="width: 8%">Qty</th>
+                        <th class="text-center" style="width: 7%">UoM</th>
+                        <th class="text-center" style="width: 9%">Price Unit</th>
+                         <th class="text-center" style="width: 5%">Tax.%</th>
+                        <th class="text-center" style="width: 8%">Net Amount</th>
+
+
+                    </thead>
+
+
+                    <tbody>
+                        <t t-set="i" t-value="1" />
+                        <t t-foreach="lines['docsnn']" t-as="doc">
+                            <t t-if="doc['name'] == 8">
+                            <tr >
+
+                                <td class="text-center" colspan="11" >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['branch_name']"/>
+                                </td>
+
+                            </tr>
+                          </t>
+                        <t t-if="doc['name'] == 6">
+                            <tr >
+                                <td></td><td></td><td></td>
+                                <td class="text-center"  >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['supplier']"/>
+                                </td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                          </t>
+                        <t t-if="doc['name'] == 5">
+
+                            <tr >
+                                <td></td><td></td><td></td>
+                                <td class="text-left"  >
+                               <h5 style="!important;font-weight:800;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['product_name']"/>
+                                </td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 4">
+                            <tr >
+
+                                <td class="text-center"   >
+                                <span t-esc="i"/>
+                                </td>
+
+                                <td class="text-center" >
+                                     <span t-esc="doc['product_name']"/>
+                                </td>
+
+                                <td class="text-center">
+                                  <span t-esc="doc['date']"/>
+                                </td>
+
+                                <td class="text-left">
+                                  <span t-esc="doc['supplier']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['description']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['hsn_code']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['uom']"/>
+                                </td>
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_unit']"/>
+                                </td>
+
+
+
+                                  <td class="text-right">
+                                  <span t-esc="'%.3f'% doc['tax']"/>
+                                  </td>
+
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+
+                             <t t-set="i" t-value="i+1"/>
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 1">
+                            <tr height="30px">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center" style="padding:10px;">
+                                     <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"> Total   </h6>
+                                </td>
+
+                                <td></td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+
+
+
+
+
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+
+                            </tr>
+                        </t>
+
+                            <t t-if="doc['name'] == 10">
+                            <tr height="30px">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center" style="padding:10px;">
+                                    <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Branch Total  </h6>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['qty']"/>
+                                </td>
+
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+
+
+
+
+
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 7">
+
+                            <tr >
+                                <td></td><td></td><td></td>
+                                <td class="text-right" >
+                                     <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Supplier Total <![CDATA[&nbsp;]]>  </h6>
+                                </td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td class="text-right"  >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+
+                            </tr>
+                        </t>
+
+
+                        <t t-if="doc['name'] == 3">
+                            <tr >
+                                <td class="text-center" >
+                                <span t-esc="i"/>
+                                </td>
+                                <td class="text-center">
+                                     <span t-esc="doc['product_name']"/>
+                                </td>
+
+                                <td class="text-center">
+                                  <span t-esc="doc['date']"/>
+                                </td>
+                                <td class="text-left">
+                                  <span t-esc="doc['invoice_no']"/>
+                                </td>
+                                <td class="text-left">
+                                  <span t-esc="doc['supplier']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['description']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['hsn_code']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['uom']"/>
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_unit']"/>
+                                </td>
+
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['tax']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+
+
+                              <t t-set="i" t-value="i+1"/>
+                            </tr>
+                        </t>
+
+                           <t t-if="doc['name'] == 2">
+                            <tr height="35px">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center">
+                                     <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"> Total   </h6>
+                                </td>
+                                 <td></td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+
+                            </tr>
+                        </t>
+                    </t>
+
+
+                    </tbody>
+
+                    </t>
+                    <t t-if="case == 2">
+                      <thead>
+                        <th class="text-center" style="width: 5%">Sl.No</th>
+                        <th class="text-center" style="width: 30%">Product Name</th>
+                        <th class="text-center" style="width: 15%">Qty</th>
+                        <th class="text-center" style="width: 10%">Amount</th>
+
+
+                    </thead>
+                    <tbody>
+                        <t t-set="i" t-value="1" />
+                        <t t-foreach="lines['docsnn']" t-as="doc">
+                          <t t-if="doc['name'] == 8">
+                            <tr >
+
+                                <td class="text-center" colspan="4" >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['branch_name']"/>
+                                </td>
+
+                            </tr>
+                          </t>
+                        <t t-if="doc['name'] == 6">
+                            <tr >
+                                <td></td>
+                                <td class="text-center"  >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['supplier']"/>
+                                </td>
+                                <td></td><td></td>
+                            </tr>
+                          </t>
+                        <t t-if="doc['name'] == 1">
+                            <tr >
+
+                                <td class="text-center"   >
+                                <span t-esc="i"/>
+                                </td>
+
+                                <td class="text-left">
+                                     <span t-esc="doc['product_name']"/>
+                                </td>
+
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                             <t t-set="i" t-value="i+1"/>
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 10">
+                            <tr height="35px">
+                                 <td></td>
+                                <td class="text-center" >
+                                     <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Branch Total </h6>
+                                </td>
+
+
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                               <!--  <td class="text-right">
+                                   <span t-esc="doc['discount']"/>
+                                </td> -->
+                                <!-- <td class="text-right">
+                                   <span style="text-align:center;!important;font-weight:bold;" t-esc="'%.2f'% doc['netamount']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['total_stock']"/>
+                                </td> -->
+
+                            </tr>
+                        </t>
+
+
+                        <t t-if="doc['name'] == 3">
+                            <tr >
+                                <td class="text-center" >
+                                <span t-esc="i"/>
+                                </td>
+                                <td class="text-left">
+                                     <span t-esc="doc['product_name']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                              <t t-set="i" t-value="i+1"/>
+                            </tr>
+                        </t>
+                           <t t-if="doc['name'] == 2">
+                            <tr height="35px">
+                                 <td></td>
+                                <td class="text-center" >
+                                     <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Total  </h6>
+                                </td>
+
+
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                               <!--  <td class="text-right">
+                                   <span t-esc="doc['discount']"/>
+                                </td> -->
+                                <!-- <td class="text-right">
+                                   <span style="text-align:center;!important;font-weight:bold;" t-esc="'%.2f'% doc['netamount']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['total_stock']"/>
+                                </td> -->
+
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 7">
+
+                            <tr >
+                                <td></td>
+
+                                <td class="text-right" >
+                                     <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Supplier Total<![CDATA[&nbsp;]]>  </h6>
+                                </td>
+                                <td></td>
+                                <td class="text-right"  >
+                               <h5 style="!important;font-weight:900;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'%doc['price_total']"/>
+                                </td>
+                            </tr>
+                        </t>
+
+
+                        </t>
+                    </tbody>
+                  </t>
+                  <t t-if="case == 3">
+                      <thead>
+                        <th class="text-center" style="width: 5%">Sl.No</th>
+                        <th class="text-center" style="width: 25%">Product Name</th>
+                        <th class="text-center" style="width: 10%">Qty</th>
+                        <th class="text-center" style="width: 10%">Amount</th>
+                        <th class="text-center" style="width: 10%">Return Qty</th>
+                        <th class="text-center" style="width: 10%">Return Amount</th>
+                        <th class="text-center" style="width: 10%">Balance Qty</th>
+                        <th class="text-center" style="width: 10%">Balance Amount</th>
+
+                    </thead>
+                    <tbody>
+                        <t t-set="i" t-value="1" />
+                        <t t-foreach="lines['docsnn']" t-as="doc">
+                          <t t-if="doc['name'] == 8">
+                            <tr >
+
+                                <td class="text-center" colspan="8" >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['branch_name']"/>
+                                </td>
+
+                            </tr>
+                          </t>
+                        <t t-if="doc['name'] == 6">
+                            <tr >
+                                <td></td>
+                                <td class="text-center"  >
+                               <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="doc['supplier']"/>
+                                </td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                          </t>
+                        <t t-if="doc['name'] == 1">
+                            <tr >
+
+                                <td class="text-center"   >
+                                <span t-esc="i"/>
+                                </td>
+
+                                <td class="text-left">
+                                     <span t-esc="doc['product_name']"/>
+                                </td>
+
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['returns_qty']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['returns_amount']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['balance_qty']"/>
+                                </td>
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['balance_amount']"/>
+                                </td>
+                             <t t-set="i" t-value="i+1"/>
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 3">
+                            <tr >
+                                <td class="text-center" >
+                                <span t-esc="i"/>
+                                </td>
+                                <td class="text-left">
+                                     <span t-esc="doc['product_name']"/>
+                                </td>
+
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['qty']"/>
+                                </td>
+
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['returns_qty']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['returns_amount']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['balance_qty']"/>
+                                </td>
+
+                                <td class="text-right">
+                                   <span t-esc="'%.3f'% doc['balance_amount']"/>
+                                </td>
+                              <t t-set="i" t-value="i+1"/>
+                            </tr>
+                        </t>
+                           <t t-if="doc['name'] == 2">
+                            <tr height="35px">
+                                 <td></td>
+                                <td class="text-center" >
+                                     <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Total   </h6>
+                                </td>
+
+
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['returns_amount']"/>
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['balance_amount']"/>
+                                </td>
+
+                               <!--  <td class="text-right">
+                                   <span t-esc="doc['discount']"/>
+                                </td> -->
+                                <!-- <td class="text-right">
+                                   <span style="text-align:center;!important;font-weight:bold;" t-esc="'%.2f'% doc['netamount']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['total_stock']"/>
+                                </td> -->
+
+                            </tr>
+                        </t>
+                        <t t-if="doc['name'] == 10">
+                            <tr height="35px">
+                                 <td></td>
+                                <td class="text-center" >
+                                     <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" > Branch Total   </h6>
+                                </td>
+
+
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['price_total']"/>
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['returns_amount']"/>
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                   <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['balance_amount']"/>
+                                </td>
+
+                               <!--  <td class="text-right">
+                                   <span t-esc="doc['discount']"/>
+                                </td> -->
+                                <!-- <td class="text-right">
+                                   <span style="text-align:center;!important;font-weight:bold;" t-esc="'%.2f'% doc['netamount']"/>
+                                </td>
+                                <td class="text-right">
+                                   <span t-esc="doc['total_stock']"/>
+                                </td> -->
+
+                            </tr>
+                        </t>
+
+
+
+                        </t>
+                    </tbody>
+                  </t>
+                   </t>
+                   <t t-else="">
+                   <t t-if="lines">
+
+                   <t t-if="lines['case'] == 1">
+
+                        <thead>
+                            <th class="text-center" style="width: 6%">Sl.No</th>
+
+                            <th class="text-center" style="width: 11%">Invoice No</th>
+                            <th class="text-center" style="width: 9%">Date</th>
+                            <th class="text-center" style="width: 25%">Supplier</th>
+                            <th class="text-center" style="width: 18%">Qty</th>
+
+                            <th class="text-center" style="width: 19%">Price Unit</th>
+                            <th class="text-center" style="width: 17%">Disc.%</th>
+                            <th class="text-center" style="width: 7%">Tax.%</th>
+                            <th class="text-center" style="width: 10%">Net Amount</th>
+
+
+                        </thead>
+
+
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <t t-set="g_total" t-value="0"/>
+                            <t t-foreach="lines['docsnn']" t-as="doc">
+                                <t t-if="doc['name'] == 6">
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center">
+                                            <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 5">
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-left">
+                                            <h5 style="!important;font-weight:800;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="doc['product_name']"/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 4">
+                                    <tr>
+
+                                        <td class="text-center">
+                                            <span t-esc="i"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span t-esc="doc['product_name']"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span t-esc="doc['date']"/>
+                                        </td>
+
+                                        <td class="text-left">
+                                            <span t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_unit']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['discount']"/>
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['tax']"/>
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 1">
+                                    <tr height="30px">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center" style="padding:10px;">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;">
+                                                Total
+                                            </h6>
+                                        </td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <!-- <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['free_qty']"/>  -->
+                                        </td>
+                                        <td class="text-right">
+                                            <!-- <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['replace_qty']"/> -->
+                                        </td>
+
+
+                                        <td></td>
+
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 10">
+                                    <tr height="30px">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center" style="padding:10px;">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;">
+                                                Total
+                                            </h6>
+                                        </td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <!-- <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['free_qty']"/>  -->
+                                        </td>
+                                        <td class="text-right">
+                                            <!-- <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['replace_qty']"/>  -->
+                                        </td>
+
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 7">
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;">
+                                                Supplier Total <![CDATA[&nbsp;]]>  </h6>
+                                        </td>
+
+                                        <td></td>
+                                         <td></td>
+                                         <td></td>
+                                         <td></td>
+                                        <td class="text-right">
+                                            <h5 style="!important;font-weight:700;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                            <t t-set="g_total" t-value="g_total+doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+
+
+                                <t t-if="doc['name'] == 3">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="i"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc['product_name']"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span t-esc="doc['date']"/>
+                                        </td>
+                                        <td class="text-left">
+                                            <span t-esc="doc['invoice_no']"/>
+                                        </td>
+                                        <td class="text-left">
+                                            <span t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_unit']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['discount']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['tax']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </t>
+
+                                <t t-if="doc['name'] == 2">
+                                    <tr height="35px">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;">
+                                                Total
+                                            </h6>
+                                        </td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <!-- <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['free_qty']"/>  -->
+                                        </td>
+                                        <td class="text-right">
+                                            <!-- <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;" t-esc="'%.3f'% doc['replace_qty']"/>  -->
+                                        </td>
+
+
+                                        <td></td>
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                            </t>
+
+
+                        </tbody>
+
+                    </t>
+                    <t t-if="lines['case'] == 2">
+                        <thead>
+                            <th class="text-center" style="width: 5%">Sl.No</th>
+                            <th class="text-center" style="width: 30%">Product Name</th>
+                            <th class="text-center" style="width: 15%">Qty</th>
+
+                            <th class="text-center" style="width: 10%">Amount</th>
+
+
+                        </thead>
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <t t-set="g_total" t-value="0"/>
+                            <t t-foreach="lines['docsnn']" t-as="doc">
+                                <t t-if="doc['name'] == 6">
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-center">
+                                            <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 1">
+                                    <tr>
+
+                                        <td class="text-center">
+                                            <span t-esc="i"/>
+                                        </td>
+
+                                        <td class="text-left">
+                                            <span t-esc="doc['product_name']"/>
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </t>
+
+
+                                <t t-if="doc['name'] == 3">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="i"/>
+                                        </td>
+                                        <td class="text-left">
+                                            <span t-esc="doc['product_name']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 2">
+                                    <tr height="35px">
+                                        <td></td>
+                                        <td class="text-center">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;">
+                                               Grand Total
+                                            </h6>
+                                        </td>
+
+
+                                        <td></td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+                                        <!--  <td class="text-right">
+                                            <span t-esc="doc['discount']"/>
+                                         </td> -->
+                                        <!-- <td class="text-right">
+                                           <span style="text-align:center;!important;font-weight:bold;" t-esc="'%.2f'% doc['netamount']"/>
+                                        </td>
+                                        <td class="text-right">
+                                           <span t-esc="doc['total_stock']"/>
+                                        </td> -->
+
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 7">
+
+                                    <tr>
+                                        <td></td>
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;">
+                                                Supplier Total<![CDATA[&nbsp;]]>  </h6>
+                                        </td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <h5 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'%doc['price_total']"/>
+                                            <t t-set="g_total" t-value="g_total+doc['price_total']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+
+                            </t>
+                        </tbody>
+                    </t>
+
+                    <t t-if="lines['case'] == 4">
+                        <thead>
+                            <th class="text-center" style="width: 6%">Sl.No</th>
+
+                            <th class="text-center" style="width: 10%">Invoice No</th>
+                            <th class="text-center" style="width: 10%">Date</th>
+                            <th class="text-center" style="width: 30%">Supplier</th>
+                            <th class="text-center" style="width: 10%">Qty</th>
+                            <th class="text-center" style="width: 10%">Price Unit</th>
+                            <th class="text-center" style="width: 10%">Disc.%</th>
+                            <th class="text-center" style="width: 7%">Tax.%</th>
+                            <th class="text-center" style="width: 10%">Net Amount</th>
+
+
+                        </thead>
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <t t-set="g_total" t-value="0"/>
+                            <t t-foreach="lines['docsnn']" t-as="doc">
+                                <t t-if="doc['name'] == 6">
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center">
+                                            <h5 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 5">
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-left">
+                                            <h5 style="!important;font-weight:800;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="doc['product_name']"/>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 4">
+                                    <tr>
+
+                                        <td class="text-center">
+                                            <span t-esc="i"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span t-esc="doc['product_name']"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span t-esc="doc['date']"/>
+                                        </td>
+
+                                        <td class="text-left">
+                                            <span t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_unit']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['discount']"/>
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['tax']"/>
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 1">
+                                    <tr height="30px">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center" style="padding:10px;">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;">
+                                                Total
+                                            </h6>
+                                        </td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 10">
+                                    <tr height="30px">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center" style="padding:10px;">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;">
+                                                Total
+                                            </h6>
+                                        </td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                                <t t-if="doc['name'] == 7">
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;">
+                                                Supplier Total <![CDATA[&nbsp;]]>  </h6>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <h5 style="!important;font-weight:700;font-size: 1.1rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                            <t t-set="g_total" t-value="g_total+doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+
+
+                                <t t-if="doc['name'] == 3">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="i"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc['product_name']"/>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span t-esc="doc['date']"/>
+                                        </td>
+                                        <td class="text-left">
+                                            <span t-esc="doc['invoice_no']"/>
+                                        </td>
+                                        <td class="text-left">
+                                            <span t-esc="doc['supplier']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_unit']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['discount']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['tax']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </t>
+
+                                <t t-if="doc['name'] == 2">
+                                    <tr height="35px">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;">
+                                                Total
+                                            </h6>
+                                        </td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['qty']"/>
+                                        </td>
+
+
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:700;font-size: 1.0rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="'%.3f'% doc['price_total']"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                        </t>
+                    </t>
+                       </t>
+                      <t t-if="detailed==True">
+                                <tr height="35px">
+                                        <td></td><td></td><td></td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.2rem;margin-top:7px;margin-bottom:7px;">
+                                               Grand Total
+                                            </h6>
+                                        </td>
+
+
+                                        <td></td><td></td><td></td><td></td>
+                                        <td class="text-right">
+                                            <h6 style="!important;font-weight:bold;font-size: 1.2rem;margin-top:7px;margin-bottom:7px;"
+                                                t-esc="g_total"/>
+                                        </td>
+                            </tr>
+
+                      </t>
+                    </table>
+                </div>
+<!--            </t>-->
+
+<!--        </t>-->
+    </template>
+
+</odoo>

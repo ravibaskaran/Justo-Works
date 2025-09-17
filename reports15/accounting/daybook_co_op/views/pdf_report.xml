@@ -1,0 +1,184 @@
+<odoo>
+
+    <!-- Notes: Pdf Template   -->
+    <template id="daybook_co_op_pdf">
+        <main/>
+        <t t-call="web.basic_layout">
+            <style type="text/css">
+                    a{
+                        text-decoration: none !important;
+                        color: inherit !important;
+                    }
+
+                    #details-tbl{
+                        border: none;
+                    }
+
+                    tr th{
+                        padding: 5px 10px;
+                        border: none;
+                        border-top: 1px solid ;
+                        border-bottom: 1px solid ;
+                    }
+
+                    #details-tbl tr td{
+                        padding: 3px 10px;
+                        border: none;
+                        border-bottom: 1px solid ;
+                    }
+
+                    .invoice_no2{
+                        padding-left:3px !important;
+                    }
+
+                    .text-right{
+                        text-align:right !important;
+                    }
+
+                    .text-left{
+                        text-align:left !important;
+                    }
+
+                    .text-center{
+                        text-align:center !important;
+                    }
+
+                    thead {
+                        display: table-header-group;
+                    }
+
+                    .pagebreak tfoot {
+                        border-top: 1px solid !important;
+                        display: table-footer-group !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: rgba(0, 0, 0, 0.05) !important;
+                    }
+
+                    .daybook-table tr td{
+                        word-break: break-all; !important
+                    }
+
+                    .pagebreak{
+                        page-break-after:always
+                    }
+
+                    html,body{
+                        height:99% !important
+                    }
+                    .on_print{
+                        display:none;
+                    }
+                    .on_print tbody tr td
+                    {
+                        border-right: solid 1px !important;
+                    }
+
+                    @media pdf {
+                        a{
+                            text-decoration: none !important;
+                            color: inherit !important;
+                        }
+
+                        thead {
+                            display: table-row-group;
+                        }
+
+                        .pagebreak tfoot {
+                            border-top: 1px solid !important;
+                            display: table-footer-group !important;
+                        }
+
+                        tbody tr:nth-of-type(#{$table-striped-order}) {
+                            background-color: $table-accent-bg;
+                        }
+
+                        .pagebreak{
+                            page-break-after:always;
+                            border: 0px !important;
+                        }
+
+                    }
+                    @media print {
+                        a {
+                            text-decoration: none !important;
+                            color: inherit !important;
+                        }
+
+                        .pagebreak{
+                            page-break-after:always
+                        }
+                    }
+
+                    .pagebreak tfoot {
+                        border-top: 1px solid !important;
+                        display: table-footer-group !important;
+                    }
+
+                </style>
+            <style t-if="report_type == 'pdf'">
+                td{height:24px;}
+            </style>
+            <script>
+                function resizeHandler() {
+                // Treat each container separately
+                $(".container").each(function(i, container) {
+                // Stores the highest rowheight for all tables in this container, per row
+                var aRowHeights = [];
+                // Loop through the tables
+                $(container).find("table").each(function(indx, table) {
+                // Loop through the rows of current table (clear their css height value)
+                $(table).find("tr").css("height", "").each(function(i, tr) {
+                // If there is already a row height defined
+                if (aRowHeights[i])
+                // Replace value with height of current row if current row is higher.
+                aRowHeights[i] = Math.max(aRowHeights[i], $(tr).height());
+                else
+                // Else set it to the height of the current row
+                aRowHeights[i] = $(tr).height();
+                });
+                });
+                // Loop through the tables in this container separately again
+                $(container).find("table").each(function(i, table) {
+                // Set the height of each row to the stored greatest height.
+                $(table).find("tr").each(function(i, tr) {
+                $(tr).css("height", aRowHeights[i]);
+                });
+                });
+                });
+                }
+
+                $(document).ready(resizeHandler);
+                $(window).resize(resizeHandler);
+            </script>
+            <t t-raw="report"/>
+        </t>
+    </template>
+
+
+    <record id="daybook_co_op_pdf_paper_format" model="report.paperformat">
+        <field name="name">Daybook Co-Op Js Paper Format</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">297</field>
+        <field name="page_width">210</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">7</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">50</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report id="daybook_co_op_pdf_action"
+            model="daybook_co_op.pdf"
+            string="Daybook Co-Op"
+            report_type="qweb-pdf"
+            name="daybook_co_op.daybook_co_op_pdf"
+            file="daybook_co_op.daybook_co_op_pdf"
+            paperformat="daybook_co_op.daybook_co_op_pdf_paper_format"
+            menu="False"/>
+</odoo>

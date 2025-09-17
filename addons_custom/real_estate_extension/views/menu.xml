@@ -1,0 +1,193 @@
+<odoo>
+    <!--./Reports-->
+<!--    <menuitem id="real_estate_reports_menu" name="Reports" web_icon="real_estate_extension,static/description/icon.png"-->
+<!--              sequence="11"/>-->
+
+<!--    &lt;!&ndash;Reports/Sales&ndash;&gt;-->
+<!--    <menuitem id="real_estate_sales_reports_menu" parent="real_estate_reports_menu" name="Sales" sequence="10"/>-->
+<!--    &lt;!&ndash;Reports/Sales/...&ndash;&gt;-->
+<!--    <menuitem id="sales_tax_report_menu" name="Sales Tax Report" parent="real_estate_sales_reports_menu"-->
+<!--              action="sales_tax_report.action_report_sales_tax" sequence="10"/>-->
+
+    <!--./Accounting-->
+<!--    <menuitem id="real_estate_accounting_menu" name="Accounting" sequence="7"-->
+<!--              web_icon="real_estate_extension,static/src/img/accounting.png"/>-->
+
+<!--    &lt;!&ndash;Accounting/Accounting&ndash;&gt;-->
+<!--    <menuitem id="real_estate_accounts_accounting_menu" parent="real_estate_accounting_menu" name="Accounting"-->
+<!--              sequence="10"/>-->
+
+<!--    &lt;!&ndash;Accounting/Accounting/Accounts&ndash;&gt;-->
+<!--    <menuitem id="real_estate_accounts_accounting_submenu" parent="real_estate_accounts_accounting_menu" name="Accounts"-->
+<!--              sequence="10"/>-->
+<!--    &lt;!&ndash;Accounting/Accounting/Accounts/...&ndash;&gt;-->
+<!--    <menuitem id="direct_journal_entry_receipt_menu" parent="real_estate_accounts_accounting_submenu"-->
+<!--              name="Receipt Voucher"-->
+<!--              action="inexoft_account_voucher.action_direct_journal_receipt" sequence="10"/>-->
+<!--    <menuitem id="direct_journal_entry_payment_menu" parent="real_estate_accounts_accounting_submenu"-->
+<!--              name="Payment Voucher"-->
+<!--              action="inexoft_account_voucher.action_direct_journal_payment" sequence="20"/>-->
+<!--    <menuitem id="direct_journal_entry_journal_menu" parent="real_estate_accounts_accounting_submenu"-->
+<!--              name="Journal Voucher"-->
+<!--              action="inexoft_account_voucher.action_direct_journal_voucher" sequence="30"/>-->
+
+<!--    &lt;!&ndash;Accounting/Accounting/Transactions&ndash;&gt;-->
+<!--    <menuitem id="real_estate_transactions_accounting_submenu" parent="real_estate_accounts_accounting_menu"-->
+<!--              name="Transactions" sequence="20"/>-->
+<!--    &lt;!&ndash;Accounting/Accounting/Transactions/...&ndash;&gt;-->
+<!--    <menuitem id="customer_receipt_menu" parent="real_estate_transactions_accounting_submenu" name="Customer Receipt"-->
+<!--              action="inexoft_account_payments.action_customer_receipt" sequence="10"/>-->
+<!--    <menuitem id="vendor_payment_menu" parent="real_estate_transactions_accounting_submenu" name="Vendor Payments"-->
+<!--              action="inexoft_account_payments.action_vendor_payment" sequence="20"/>-->
+
+<!--    &lt;!&ndash;Accounting/Accounting/Others&ndash;&gt;-->
+<!--    <menuitem id="real_estate_others_accounting_submenu" parent="real_estate_accounts_accounting_menu"-->
+<!--              name="Others" sequence="30"/>-->
+<!--    &lt;!&ndash;Accounting/Accounting/Others/...&ndash;&gt;-->
+<!--    <menuitem id="bank_reconciliation_statement_menu" parent="real_estate_others_accounting_submenu"-->
+<!--              name="Bank Statement Reconciliation" action="bank_reconciliation.action_bank_statement_wiz" sequence="10"/>-->
+
+<!--    &lt;!&ndash;Accounting/Masters&ndash;&gt;-->
+<!--    <menuitem name="Master" id="menu_master_custom_menu" parent="real_estate_accounting_menu"-->
+<!--              sequence="20"-->
+<!--              groups="account.group_account_manager"/>-->
+<!--    &lt;!&ndash;Accounting/Masters/...&ndash;&gt;-->
+<!--    <menuitem name="Account Head" id="account_head_custom_menu" parent="menu_master_custom_menu"-->
+<!--              sequence="10"-->
+<!--              action="account.action_account_form"/>-->
+<!--    <menuitem name="Account Head Type" id="account_head_type_custom_menu" parent="menu_master_custom_menu"-->
+<!--              sequence="20"-->
+<!--              action="account.action_account_type_form"/>-->
+<!--    <menuitem name="Taxes" id="account_tax_custom_menu" parent="menu_master_custom_menu"-->
+<!--              sequence="30"-->
+<!--              action="account.action_tax_form"/>-->
+<!--    <menuitem id="menu_bank_master" name="Bank Accounts" action="base.action_res_bank_form"-->
+<!--              parent="menu_master_custom_menu" sequence="40"/>-->
+<!--    <menuitem id="menu_bank_journals" name="Bank Journals" action="real_estate_extension.action_account_bank_journal_form"-->
+<!--              parent="menu_master_custom_menu" sequence="40"/>-->
+
+<!--    &lt;!&ndash;Accounting/Fixed Assets&ndash;&gt;-->
+<!--    <menuitem name="Fixed Assets" id="menu_fixed_assets_custom_menu" parent="real_estate_accounting_menu"-->
+<!--              sequence="30"/>-->
+<!--    &lt;!&ndash;Accounting/Fixed Assets/...&ndash;&gt;-->
+<!--    <menuitem name="Assets" id="menu_assets_menu" parent="menu_fixed_assets_custom_menu"-->
+<!--              action="base_accounting_kit.action_account_asset_asset_form" sequence="10"/>-->
+<!--    <menuitem name="Asset Types" id="menu_asset_types_menu" parent="menu_fixed_assets_custom_menu"-->
+<!--              action="base_accounting_kit.action_account_asset_asset_list_normal_purchase" sequence="20"/>-->
+<!--    <menuitem name="Assets Analysis" id="menu_asset_analysis_menu" parent="menu_fixed_assets_custom_menu"-->
+<!--              action="base_accounting_kit.action_asset_asset_report" sequence="30"/>-->
+<!--&lt;!&ndash;    <menuitem name="Generate Assets Entries" id="menu_generate_asset_entries_menu"&ndash;&gt;-->
+<!--&lt;!&ndash;              parent="menu_fixed_assets_custom_menu"&ndash;&gt;-->
+<!--&lt;!&ndash;              action="base_accounting_kit.action_asset_depreciation_confirmation_wizard" sequence="40"/>&ndash;&gt;-->
+
+<!--    &lt;!&ndash;Accounting/Reports&ndash;&gt;-->
+<!--    <menuitem id="real_estate_accounts_reports_menu" parent="real_estate_accounting_menu" name="Reports" sequence="40"/>-->
+<!--    &lt;!&ndash;Accounting/Reports/...&ndash;&gt;-->
+<!--    <menuitem id="cash_book_menu" name="Cash Book" parent="real_estate_accounts_reports_menu"-->
+<!--              action="cash_book.cash_book_action" sequence="10"/>-->
+<!--    <menuitem id="day_book_menu" name="Day Book" parent="real_estate_accounts_reports_menu"-->
+<!--              action="day_book.day_book_action" sequence="20"/>-->
+<!--    <menuitem id="general_ledger_menu" name="General Ledger" parent="real_estate_accounts_reports_menu"-->
+<!--              action="general_ledger.general_ledger_action" sequence="30"/>-->
+<!--    <menuitem id="trial_balance_menu" name="Trial Balance" parent="real_estate_accounts_reports_menu"-->
+<!--              action="trial_balance.trial_balance_action" sequence="40"/>-->
+<!--    <menuitem id="trading_account_menu" name="Trading A/C Report" parent="real_estate_accounts_reports_menu"-->
+<!--              action="manufacturing_trading.trading_account_action" sequence="50"/>-->
+<!--    <menuitem id="profit_and_loss_menu" name="Profit and Loss" parent="real_estate_accounts_reports_menu"-->
+<!--              action="profit_loss_balance_sheet.profit_loss_account_action" sequence="50"/>-->
+<!--    <menuitem id="balance_sheet_menu" name="Balance Sheet" parent="real_estate_accounts_reports_menu"-->
+<!--              action="profit_loss_balance_sheet.balance_sheet_account_action" sequence="50"/>-->
+
+    <!--./Purchase-->
+<!--    <menuitem name="Purchase" id="real_estate_purchase_main_menu"-->
+<!--              web_icon="real_estate_extension,static/src/img/purchase.png"-->
+<!--              sequence="9"-->
+<!--              groups=""/>-->
+
+<!--    &lt;!&ndash;Purchase/Purchase&ndash;&gt;-->
+<!--    <menuitem name="Purchase" id="real_estate_purchase_sub_menu" parent="real_estate_purchase_main_menu"-->
+<!--              sequence="10"/>-->
+<!--    &lt;!&ndash;Purchase/Purchase/...&ndash;&gt;-->
+<!--    <menuitem name="Purchase Order" id="real_estate_purchase_order_menu" parent="real_estate_purchase_sub_menu"-->
+<!--              sequence="10"-->
+<!--              action="purchase.purchase_form_action"/>-->
+<!--    <menuitem name="Purchase" id="real_estate_purchase_menu" parent="real_estate_purchase_sub_menu"-->
+<!--              sequence="20"-->
+<!--              action="account.action_move_in_invoice_type"/>-->
+
+    <!--Purchase/Reports-->
+<!--    <menuitem id="real_estate_purchase_reports_menu" parent="real_estate_purchase_main_menu" name="Reports" sequence="40"/>-->
+<!--    &lt;!&ndash;Purchase/Reports/...&ndash;&gt;-->
+<!--    <menuitem id="purchase_detail_menu" name="Purchase Detail Report" parent="real_estate_purchase_reports_menu"-->
+<!--              action="purchase_detail.purchase_detail_action" sequence="10"/>-->
+
+<!--    &lt;!&ndash;Purchase/Master&ndash;&gt;-->
+<!--    <menuitem name="Master" id="menu_purchase_master" parent="real_estate_purchase_main_menu"-->
+<!--              sequence="20"/>-->
+<!--    &lt;!&ndash;Purchase/Master/...&ndash;&gt;-->
+<!--    <menuitem name="Vendors" id="real_estate_supplier_menu" parent="menu_purchase_master"-->
+<!--              sequence="10"-->
+<!--              action="account.res_partner_action_supplier"/>-->
+<!--    <menuitem name="Products" id="real_estate_products_menu" parent="menu_purchase_master"-->
+<!--              sequence="20"-->
+<!--              action="purchase.product_normal_action_puchased"/>-->
+
+    <!--Purchase and its master moved to accounting-->
+    <record id="purchase_extension.purchase_main_sub" model="ir.ui.menu">
+        <field name="parent_id" ref="account_vouchers.accounting_menu_main"/>
+        <field name="sequence">60</field>
+    </record>
+    <record id="purchase_extension.purchase_master_sub" model="ir.ui.menu">
+        <field name="parent_id" ref="account_vouchers.accounting_menu_main"/>
+        <field name="name">Purchase Master</field>
+        <field name="sequence">70</field>
+    </record>
+    <!--Analytic Accounts -> Cost Center-->
+    <record id="analytic.action_account_analytic_account_form" model="ir.actions.act_window">
+        <field name="name">Cost Center</field>
+    </record>
+    <!--Accounting/Master/Cost Center-->
+    <menuitem id="account_analytic_def_account" action="analytic.action_account_analytic_account_form"
+              parent="account_vouchers.menu_master_custom_menu" name="Cost Center" sequence="60"/>
+    <!--Account Head -> Ledger-->
+    <record id="account_vouchers.account_head_custom_menu" model="ir.ui.menu">
+        <field name="name">Ledger</field>
+    </record>
+    <!--Account Head Type -> Group-->
+    <record id="account_vouchers.account_head_type_custom_menu" model="ir.ui.menu">
+        <field name="name">Group</field>
+    </record>
+    <!--Account Opening Menu Removed-->
+    <record id="account_vouchers.account_opening_menu" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <!--Bank Journals Menu Removed-->
+    <record id="account_vouchers.menu_bank_journals" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <!--R&D Register Menu Removed-->
+    <record id="account_vouchers.rnd_register_menu" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <!--Daybook Co Op changed to Daybook Two Column-->
+    <record id="account_vouchers.daybook_co_op_menu" model="ir.ui.menu">
+        <field name="name">Daybook Two Column</field>
+    </record>
+
+    <!--Discuss menu icon changed-->
+    <record id="mail.menu_root_discuss" model="ir.ui.menu">
+        <field name="web_icon">real_estate_extension,static/src/img/discuss.png</field>
+    </record>
+
+    <!--Employees menu icon changed-->
+    <record id="hr.menu_hr_root" model="ir.ui.menu">
+        <field name="web_icon">real_estate_extension,static/src/img/employee.png</field>
+    </record>
+
+    <menuitem name="Invoice" id="project_invoice_reports"
+              parent="reports_menu.report_menu"
+              sequence="30"/>
+<!--    <menuitem id="customer_sales_report_menu" name="Customer Sales Report" parent="sales_reports" action="customer_sales_report.customer_sales_report_action"/>-->
+<!--    <menuitem id="sales_summary_menu" name="Sales Summary" parent="sales_reports" action="sales_summary.sales_summary_report_action"/>-->
+<!--    <menuitem id="sales_tax_menu" name="Sales Tax Report" parent="sales_reports" action="sales_tax_report.sales_tax_report_action"/>-->
+</odoo>
