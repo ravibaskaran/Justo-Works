@@ -1,16 +1,50 @@
+# --------------------
+# Python
+# --------------------
+*.pyc
+*.pyo
+*.pyd
 __pycache__/
-*.pyc
+*.cover
+*.py[cod]
+*.egg-info/
+
+# --------------------
+# Odoo temp / logs / databases
+# --------------------
 *.log
+*.pid
+*.sqlite
 *.db
-*.sqlite3
-.idea/
-*.log
 *.pot
-*.pyc
-.coverage
-.tox/
-.nox/
-.venv/
-.env/
+*.po~
+*.mo
+*.swp
+*.bak
+
+# Odoo filestore (user uploads, attachments)
+filestore/
+
+# --------------------
+# Virtual environments / IDE
+# --------------------
+venv/
 env/
+.idea/
+.vscode/
+*.iml
+
+# --------------------
+# Node / Asset builds
+# --------------------
+node_modules/
+*.map
+*.scssc
+*.min.js
+
+# --------------------
+# OS / Misc
+# --------------------
+.DS_Store
+Thumbs.db
 *.swp
