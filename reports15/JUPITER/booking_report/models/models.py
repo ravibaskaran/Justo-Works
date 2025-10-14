@@ -19,7 +19,7 @@ class BetaBookingReport(models.TransientModel):  # change this
     region_wise = fields.Boolean(string="Region Wise", default=False)
     region_ids = fields.Many2many('regions', string="Regions")
 
-    @api.onchange('region_wise','project_filter')
+    @api.onchange('region_wise', 'project_filter')
     def _onchange_region_wise(self):
         if not self.region_wise:
             self.region_ids = [(5, 0, 0)]
@@ -55,7 +55,9 @@ class BetaBookingReport(models.TransientModel):  # change this
         employee = self.env['hr.employee'].sudo().search(
             [('user_id', '=', self.env.user.id)], limit=1
         )
-        if employee and self.env.user.has_group('project_transactions.group_region_booking_user') and not self.env.user.has_group('project_transactions.view_all_projects'):
+        if employee and self.env.user.has_group(
+                'project_transactions.group_region_booking_user') and not self.env.user.has_group(
+                'project_transactions.view_all_projects'):
             res['region_wise'] = True
             # prefill only the regions assigned to that employee
             res['region_ids'] = [(6, 0, employee.region_ids.ids)]
@@ -78,27 +80,31 @@ class BetaBookingReport(models.TransientModel):  # change this
                 <thead>
                     <th class="text-center">Booking No.</th>
                     <th class="text-center">Project</th>
-                    <th class="text-center">Date</th>
+                    <th class="text-center">Booking Date</th>
+                    <th class="text-center">Cancellation Date</th>
                     <th class="text-center">Wing</th>
                     <th class="text-center">Flat</th>
                     <th class="text-center">Number</th>
                     <th class="text-center">Applicant</th>
                     <th class="text-center">Co-Applicant</th>
-                    
+
                     <th class="text-center">Sourcing Manager</th>
                     <th class="text-center">Closing Manager</th>
                     <th class="text-center">Closing TL</th>
                     <th class="text-center">Sourcing TL</th>
+                    <th class="text-center">CRM Name</th>
                     <th class="text-center">Contact No.</th>
                     <th class="text-center">Email</th>
+                    <th class="text-left">Client Current Residence Location</th>
                     <th class="text-left">Location</th>
                     <th class="text-center">Pin Code</th>
                     <th class="text-center">Source of Booking</th>
                     <th class="text-center">CP Employee</th>
                     <th class="text-center">CP Firm Name</th>
+                    <th class="text-center">Referral Partner Name</th>
                     <th class="text-center">Configuration</th>
                     <th class="text-center">Carpet Area</th>
-                    
+
                     <th class="text-center">Saleable Sq.Ft</th>
                     <th class="text-center">Sq.Ft Rate</th>
                     <th class="text-center">Flat Cost</th>
@@ -107,24 +113,25 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <th class="text-center">Agreement Value</th>
                     <th class="text-center">Source of Funding</th>
                     <th class="text-center">Sub Source</th>
+                    <th class="text-center">Type</th>
                     <th class="text-center">Banker</th>
-                    
+
                     <th class="text-center">Amount Received</th>
                     <th class="text-center">Amount %</th>
-                    
+
                     <th class="text-center">GST</th>
                     <th class="text-center">Stamp Duty</th>
                     <th class="text-center">Registration Charge</th>
                     <th class="text-center">All Inclusive Amount</th>
                     <th class="text-center">Advance Amount</th>
-                    
+
                     <th class="text-center">CP%</th>
                     <th class="text-center">CP Brokerage</th>
                     <th class="text-center">Spot Amount</th>
+                    <th class="text-center">Referral Amount</th>
                     <th class="text-center">Registration Status</th>
                     <th class="text-center">Date of Registration</th>
                     <th class="text-center">Status</th>
-                    <th class="text-center">Cancellation Date</th>
                     <th class="text-center">Cancellation Reason</th>
                 </thead>
                 <tbody>"""
@@ -132,7 +139,8 @@ class BetaBookingReport(models.TransientModel):  # change this
         date_from = self.get_actual_date(self.date_from.strftime('%Y-%m-%d') + " 00:00:00")
         date_to = self.get_actual_date(self.date_to.strftime('%Y-%m-%d') + " 23:59:59")
         domain = " ur.date>='" + date_from + "' and ur.date<='" + date_to + "'"
-        consolidate_domain = " ur.cancellation_date>='" + self.date_from.strftime('%Y-%m-%d') + "' and ur.cancellation_date<='" + self.date_to.strftime('%Y-%m-%d') + "'"
+        consolidate_domain = " ur.cancellation_date>='" + self.date_from.strftime(
+            '%Y-%m-%d') + "' and ur.cancellation_date<='" + self.date_to.strftime('%Y-%m-%d') + "'"
         if self.project_filter == 'selected':
             domain += " and b.id in " + str(tuple(self.project_ids.ids) or '(0)').replace(',)', ')')
             consolidate_domain += " and b.id in " + str(tuple(self.project_ids.ids) or '(0)').replace(',)', ')')
@@ -159,23 +167,24 @@ class BetaBookingReport(models.TransientModel):  # change this
 
         query = """
             select ur.id as booking_id, ur.name as booking, ur.date as booking_date,
-            b.name as project, bu.name as configuration, pt.name as flat,
-            p.name as applicant, cop.name as co_applicant, ur.state as booking_state,
-            ur.total_saleable_area as saleable, ur.sq_ft_rate as rate,
-            ur.flat_cost_real as flat_cost, ur.infra_charge as infra,
-            ur.other_charges as other, ur.flat_cost as agreement,
+            b.name as project, bu.name as configuration, pt.name as flat, pr.registration_date as registration_date,
+            p.name as applicant, cop.name as co_applicant, ur.state as booking_state,ur.referral_amount as referral_amount,
+            ur.total_saleable_area as saleable, ur.sq_ft_rate as rate,ur.referral_partner_name as referral_partner_name,
+            ur.flat_cost_real as flat_cost, ur.infra_charge as infra, ur.source_of_booking_type as source_of_booking_type,
+            ur.other_charges as other, ur.flat_cost as agreement, ur.street as street,
             ur.stamp_duty as stamp, ur.legal_charge as legal,
             ur.registration_charge as registration, ur.net_amount, ur.advance_amount as advance,
             bw.name as wing, pt.flat_number, sm.name as sourcing_manager,
-            cm.name as closing_manager, stl.name as sourcing_tl,
+            cm.name as closing_manager, stl.name as sourcing_tl,crm.name as crm_name,
             ctl.name as closing_tl, UPPER(ur.source_of_booking) as source_of_booking,
             cp_emp.name as cp_employee, cp_firm.name as cp_firm, ur.carpet_area,
-            ur.if_loan, ur.preferred_bank as sub_source, ur.bank_person as banker,
+            ur.if_loan, btd.name as sub_source, ur.bank_person as banker,
             ur.cp_brokerage, ur.spot_amount, b.pin_code, ur.cancellation_date,
             p.mobile as mobile, p.email, b.site_address, pr.registration_date, 
             pr.state as registration_state, sum(rps.ocr) + sum(rps.bank_payment) as amount_received,
             %s as index, b.region_id as region_id, r.name as region_name,
             bcr.name as cancellation_reason, b.cp_brokerage_percentage as cp_percentage,
+
             CASE 
                 WHEN ur.state = 'confirmed' AND pr.state = 'confirmed' THEN 'Registered' 
                 WHEN ur.state = 'confirmed' AND (pr.state IS NULL OR pr.state != 'confirmed') THEN 'Booked' 
@@ -195,12 +204,14 @@ class BetaBookingReport(models.TransientModel):  # change this
             left join hr_employee ctl on ctl.id = ur.closing_tl_id
             left join res_partner cp_emp on cp_emp.id = ur.cp_employee_id
             left join res_partner cp_firm on cp_firm.id = ur.cp_id
+            left join booking_direct_type btd on btd.id = ur.direct_type_id
+            left join hr_employee crm on crm.id = ur.crm_id
             left join project_registration pr on pr.booking_id = ur.id and pr.state not in ('draft','canceled')
             left join reservation_payment_schedule rps on rps.monitoring_reservation_id = ur.id
             left join regions r on r.id = b.region_id
             left join booking_cancellation_reason bcr on bcr.id=ur.cancellation_reason
             where %s group by ur.id, b.id, bu.id, pt.id, p.id, 
-            cop.id, bw.id, sm.id, cm.id, stl.id, ctl.id, cp_emp.id, cp_firm.id, pr.id, r.id, bcr.id
+            cop.id, bw.id, sm.id, cm.id, stl.id, ctl.id, cp_emp.id, cp_firm.id, pr.id, r.id, bcr.id, btd.id, crm.id
         """
 
         if self.region_wise:
@@ -268,7 +279,8 @@ class BetaBookingReport(models.TransientModel):  # change this
                 cancelled_header_added = True
                 current_region = None
             row_color = ''
-            if (self.state in ('both', 'confirmed') or self.consolidate) and row['booking_state'] == 'canceled' and not cancelled_header_added:
+            if (self.state in ('both', 'confirmed') or self.consolidate) and row[
+                'booking_state'] == 'canceled' and not cancelled_header_added:
                 row_color = 'class="text-warning"'
 
             region_wise = self.region_wise
@@ -293,7 +305,7 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
-                    
+
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
@@ -306,8 +318,9 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
+                    <td class="text-left">%s</td>
                     <td class="text-right">%s</td>
-                    
+
                     <td class="text-right">%s</td>
                     <td class="text-right">%s</td>
                     <td class="text-right">%s</td>
@@ -317,23 +330,27 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
-                    
+
                     <td class="text-right">%s</td>
                     <td class="text-right">%s</td>
-                    
-                    <td class="text-right">%s</td>
-                    <td class="text-right">%s</td>
-                    <td class="text-right">%s</td>
+
                     <td class="text-right">%s</td>
                     <td class="text-right">%s</td>
                     <td class="text-right">%s</td>
-                    
                     <td class="text-right">%s</td>
                     <td class="text-right">%s</td>
+                    <td class="text-right">%s</td>
+
+                    <td class="text-right">%s</td>
+                    <td class="text-right">%s</td>
+                    <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-center">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-center">%s</td>
+                    <td class="text-left">%s</td>
+                    <td class="text-left">%s</td>
+                    <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
                 </tr>
             """ % (
@@ -343,6 +360,8 @@ class BetaBookingReport(models.TransientModel):  # change this
                 row['booking'],
                 row['project'],
                 self.get_current_inv_date(row['booking_date'].strftime('%d/%m/%Y %H:%M:%S')),
+                row['cancellation_date'].strftime('%d/%m/%Y') if row['cancellation_date'] and row[
+                    'booking_state'] == 'canceled' else '',
                 row['wing'] or '',
                 row['flat'],
                 row['flat_number'] or '',
@@ -353,13 +372,16 @@ class BetaBookingReport(models.TransientModel):  # change this
                 row['closing_manager'] or '',
                 row['closing_tl'] or '',
                 row['sourcing_tl'] or '',
+                row.get('crm_name', '') or '',
                 row['mobile'] or '',
                 row['email'] or '',
+                row['street'] or '',
                 row['site_address'] or '',
                 row['pin_code'] or '',
                 row['source_of_booking'] or '',
                 row['cp_employee'] or '',
                 row['cp_firm'] or '',
+                row['referral_partner_name'] or '',
                 row['configuration'],
                 "{:.2f}".format(row['carpet_area'] or 0),
 
@@ -371,10 +393,12 @@ class BetaBookingReport(models.TransientModel):  # change this
                 "{:.2f}".format(row['agreement'] or 0),
                 'Bank' if row['if_loan'] else 'Self',
                 row['sub_source'] or '',
+                row['source_of_booking_type'] or '',
                 row['banker'] or '',
 
                 "{:.2f}".format(row['amount_received'] or 0),
-                "{:.2f}".format((((row['amount_received'] or 0) * 100) / row['agreement']) if row['agreement'] != 0 else 0),
+                "{:.2f}".format(
+                    (((row['amount_received'] or 0) * 100) / row['agreement']) if row['agreement'] != 0 else 0),
 
                 "{:.2f}".format(row['legal'] or 0),
                 "{:.2f}".format(row['stamp'] or 0),
@@ -385,10 +409,11 @@ class BetaBookingReport(models.TransientModel):  # change this
                 "{:.2f}".format(row['cp_percentage'] or 0),
                 "{:.2f}".format(row['cp_brokerage'] or 0),
                 "{:.2f}".format(row['spot_amount'] or 0),
+                "{:.2f}".format(row['referral_amount'] or 0),
                 'Done' if row['registration_state'] in ('confirmed', 'invoiced') else 'Pending',
-                row['booking_date'].strftime('%d/%m/%Y') if row['booking_date'] and row['registration_state'] in ('confirmed', 'invoiced') else '',
+                row['registration_date'].strftime('%d/%m/%Y') if row['registration_date'] and row[
+                    'registration_state'] in ('confirmed', 'invoiced') else '',
                 row['registration_status'],
-                row['cancellation_date'].strftime('%d/%m/%Y') if row['cancellation_date'] and row['booking_state'] == 'canceled' else '',
                 row['cancellation_reason'] if row['cancellation_reason'] else '',
             )
             totals['count'] += 1
@@ -424,5 +449,12 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <td class="text-right" style="mso-number-format:'0.00';">%s</td>
                     <td colspan="9"/>
                 </tr>
-            """ % ((booked_count - totals['count']) if booked_count or row_index == 1 else totals['count'], "{:.2f}".format(flat_cost_count - totals['flat_cost']) if flat_cost_count or row_index == 1 else "{:.2f}".format(totals['flat_cost']), "{:.2f}".format(agreement_value_count - totals['av']) if agreement_value_count or row_index == 1 else "{:.2f}".format(totals['av']), "{:.2f}".format(all_exclusive_amount_count - totals['amount']) if all_exclusive_amount_count or row_index == 1 else "{:.2f}".format(totals['amount']))
+            """ % ((booked_count - totals['count']) if booked_count or row_index == 1 else totals['count'],
+                   "{:.2f}".format(
+                       flat_cost_count - totals['flat_cost']) if flat_cost_count or row_index == 1 else "{:.2f}".format(
+                       totals['flat_cost']), "{:.2f}".format(agreement_value_count - totals[
+                    'av']) if agreement_value_count or row_index == 1 else "{:.2f}".format(totals['av']),
+                   "{:.2f}".format(all_exclusive_amount_count - totals[
+                       'amount']) if all_exclusive_amount_count or row_index == 1 else "{:.2f}".format(
+                       totals['amount']))
         return table
