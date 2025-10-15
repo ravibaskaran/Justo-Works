@@ -83,7 +83,6 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <th class="text-center">Booking Date</th>
                     <th class="text-center">Cancellation Date</th>
                     <th class="text-center">Wing</th>
-                    <th class="text-center">Flat</th>
                     <th class="text-center">Number</th>
                     <th class="text-center">Applicant</th>
                     <th class="text-center">Co-Applicant</th>
@@ -96,7 +95,6 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <th class="text-center">Contact No.</th>
                     <th class="text-center">Email</th>
                     <th class="text-left">Client Current Residence Location</th>
-                    <th class="text-left">Location</th>
                     <th class="text-center">Pin Code</th>
                     <th class="text-center">Source of Booking</th>
                     <th class="text-center">CP Employee</th>
@@ -350,8 +348,6 @@ class BetaBookingReport(models.TransientModel):  # change this
                     <td class="text-center">%s</td>
                     <td class="text-left">%s</td>
                     <td class="text-left">%s</td>
-                    <td class="text-left">%s</td>
-                    <td class="text-left">%s</td>
                 </tr>
             """ % (
                 row_color,
@@ -363,7 +359,6 @@ class BetaBookingReport(models.TransientModel):  # change this
                 row['cancellation_date'].strftime('%d/%m/%Y') if row['cancellation_date'] and row[
                     'booking_state'] == 'canceled' else '',
                 row['wing'] or '',
-                row['flat'],
                 row['flat_number'] or '',
                 row['applicant'],
                 row['co_applicant'] or '',
@@ -376,7 +371,6 @@ class BetaBookingReport(models.TransientModel):  # change this
                 row['mobile'] or '',
                 row['email'] or '',
                 row['street'] or '',
-                row['site_address'] or '',
                 row['pin_code'] or '',
                 row['source_of_booking'] or '',
                 row['cp_employee'] or '',
