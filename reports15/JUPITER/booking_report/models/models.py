@@ -416,12 +416,13 @@ class BetaBookingReport(models.TransientModel):  # change this
             totals['amount'] += row['net_amount'] or 0
         table += """
             <tr class="font-weight-bold">
-                <td class="text-center" colspan="8">(Count: %s)</td>
-                <td colspan="15"/>
+                <td colspan="5"></td>  <!-- columns 1-5 blank -->
+                <td class="text-center">(Count: %s)</td>  <!-- column 6 = Number -->
+                <td colspan="19"/>
                 <td class="text-right" style="mso-number-format:'0.00';">%s</td>
                 <td colspan="2"/>
                 <td class="text-right" style="mso-number-format:'0.00';">%s</td>
-                <td colspan="8"/>
+                <td colspan="9"/>
                 <td class="text-right" style="mso-number-format:'0.00';">%s</td>
                 <td colspan="9"/>
             </tr>
