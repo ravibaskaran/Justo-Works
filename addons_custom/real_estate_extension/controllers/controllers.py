@@ -148,19 +148,25 @@ class RealEstateExtension(http.Controller):
     # 71119f18dd995f6746e4e8d97f3b304e7c525c9e
     @http.route(['/employee/get_details'], type='json', auth='public', methods=['POST'])
     def employee_get_details(self, **kwargs):
-        failed_response = {
-            'data': 'Access Denied',
-            'status': 'Failed',
-            'code': 201
-        }
+        # Start timing for performance tracking
+        start_time = time.time()
+
+        failed_response = APIResponseBuilder.forbidden(message="Access Denied")
+
         user_id = request.env["res.users.apikeys"]._check_credentials(scope='employee_details', key=kwargs.get('password'))
         if not user_id:
-            self.add_api_log('', 201, str(failed_response), 'employee_details',
-                             'failed', '', 'in', kwargs)
+            exec_time = (time.time() - start_time) * 1000
+            self.add_api_log('', 403, str(failed_response), 'employee_details',
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         if request.env['res.users'].sudo().browse(user_id).login != kwargs.get('login'):
-            self.add_api_log('', 201, str(failed_response), 'employee_details',
-                             'failed', '', 'in', kwargs)
+            exec_time = (time.time() - start_time) * 1000
+            self.add_api_log('', 403, str(failed_response), 'employee_details',
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         else:
             employees = request.env['hr.employee'].sudo().search([])
@@ -183,13 +189,17 @@ class RealEstateExtension(http.Controller):
                     "relieving_date": employee_id.departure_date.strftime('%d/%m/%Y') if employee_id.departure_date else "",
                     "role": employee_id.role or ''
                 })
-            response = {
-                'data': final_data,
-                'status': 'Success',
-                'code': 200
-            }
+
+            exec_time = (time.time() - start_time) * 1000
+            response = APIResponseBuilder.success(
+                data=final_data,
+                message=f"Retrieved {len(final_data)} employee records successfully",
+                code=200
+            )
             self.add_api_log('', 200, str(response), 'employee_details', 'success', '', 'in',
-                             kwargs)
+                             kwargs,
+                             request_data=kwargs, response_data=response,
+                             execution_time=exec_time, request_obj=request)
             return response
 
     # Api for creating booking
@@ -1118,41 +1128,123 @@ class RealEstateExtension(http.Controller):
     # create api key with scope emp
     @http.route(['/employee/fetch_employee_code123'], type='json', auth='public', methods=['POST'])
     def fetch_employee_details(self, **kwargs):
-        failed_response = {
-            'data': 'Access Denied',
-            'status': 'Failed',
-            'code': 201
-        }
+        # Start timing for performance tracking
+        start_time = time.time()
+
+        failed_response = APIResponseBuilder.forbidden(message="Access Denied")
+
         user_id = request.env["res.users.apikeys"]._check_credentials(scope='emp', key=kwargs.get('password'))
         if not user_id:
-            self.add_api_log('', 201, str(failed_response), 'employee',
-                             'failed', '', 'in', kwargs)
+            exec_time = (time.time() - start_time) * 1000
+            self.add_api_log('', 403, str(failed_response), 'employee',
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         if request.env['res.users'].sudo().browse(user_id).login != kwargs.get('login'):
-            self.add_api_log('', 201, str(failed_response), 'employee',
-                             'failed', '', 'in', kwargs)
+            exec_time = (time.time() - start_time) * 1000
+            self.add_api_log('', 403, str(failed_response), 'employee',
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         else:
             vals = kwargs.get('record')
             if vals:
-                # if vals.get('name'):
-                gender = vals.get('gender')
-                if gender:
-                    if gender.upper() == 'M':
-                        gender = 'male'
-                    elif gender.upper() == 'F':
-                        gender = 'female'
-                    elif gender.upper() == 'O':
-                        gender = 'other'
-                    else:
-                        self.add_api_log('', 201, str('Invalid input for gender'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'Invalid input for gender '
-                                    '(Valid inputs: F or f for Female, M or m for Male, O or o for Other)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
+                # Initialize validator
+                validator = DataValidator(env=request.env)
+
+                # VALIDATION: Email format (corporate email)
+                if vals.get('corporate_email'):
+                    is_valid, error_msg = validator.validate_email(vals.get('corporate_email'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Email format (private email)
+                if vals.get('email'):
+                    is_valid, error_msg = validator.validate_email(vals.get('email'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Phone format (work_phone)
+                if vals.get('work_phone'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('work_phone'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Mobile format (work_mobile)
+                if vals.get('work_mobile'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('work_mobile'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Mobile format (personal_mobile)
+                if vals.get('personal_mobile'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('personal_mobile'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Gender (using validator)
+                gender = None
+                if vals.get('gender'):
+                    is_valid, error_msg, normalized_gender = validator.validate_gender(vals.get('gender'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    gender = normalized_gender
                 department = vals.get('department')
                 department_id = False
                 if department:
@@ -1172,74 +1264,90 @@ class RealEstateExtension(http.Controller):
                     #         'status': 'Failed',
                     #         'code': 201
                     #     }
-                marital_status = vals.get('marital_status')
-                if marital_status:
-                    if marital_status not in ('single', 'married', 'cohabitant', 'widower', 'divorced'):
-                        self.add_api_log('', 201, str('Invalid input for marital status'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'Invalid input for marital status '
-                                    '(Valid inputs: single, married, cohabitant, widower, divorced)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                active_status = vals.get('active_status')
-                if active_status:
-                    if active_status.upper() == 'T':
-                        active_status = True
-                    elif active_status.upper() == 'F':
-                        active_status = False
-                    else:
-                        self.add_api_log('', 201, str('Invalid input for Active Status'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'Invalid input for Active Status'
-                                    '(Valid inputs: T or t for True, F or f for False)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                dob = vals.get('date_of_birth')
-                if dob:
-                    dob = is_valid_date_format(dob)
-                    if not dob:
-                        self.add_api_log('', 201, str('Invalid input for Date of Birth (Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'Invalid input for Date of Birth'
-                                    '(Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                else:
-                    dob = False
-                joining_date = vals.get('joining_date')
-                if joining_date:
-                    joining_date = is_valid_date_format(joining_date)
-                    if not joining_date:
-                        self.add_api_log('', 201, str('Invalid input for Joining Date (Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'Invalid input for Joining Date'
-                                    '(Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                else:
-                    joining_date = False
-                relieving_date = vals.get('relieving_date')
-                if relieving_date:
-                    relieving_date = is_valid_date_format(relieving_date)
-                    if not relieving_date:
-                        self.add_api_log('', 201, str('Invalid input for Relieving Date (Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'Invalid input for Relieving Date'
-                                    '(Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                else:
-                    relieving_date = False
+                # VALIDATION: Marital status (using validator)
+                marital_status = None
+                if vals.get('marital_status'):
+                    is_valid, error_msg, normalized_status = validator.validate_marital_status(vals.get('marital_status'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    marital_status = normalized_status
+
+                # VALIDATION: Active status (boolean flag using validator)
+                active_status = None
+                if vals.get('active_status'):
+                    is_valid, error_msg, bool_value = validator.validate_boolean_flag(vals.get('active_status'), 'active_status')
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    active_status = bool_value
+
+                # VALIDATION: Date of Birth format (using validator)
+                dob = False
+                if vals.get('date_of_birth'):
+                    is_valid, error_msg, iso_date = validator.validate_date_format(vals.get('date_of_birth'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    dob = iso_date
+
+                # VALIDATION: Joining Date format (using validator)
+                joining_date = False
+                if vals.get('joining_date'):
+                    is_valid, error_msg, iso_date = validator.validate_date_format(vals.get('joining_date'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    joining_date = iso_date
+
+                # VALIDATION: Relieving Date format (using validator)
+                relieving_date = False
+                if vals.get('relieving_date'):
+                    is_valid, error_msg, iso_date = validator.validate_date_format(vals.get('relieving_date'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    relieving_date = iso_date
                 try:
                     # if vals.get('corporate_email'):
                     #     employee_id = request.env['hr.employee'].sudo().search([('corporate_email', '=', vals.get('corporate_email'))], limit=1)
@@ -1249,8 +1357,11 @@ class RealEstateExtension(http.Controller):
                     #         'status': 'Failed',
                     #         'code': 201
                     #     }
+                    is_update = False  # Track if this is an update or create
                     if vals.get('employee_id'):
                         employee_id = request.env['hr.employee'].sudo().search([('barcode', '=', vals.get('employee_id'))], limit=1)
+                        if employee_id:
+                            is_update = True  # Existing employee found - UPDATE operation
                         # if request.env['hr.employee'].sudo().search([('barcode', '=', vals.get('employee_id')), ('id', '!=', employee_id.id)]):
                             # return {
                             #     'data': "The Employee ID must be unique, this one is already assigned to another employee.",
@@ -1258,13 +1369,17 @@ class RealEstateExtension(http.Controller):
                             #     'code': 201
                             # }
                     else:
-                        self.add_api_log('', 201, str('Employee ID is required.'), 'employee',
-                                         'failed', '', 'in', kwargs)
-                        return{
-                            'data': "Employee ID is required.",
-                            'status': 'Failed',
-                            'code': 201
-                        }
+                        # VALIDATION: Required field - employee_id
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message="employee_id is required",
+                            errors=["employee_id: Field is required"]
+                        )
+                        self.add_api_log('', 400, str(error_response['message']), 'employee',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                     if employee_id:
                         employee_id.write({
                             'name': vals.get('name') if vals.get('name') else employee_id.name,
@@ -1353,24 +1468,47 @@ class RealEstateExtension(http.Controller):
                             'location': vals.get('location'),
                             'barcode': vals.get('employee_id'),
                         })
-                    success_response = {
-                        'status': 'Success',
-                        'code': 200
-                    }
-                    self.add_api_log(employee_id.id, 200, str(success_response), 'employee',
-                                     'success', str(employee_id.name), 'in', kwargs)
+
+                    # Build success response with proper HTTP code (200 for update, 201 for create)
+                    exec_time = (time.time() - start_time) * 1000
+                    if is_update:
+                        success_response = APIResponseBuilder.success(
+                            data={'employee_id': employee_id.barcode},
+                            message="Employee updated successfully",
+                            code=200
+                        )
+                        http_code = 200
+                    else:
+                        success_response = APIResponseBuilder.created(
+                            data={'employee_id': employee_id.barcode},
+                            message="Employee created successfully",
+                            resource_id=employee_id.barcode
+                        )
+                        http_code = 201
+
+                    self.add_api_log(employee_id.id, http_code, str(success_response), 'employee',
+                                     'success', str(employee_id.name), 'in', kwargs,
+                                     request_data=kwargs, response_data=success_response,
+                                     execution_time=exec_time, request_obj=request)
                 except Exception as e:
+                    # Handle unexpected server errors with specific error messages
+                    exec_time = (time.time() - start_time) * 1000
+                    error_message = "An error occurred while processing the employee data"
+
                     if 'hr_employee_unique_name_per_employee' in str(e):
-                        e = 'Employee with name already exists !'
-                    if 'unique_corporate_email_per_employee' in str(e):
-                        e = 'Employee with Corporate Email already exists !'
-                    self.add_api_log('', 201, str(e), 'employee',
-                                     'failed', '', 'in', kwargs)
-                    return {
-                        'data': e,
-                        'status': 'Failed',
-                        'code': 201
-                    }
+                        error_message = 'Employee with this name already exists'
+                    elif 'unique_corporate_email_per_employee' in str(e):
+                        error_message = 'Employee with this corporate email already exists'
+
+                    error_response = APIResponseBuilder.server_error(
+                        message=error_message,
+                        exception=e
+                    )
+                    # Log the actual exception for debugging (sanitized by add_api_log)
+                    self.add_api_log('', 500, str(e), 'employee', 'failed', '', 'in', kwargs,
+                                     request_data=kwargs, response_data=error_response,
+                                     execution_time=exec_time, request_obj=request)
+                    return error_response
                 # out_api = request.env['ir.config_parameter'].sudo().get_param('real_estate_extension.enable_employee_out_api')
                 # if out_api:
                 #     # commented fields - because not in mobile app
@@ -1441,9 +1579,17 @@ class RealEstateExtension(http.Controller):
 
                 return success_response
             else:
-                self.add_api_log('', 201, str(failed_response), 'employee',
-                                 'failed', '', 'in', kwargs)
-                return failed_response
+                # No record data provided
+                exec_time = (time.time() - start_time) * 1000
+                error_response = APIResponseBuilder.bad_request(
+                    message="No record data provided",
+                    errors=["record: Field is required"]
+                )
+                self.add_api_log('', 400, str(error_response['message']), 'employee',
+                                 'failed', '', 'in', kwargs,
+                                 request_data=kwargs, response_data=error_response,
+                                 execution_time=exec_time, request_obj=request)
+                return error_response
 
     # Api for creating channel partner and returning cp_id
     # create api key with scope cp
