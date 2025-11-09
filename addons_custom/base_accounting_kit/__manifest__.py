@@ -112,18 +112,25 @@
     ],
     'assets': {
         'web.assets_backend': [
+            # Stylesheets
             'base_accounting_kit/static/src/scss/style.scss',
             'base_accounting_kit/static/src/scss/account_asset.scss',
             'base_accounting_kit/static/lib/bootstrap-toggle-master/css/bootstrap-toggle.min.css',
-            'base_accounting_kit/static/src/js/account_dashboard.js',
+
+            # Chart.js v4.4.0 from CDN (replaces old v2.8 files)
+            # Alternative: Install via npm: npm install chart.js@4.4.0
+            'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
+
+            # NEW: OWL-based dashboard component (Odoo 18 compatible)
+            'base_accounting_kit/static/src/js/account_dashboard_owl.js',
+
+            # Other JS files (TODO: Migrate to OWL)
             'base_accounting_kit/static/src/js/account_asset.js',
             'base_accounting_kit/static/src/js/payment_model.js',
             'base_accounting_kit/static/src/js/payment_render.js',
             'base_accounting_kit/static/src/js/payment_matching.js',
-            'base_accounting_kit/static/lib/Chart.bundle.js',
-            'base_accounting_kit/static/lib/Chart.bundle.min.js',
-            'base_accounting_kit/static/lib/Chart.min.js',
-            'base_accounting_kit/static/lib/Chart.js',
+
+            # Bootstrap Toggle
             'base_accounting_kit/static/lib/bootstrap-toggle-master/js/bootstrap-toggle.min.js',
 
         ],
