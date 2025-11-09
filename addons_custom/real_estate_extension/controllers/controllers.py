@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import re
+import time
 from datetime import datetime
 from odoo import http
 from odoo.http import request
 import logging
+from odoo.addons.real_estate_extension.models.sanitizer import sanitize_for_logging
 
 _logger = logging.getLogger(__name__)
 
@@ -21,21 +23,123 @@ def is_valid_date_format(date_string):
 
 class RealEstateExtension(http.Controller):
 
-    def add_api_log(self, record, code, response, api_type, status, name, direction, args):
+    def add_api_log(self, record, code, response, api_type, status, name, direction, args,
+                    request_data=None, response_data=None, execution_time=None, request_obj=None):
+        """
+        Create API log entry with security and audit information.
+
+        Args:
+            record: Record reference (legacy)
+            code: HTTP status code
+            response: Response message (legacy)
+            api_type: Type of API call
+            status: 'success' or 'failed'
+            name: API name/endpoint
+            direction: 'in' or 'out'
+            args: Arguments (legacy - kept for backward compatibility)
+            request_data: Request payload dict (new - for sanitization)
+            response_data: Response payload dict (new - for sanitization)
+            execution_time: API execution time in milliseconds (new)
+            request_obj: HTTP request object (new - for IP and user agent)
+        """
         try:
+            # Use current request if not provided
+            if request_obj is None:
+                request_obj = request
+
+            # Extract IP address (handle proxy headers)
+            ip_address = self._get_client_ip(request_obj)
+
+            # Extract user agent
+            user_agent = self._get_user_agent(request_obj)
+
+            # Sanitize request payload
+            if request_data:
+                request_payload, request_has_sensitive = sanitize_for_logging(request_data)
+            else:
+                request_payload = str(args) if args else ''
+                request_has_sensitive = False
+
+            # Sanitize response payload
+            if response_data:
+                response_payload, response_has_sensitive = sanitize_for_logging(response_data)
+            else:
+                response_payload = response if response else ''
+                response_has_sensitive = False
+
+            # Determine if sensitive data was found
+            is_sensitive = request_has_sensitive or response_has_sensitive
+            data_sanitized = request_data is not None or response_data is not None
+
+            # Create log entry with new security fields
             request.env['api.log'].sudo().create({
+                # Legacy fields (keep for backward compatibility)
                 'record': str(record),
                 'code': code,
                 'response': response,
+                'args': str(args) if args else '',
+
+                # Standard fields
                 'date': datetime.now(),
                 'type': api_type,
                 'status': status,
                 'name': name,
                 'direction': direction,
-                'args': str(args)
+
+                # New security and audit fields
+                'ip_address': ip_address,
+                'user_agent': user_agent[:500] if user_agent else '',  # Truncate to 500 chars
+                'execution_time': execution_time or 0.0,
+                'request_payload': request_payload,
+                'response_payload': response_payload,
+                'sanitized': data_sanitized,
+                'is_sensitive': is_sensitive,
             })
         except Exception as e:
-            _logger.warning(str(e))
+            _logger.warning(f"Failed to create API log: {str(e)}")
+
+    def _get_client_ip(self, request_obj):
+        """
+        Get client IP address, handling proxy headers.
+
+        Args:
+            request_obj: HTTP request object
+
+        Returns:
+            IP address string (IPv4 or IPv6)
+        """
+        if not request_obj or not hasattr(request_obj, 'httprequest'):
+            return ''
+
+        httprequest = request_obj.httprequest
+
+        # Check proxy headers first
+        forwarded_for = httprequest.headers.get('X-Forwarded-For')
+        if forwarded_for:
+            # X-Forwarded-For can contain multiple IPs, take the first one
+            return forwarded_for.split(',')[0].strip()
+
+        real_ip = httprequest.headers.get('X-Real-IP')
+        if real_ip:
+            return real_ip.strip()
+
+        # Fall back to remote_addr
+        return httprequest.remote_addr or ''
+
+    def _get_user_agent(self, request_obj):
+        """
+        Get user agent string from request.
+
+        Args:
+            request_obj: HTTP request object
+
+        Returns:
+            User agent string
+        """
+        if not request_obj or not hasattr(request_obj, 'httprequest'):
+            return ''
+
+        return request_obj.httprequest.headers.get('User-Agent', '')
 
     # Api for sending employee_details
     # create api key with scope employee_out
