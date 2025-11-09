@@ -4,6 +4,10 @@
 **Estimated Duration:** 2-3 weeks
 **Priority:** CRITICAL (Pre-Migration)
 
+**⚠️ DEFERRED TASKS (Lower Priority):**
+- Task 5: Log Retention Policy - Deferred to post-migration
+- Task 6: Performance Testing - Deferred to post-migration
+
 ---
 
 ## PART 1: API LOGGING SECURITY FIXES (Week 1-2)
