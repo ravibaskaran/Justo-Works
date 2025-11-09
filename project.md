@@ -61,3 +61,36 @@ The repository size has been reduced from **~479MB** to a much smaller footprint
 - Reduced bandwidth usage
 - Faster git operations
 - Focus on custom code only
+
+## Odoo 18 Migration Status
+
+This project is migrating from **Odoo 15 (Windows)** to **Odoo 18 (Ubuntu ARM64)**.
+
+### Platform Change
+- **From**: Windows-based development (`C:\jworks\odoo15\`)
+- **To**: OCI Ampere Ubuntu ARM64 (`/opt/odoo18/`)
+
+### Version Upgrade
+- **From**: Odoo 15.0
+- **To**: Odoo 18.0
+
+### Key Documents
+- `ODOO_18_UBUNTU_ARM64_SETUP.md` - Complete setup guide for Ubuntu ARM64
+- `DEVELOPMENT_ROADMAP.md` - Full project roadmap with all phases
+- `setup_odoo18_ubuntu.sh` - Automated installation script
+- `odoo.conf` - Updated configuration for Linux paths
+
+### Quick Start on Ubuntu
+
+1. **Automated Setup** (Recommended):
+   ```bash
+   # Edit the script to set secure passwords first!
+   sudo bash setup_odoo18_ubuntu.sh
+   ```
+
+2. **Manual Setup**:
+   Follow step-by-step instructions in `ODOO_18_UBUNTU_ARM64_SETUP.md`
+
+### Current Phase
+**Phase 1**: Odoo 18 Environment Setup (In Progress)
+- See `DEVELOPMENT_ROADMAP.md` for complete phase breakdown
