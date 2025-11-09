@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_beta_debtors_outstanding_statement,debtors_outstanding_statement_report.debtors_outstanding_statement,model_beta_debtors_outstanding_statement,,1,1,1,1

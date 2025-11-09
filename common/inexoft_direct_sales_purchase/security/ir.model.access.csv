@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_direct_lot_selection_user,direct.lot.selection.user,model_direct_lot_selection,account.group_account_user,1,0,0,0
-access_direct_lot_selection_manager,direct.lot.selection.manager,model_direct_lot_selection,account.group_account_manager,1,1,1,1

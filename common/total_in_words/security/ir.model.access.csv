@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_total_in_words_total_in_words,total_in_words.total_in_words,model_total_in_words_total_in_words,base.group_user,1,1,1,1

@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_beta_register_making,beta_reports_base.beta_register_making,model_beta_register_making,,1,1,1,1

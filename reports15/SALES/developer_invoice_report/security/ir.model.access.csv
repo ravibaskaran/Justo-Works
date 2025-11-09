@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_beta_developer_invoice_report,developer_invoice_report.beta_developer_invoice_report,model_beta_developer_invoice_report,,1,1,1,1

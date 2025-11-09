@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_beta_day_book,beta_reports_base.beta_day_book,model_beta_day_book,,1,1,1,1

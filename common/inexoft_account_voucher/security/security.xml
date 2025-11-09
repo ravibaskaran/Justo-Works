@@ -1,7 +1,0 @@
-<odoo>
-    <data>
-        <record id="group_cancel_voucher" model="res.groups">
-            <field name="name">Cancel Voucher</field>
-        </record>
-    </data>
-</odoo>

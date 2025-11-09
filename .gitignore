@@ -26,6 +26,32 @@ __pycache__/
 filestore/
 
 # --------------------
+# Odoo Core & Standard Addons
+# (Download separately to reduce repo size)
+# --------------------
+# Standard Odoo addons (download via pip install odoo or git clone)
+addons/
+# Standard Odoo themes
+themes15/
+# Odoo core files
+odoo/
+# Standard reports
+reports15/
+# Common libraries (if from Odoo standard)
+common/
+# Docker and test artifacts
+docker/
+test-results/
+tests/
+# Build and setup artifacts
+build/
+dist/
+*.egg
+# Session/cache files
+sessions/
+.cache/
+
+# --------------------
 # Virtual environments / IDE
 # --------------------
 venv/

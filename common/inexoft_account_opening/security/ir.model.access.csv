@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_multiple_account_opening_user,multiple.account.opening.user,model_multiple_account_opening,account.group_account_user,1,1,1,0
-access_multiple_account_opening_manager,multiple.account.opening.manager,model_multiple_account_opening,account.group_account_manager,1,1,1,1
-,,,,,,,
-access_multiple_account_opening_line_user,multiple.account.opening.line.user,model_multiple_account_opening_line,account.group_account_user,1,1,1,1
-access_multiple_account_opening_line_manager,multiple.account.opening.line.manager,model_multiple_account_opening_line,account.group_account_manager,1,1,1,1
-,,,,,,,
-access_multiple_account_opening_summary_user,multiple.account.opening.summary.user,model_multiple_account_opening_summary,account.group_account_user,1,1,1,1
-access_multiple_account_opening_summary_manager,multiple.account.opening.summary.manager,model_multiple_account_opening_summary,account.group_account_manager,1,1,1,1
