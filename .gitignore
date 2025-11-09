@@ -48,3 +48,23 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.swp
+
+# --------------------
+# Migration artifacts
+# --------------------
+# Backup files
+backups/
+*.backup
+*.sql
+*.sql.gz
+*.tar.gz
+
+# OpenUpgrade cloned repositories (clone when needed)
+migration/openupgrade/OpenUpgrade*
+
+# Docker volumes and caches
+migration/odoo18/init-db/
+
+# Test databases and temporary files
+*.tmp
+*.cache

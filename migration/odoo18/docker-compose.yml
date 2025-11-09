@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 15 for Odoo 18
+  db:
+    image: postgres:15-alpine
+    container_name: odoo18_postgres
+    environment:
+      POSTGRES_DB: odoo18
+      POSTGRES_USER: odoo18
+      POSTGRES_PASSWORD: odoo18_secure_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo18-db-data:/var/lib/postgresql/data/pgdata
+      - ./init-db:/docker-entrypoint-initdb.d  # For custom initialization
+    ports:
+      - "5433:5432"  # Expose on different port to avoid conflict with Odoo 15
+    networks:
+      - odoo18-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo18"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Odoo 18 Application
+  odoo18:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: odoo18_app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - HOST=db
+      - PORT=5432
+      - USER=odoo18
+      - PASSWORD=odoo18_secure_password
+    volumes:
+      # Odoo configuration
+      - ./odoo18.conf:/opt/odoo/odoo.conf:ro
+
+      # Custom addons (mount from migration source)
+      - ../../addons_custom:/opt/odoo/custom-addons/addons_custom:ro
+      - ../../common:/opt/odoo/custom-addons/common:ro
+
+      # Data persistence
+      - odoo18-data:/opt/odoo/data
+      - odoo18-filestore:/opt/odoo/data/filestore
+      - odoo18-sessions:/opt/odoo/data/sessions
+
+      # Logs
+      - odoo18-logs:/opt/odoo/logs
+
+      # Source code (for development)
+      - odoo18-odoo:/opt/odoo/odoo
+    ports:
+      - "8069:8069"  # Odoo web interface
+      - "8072:8072"  # Longpolling port
+    networks:
+      - odoo18-network
+    restart: unless-stopped
+    command: ["-c", "/opt/odoo/odoo.conf", "--dev=xml"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8069/web/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # pgAdmin (optional, for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: odoo18_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@odoo18.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - odoo18-network
+    restart: unless-stopped
+    profiles:
+      - tools
+
+networks:
+  odoo18-network:
+    driver: bridge
+
+volumes:
+  odoo18-db-data:
+    driver: local
+  odoo18-data:
+    driver: local
+  odoo18-filestore:
+    driver: local
+  odoo18-sessions:
+    driver: local
+  odoo18-logs:
+    driver: local
+  odoo18-odoo:
+    driver: local
+  pgadmin-data:
+    driver: local

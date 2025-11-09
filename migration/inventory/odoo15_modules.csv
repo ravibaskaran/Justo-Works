@@ -1,0 +1,2028 @@
+name,display_name,version,category,technical_category,author,summary,description,depends,auto_install,installable,application,path,manifest_file
+gamification,Gamification,1.0,Third-Party,Human Resources,Unknown,,"
+Gamification process
+====================
+The Gamification module provides ways to evaluate and motivate the users of Odoo.
+
+The users can be evaluated using goals and numerical objectives to reach.
+","mail, web_kanban_gauge",False,True,False,addons/gamification,__manifest__.py
+website_slides_forum,Forum on Courses,1.0,Third-Party,Website/eLearning,Unknown,Allows to link forum on a course,"A Slide channel can be linked to forum. Also, profiles from slide and forum are regrouped together","website_slides, website_forum",True,True,False,addons/website_slides_forum,__manifest__.py
+pos_discount,Point of Sale Discounts,1.0,Third-Party,Sales/Point of Sale,Unknown,Simple Discounts in the Point of Sale ,"
+
+This module allows the cashier to quickly give percentage-based
+discount to a customer.
+
+",point_of_sale,False,True,False,addons/pos_discount,__manifest__.py
+hr_attendance,Attendances,2.0,Third-Party,Human Resources/Attendances,Unknown,Track employee attendance,"
+This module aims to manage employee's attendances.
+==================================================
+
+Keeps account of the attendances of the employees on the basis of the
+actions(Check in/Check out","hr, barcodes",False,True,True,addons/hr_attendance,__manifest__.py
+stock_dropshipping,Drop Shipping,1.0,Third-Party,Inventory/Inventory,Unknown,Drop Shipping,"
+Manage drop shipping orders
+===========================
+
+This module adds a pre-configured Drop Shipping operation type
+as well as a procurement route that allow configuring Drop
+Shipping products an",sale_purchase_stock,False,True,False,addons/stock_dropshipping,__manifest__.py
+website_links,Link Tracker,1.0,Third-Party,Website/Website,Unknown,Generate trackable & short URLs,"
+Generate short links with analytics trackers (UTM) to share your pages through marketing campaigns.
+Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to ","website, link_tracker",True,True,False,addons/website_links,__manifest__.py
+website_sale_product_configurator,Website Sale Product Configurator,0.1,Third-Party,Hidden,Unknown,"
+        Bridge module for website_sale / sale_product_configurator","
+        Bridge module to make the website e-commerce compatible with the product configurator
+    ","website_sale, sale_product_configurator",True,True,False,addons/website_sale_product_configurator,__manifest__.py
+mass_mailing_slides,Mass mailing on course members,1.0,Third-Party,Hidden,Unknown,,"
+Mass mail course members
+========================
+
+Bridge module adding UX requirements to ease mass mailing of course members.
+        ","website_slides, mass_mailing",True,True,False,addons/mass_mailing_slides,__manifest__.py
+mrp_landed_costs,Landed Costs On MO,1.0,Third-Party,Manufacturing/Manufacturing,Unknown,Landed Costs on Manufacturing Order,"
+This module allows you to easily add extra costs on manufacturing order 
+and decide the split of these costs among their stock moves in order to 
+take them into account in your stock valuation.
+    ","stock_landed_costs, mrp",True,True,False,addons/mrp_landed_costs,__manifest__.py
+website_slides_survey,Course Certifications,1.0,Third-Party,Website/eLearning,Unknown,Add certification capabilities to your courses,This module lets you use the full power of certifications within your courses.,"website_slides, survey",True,True,False,addons/website_slides_survey,__manifest__.py
+account_fleet,Accounting/Fleet bridge,1.0,Third-Party,Accounting/Accounting,Unknown,Manage accounting with fleets,,"fleet, account",True,True,False,addons/account_fleet,__manifest__.py
+auth_signup,Signup,1.0,Third-Party,Hidden/Tools,Unknown,,"
+Allow users to sign up and reset their password
+===============================================
+    ","base_setup, mail, web",True,True,False,addons/auth_signup,__manifest__.py
+hr_skills_survey,Skills Certification,1.0,Third-Party,Hidden,Unknown,Add certification to resumé of your employees,"
+Certification and Skills for HR
+===============================
+
+This module adds certification to resumé for employees.
+        ","hr_skills, survey",True,True,False,addons/hr_skills_survey,__manifest__.py
+l10n_ec,Ecuadorian Accounting,3.3,Third-Party,Accounting/Localizations/Account Charts,OPA CONSULTING & TRESCLOUD,,"
+Functional
+----------
+
+This module adds accounting features for Ecuadorian localization, which
+represent the minimum requirements to operate a business in Ecuador in compliance
+with local regulation ","base, base_iban, account, account_debit_note, l10n_latam_invoice_document, l10n_latam_base",False,True,False,addons/l10n_ec,__manifest__.py
+crm_livechat,CRM Livechat,15.0.1.0.0,Third-Party,Sales/CRM,Unknown,Create lead from livechat conversation,Create new lead with using /lead command in the channel,"crm, im_livechat",True,True,False,addons/crm_livechat,__manifest__.py
+l10n_in,Indian - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Unknown,,"
+Indian Accounting: Chart of Account.
+====================================
+
+Indian accounting chart and localization.
+
+Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Acco","account_tax_python, base_vat",False,True,False,addons/l10n_in,__manifest__.py
+pos_hr,pos_hr,15.0.1.0.0,Third-Party,Hidden,Unknown,Link module between Point of Sale and HR,"
+This module allows Employees (and not users) to log in to the Point of Sale application using a barcode, a PIN number or both.
+The actual till still requires one user but an unlimited number of emplo","point_of_sale, hr",True,True,False,addons/pos_hr,__manifest__.py
+website_sale_stock_product_configurator,Website Sale Stock Product Configurator,1.0,Third-Party,Hidden,Unknown,"
+        Bridge module for website_sale_stock / sale_product_configurator","
+        Bridge module to make the website e-commerce stock management compatible with the product configurator
+    ","website_sale_stock, sale_product_configurator",True,True,False,addons/website_sale_stock_product_configurator,__manifest__.py
+hr_holidays,Time Off,1.5,Third-Party,Human Resources/Time Off,Unknown,Allocate PTOs and follow leaves requests,"
+Manage time off requests and allocations
+=====================================
+
+This application controls the time off schedule of your company. It allows employees to request time off. Then, manager","hr, calendar, resource",False,True,True,addons/hr_holidays,__manifest__.py
+website_blog,Blogs,1.1,Third-Party,Website/Website,Unknown,"Publish blog posts, announces, news",,"website_mail, website_partner",False,True,True,addons/website_blog,__manifest__.py
+l10n_bg,Bulgaria - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo S.A.,,"
+        Chart accounting and taxes for Bulgaria
+    ","account, base_vat, l10n_multilang",False,True,False,addons/l10n_bg,__manifest__.py
+l10n_be,Belgium - Accounting,2.0,Core,Accounting/Localizations/Account Charts,"Noviat, Odoo SA",,"
+This is the base module to manage the accounting chart for Belgium in Odoo.
+==============================================================================
+
+After installing this module, the Configura","account, base_iban, base_vat, l10n_multilang",False,True,False,addons/l10n_be,__manifest__.py
+l10n_es_edi_sii,Spain - SII EDI Suministro de Libros,1.0,Third-Party,Accounting/Localizations/EDI,Unknown,,"
+        This module sends the taxes information (mostly VAT) of the 
+        vendor bills and customer invoices to the SII.  It is called 
+        Procedimiento G417 - IVA. Llevanza de libros registr","l10n_es, account_edi",False,True,False,addons/l10n_es_edi_sii,__manifest__.py
+l10n_ae,United Arab Emirates - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,Tech Receptives,,"
+United Arab Emirates accounting chart and localization.
+=======================================================
+    ","base, account",False,True,False,addons/l10n_ae,__manifest__.py
+project_mrp,MRP Project,1.0,Third-Party,Services/Project,Unknown,Monitor MRP using project,,"mrp_account, project",True,True,False,addons/project_mrp,__manifest__.py
+test_discuss_full,Test Discuss (full),1.0,Third-Party,Hidden,Unknown,Test of Discuss with all possible overrides installed.,"Test of Discuss with all possible overrides installed, including feature and performance tests.","crm_livechat, hr_holidays, im_livechat, mail, mail_bot, website_livechat",False,True,False,addons/test_discuss_full,__manifest__.py
+l10n_in_sale,Indian - Sale Report(GST),1.0,Third-Party,Accounting/Localizations/Sale,Unknown,,GST Sale Report,"l10n_in, sale",True,True,False,addons/l10n_in_sale,__manifest__.py
+l10n_sk,Slovak - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,26HOUSE,,"
+Slovakia accounting chart and localization: Chart of Accounts 2020, basic VAT rates + 
+fiscal positions.
+
+Tento modul definuje:
+• Slovenskú účtovú osnovu za rok 2020
+
+• Základné sadzby pre DPH z pred","account, base_iban, base_vat",False,True,False,addons/l10n_sk,__manifest__.py
+l10n_gr,Greece - Accounting,15.0.1.0.0,Core,Accounting/Localizations/Account Charts,"P. Christeas, OpenERP SA.",,"
+This is the base module to manage the accounting chart for Greece.
+==================================================================
+
+Greek accounting chart and localization.
+    ","account, base_iban, base_vat",False,True,False,addons/l10n_gr,__manifest__.py
+pos_six,POS Six,1.0,Third-Party,Sales/Point Of Sale,Unknown,Integrate your POS with a Six payment terminal,,point_of_sale,False,True,False,addons/pos_six,__manifest__.py
+sale_product_matrix,Sale Matrix,1.0,Third-Party,Sales/Sales,Unknown,Add variants to Sales Order through a grid entry.,"
+        This module allows to fill Sales Order rapidly
+        by choosing product variants quantity through a Grid Entry.
+    ","sale, product_matrix, sale_product_configurator",False,True,False,addons/sale_product_matrix,__manifest__.py
+website_crm_livechat,Lead Livechat Sessions,1.0,Third-Party,Website/Website,Unknown,View livechat sessions for leads, Adds a stat button on lead form view to access their livechat sessions.,"website_crm, website_livechat",True,True,False,addons/website_crm_livechat,__manifest__.py
+stock_account,WMS Accounting,1.1,Third-Party,Hidden,Unknown,"Inventory, Logistic, Valuation, Accounting","
+WMS Accounting module
+======================
+This module makes the link between the 'stock' and 'account' modules and allows you to create accounting entries to value your stock movements
+
+Key Featur","stock, account",True,True,False,addons/stock_account,__manifest__.py
+website_event_track_quiz,Quizzes on Tracks,1.0,Third-Party,Marketing/Events,Unknown,Quizzes on tracks,,"website_profile, website_event_track",False,True,False,addons/website_event_track_quiz,__manifest__.py
+test_website_slides_full,Test Full eLearning Flow,1.0,Third-Party,Hidden/Tests,Unknown,,"
+This module will test the main certification flow of Odoo.
+It will install the e-learning, survey and e-commerce apps and make a complete
+certification flow including purchase, certification, failure","website_sale_product_configurator, website_sale_slides, website_slides_forum, website_slides_survey, payment_test",False,True,False,addons/test_website_slides_full,__manifest__.py
+website_form_project,Online Task Submission,1.0,Third-Party,Website/Website,Unknown,Add a task suggestion form to your website,"
+Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module (available in Odoo Enterprise) in order to build the form.
+    ","website, project",True,True,False,addons/website_form_project,__manifest__.py
+website_event_track_live,Live Event Tracks,1.0,Third-Party,Marketing/Events,Unknown,"Support live tracks: streaming, participation, youtube",,website_event_track,False,True,False,addons/website_event_track_live,__manifest__.py
+pad_project,Pad on tasks,15.0.1.0.0,Third-Party,Services/Project,Unknown,,"
+This module adds a PAD in all project form views.
+=================================================
+    ","project, pad",True,True,False,addons/pad_project,__manifest__.py
+auth_totp_mail_enforce,2FA by mail,15.0.1.0.0,Third-Party,Extra Tools,Unknown,,"
+2FA by mail
+===============
+Two-Factor authentication by sending a code to the user email inbox
+when the 2FA using an authenticator app is not configured.
+To enforce users to use a two-factor authent","auth_totp, mail",False,True,False,addons/auth_totp_mail_enforce,__manifest__.py
+payment_mollie,Mollie Payment Acquirer,1.0,Core,Accounting/Payment Acquirers,"Odoo S.A, Applix BV, Droggol Infotech Pvt. Ltd.",Payment Acquirer: Mollie Implementation,Mollie Payment Acquirer,payment,False,True,True,addons/payment_mollie,__manifest__.py
+website_crm_sms,Send SMS to Visitor with leads,1.0,Third-Party,Website/Website,Unknown,Allows to send sms to website visitor that have lead,Allows to send sms to website visitor if the visitor is linked to a lead.,"website_sms, crm",True,True,False,addons/website_crm_sms,__manifest__.py
+website_partner,Website Partner,0.1,Third-Party,Hidden,Unknown,Partner module for website,"
+This is a base module. It holds website-related stuff for Contact model (res.partner).
+    ",website,False,True,False,addons/website_partner,__manifest__.py
+website_crm_iap_reveal,Lead Generation From Website Visits,1.1,Third-Party,Sales/CRM,Unknown,Generate Leads/Opportunities from your website's traffic,,"iap_crm, iap_mail, crm_iap_mine, website",False,True,False,addons/website_crm_iap_reveal,__manifest__.py
+mass_mailing_sale,Mass mailing on sale orders,1.0,Third-Party,Hidden,Unknown,Add sale order UTM info on mass mailing,UTM and mass mailing on sale orders,"sale, mass_mailing",True,True,False,addons/mass_mailing_sale,__manifest__.py
+l10n_eu_oss,EU One Stop Shop (OSS),15.0.1.0.0,Third-Party,Accounting/Localizations,Unknown,,"
+EU One Stop Shop (OSS) VAT
+==========================
+
+From July 1st 2021, EU businesses that are selling goods within the EU above EUR 10 000 to buyers located in another EU Member State need to reg",account,False,True,False,addons/l10n_eu_oss,__manifest__.py
+mail_group,Mail Group,1.0,Third-Party,Uncategorized,Unknown,Manage your mailing lists,"
+        Manage your mailing lists from Odoo.
+    ","mail, portal",False,True,False,addons/mail_group,__manifest__.py
+l10n_id_efaktur,Indonesia E-faktur,1.0,Third-Party,Accounting/Localizations/EDI,Unknown,,"
+        E-Faktur Menu(Indonesia)
+        Format : 010.000-16.00000001
+        * 2 (dua) digit pertama adalah Kode Transaksi
+        * 1 (satu) digit berikutnya adalah Kode Status
+        * 3 (tiga) d",l10n_id,True,True,False,addons/l10n_id_efaktur,__manifest__.py
+l10n_gcc_invoice_stock_account,Gulf Cooperation Council WMS Accounting,1.0,Core,Accounting/Localizations,Odoo S.A.,,"
+        Arabic/English for GCC + lot/SN numbers
+    ","l10n_gcc_invoice, stock_account",True,True,False,addons/l10n_gcc_invoice_stock_account,__manifest__.py
+website_membership,Online Members Directory,1.0,Third-Party,Website/Website,Unknown,Publish your members directory,"
+Publish your members/association directory publicly.
+    ","website_partner, website_google_map, association, website_sale",False,True,False,addons/website_membership,__manifest__.py
+account_test,Accounting Consistency Tests,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+Asserts on accounting.
+======================
+With this module you can manually check consistencies and inconsistencies of accounting module from menu Reporting/Accounting/Accounting Tests.
+
+You can ",account,False,True,False,addons/account_test,__manifest__.py
+base_import_module,Base import module,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,"
+Import a custom data module
+===========================
+
+This module allows authorized users to import a custom data module (.xml files and static assests)
+for customization purpose.
+",web,False,True,False,addons/base_import_module,__manifest__.py
+microsoft_account,Microsoft Users,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,"
+The module adds Microsoft user in res user.
+===========================================
+",base_setup,False,True,False,addons/microsoft_account,__manifest__.py
+l10n_pt,Portugal - Accounting,0.011,Third-Party,Accounting/Localizations/Account Charts,ThinkOpen Solutions,,Plano de contas SNC para Portugal,"base, account, base_vat",False,True,False,addons/l10n_pt,__manifest__.py
+sales_team,Sales Teams,1.1,Third-Party,Sales/Sales,Unknown,Sales Teams,"
+Using this application you can manage Sales Teams with CRM and/or Sales
+=======================================================================
+ ","base, mail",False,True,False,addons/sales_team,__manifest__.py
+purchase_stock,Purchase Stock,1.2,Third-Party,Inventory/Purchase,Unknown,"Purchase Orders, Receipts, Vendor Bills for Stock",,"stock_account, purchase",True,True,False,addons/purchase_stock,__manifest__.py
+l10n_no_edi,Norway - E-Invoicing (EHF 3),0.1,Third-Party,Accounting/Localizations/EDI,Unknown,"E-Invoicing, Universal Business Language (EHF 3)","
+EHF 3 is the Norwegian implementation of EN 16931 norm.
+    ","l10n_no, account_edi_ubl_bis3",True,True,False,addons/l10n_no_edi,__manifest__.py
+social_media,Social Media,0.1,Core,Hidden,Odoo S.A.,Social media connectors for company settings.,"
+The purpose of this technical module is to provide a front for
+social media configuration for any other module that might need it.
+    ",base,False,True,False,addons/social_media,__manifest__.py
+project_purchase,Project Purchase,1.0,Third-Party,Services/Project,Unknown,Monitor purchase in project,,"purchase, project",True,True,False,addons/project_purchase,__manifest__.py
+hr,Employees,1.1,Third-Party,Human Resources/Employees,Unknown,Centralize employee information,,"base_setup, mail, resource, web",False,True,True,addons/hr,__manifest__.py
+l10n_fr,France - Accounting,2.1,Third-Party,Accounting/Localizations/Account Charts,Unknown,,"
+This is the module to manage the accounting chart for France in Odoo.
+========================================================================
+
+This module applies to companies based in France mainla","account, base_iban, base_vat",False,True,False,addons/l10n_fr,__manifest__.py
+l10n_pe,Peru - Accounting,2.0,Core,Accounting/Localizations/Account Charts,"Vauxoo, Odoo",PCGE Simplified,,"base_vat, base_address_extended, base_address_city, l10n_latam_base, l10n_latam_invoice_document, account_debit_note",False,True,False,addons/l10n_pe,__manifest__.py
+l10n_za,South Africa - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,Paradigm Digital,,"
+This is the latest basic South African localisation necessary to run Odoo in ZA:
+================================================================================
+    - a generic chart of accounts
+   ","account, base_vat",False,True,False,addons/l10n_za,__manifest__.py
+l10n_sa_pos,Saudi Arabia - Point of Sale,15.0.1.0.0,Core,Accounting/Localizations/Point of Sale,Odoo S.A,,"
+K.S.A. POS Localization
+=======================================================
+    ","l10n_gcc_pos, l10n_sa_invoice",True,True,False,addons/l10n_sa_pos,__manifest__.py
+pos_sale,pos_sale,1.1,Third-Party,Hidden,Unknown,Link module between Point of Sale and Sales,"
+
+This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.
+","point_of_sale, sale_management",True,True,False,addons/pos_sale,__manifest__.py
+project_hr_expense,Project Expenses,1.0,Third-Party,Services/expenses,Unknown,Project expenses,Bridge created to add the number of expenses linked to an AA to a project form,"project, hr_expense",True,True,False,addons/project_hr_expense,__manifest__.py
+hr_work_entry,Work Entries,15.0.1.0.0,Third-Party,Human Resources/Employees,Unknown,Manage work entries,,hr,False,True,False,addons/hr_work_entry,__manifest__.py
+digest,KPI Digests,1.1,Third-Party,Marketing,Unknown,,"
+Send KPI Digests periodically
+=============================
+","mail, portal, resource",False,True,False,addons/digest,__manifest__.py
+sale_management,Sales,1.0,Third-Party,Sales/Sales,Unknown,From quotations to invoices,"
+Manage sales quotations and orders
+==================================
+
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders","sale, digest",False,True,True,addons/sale_management,__manifest__.py
+base_geolocalize,Partners Geolocation,2.1,Third-Party,Hidden/Tools,Unknown,,"
+Partners Geolocation
+========================
+    ",base_setup,False,True,False,addons/base_geolocalize,__manifest__.py
+web_tour,Tours,0.1,Third-Party,Hidden,Unknown,,"
+Odoo Web tours.
+========================
+
+",web,True,True,False,addons/web_tour,__manifest__.py
+gamification_sale_crm,CRM Gamification,1.0,Third-Party,Sales/CRM,Unknown,,Example of goal definitions and challenges that can be used related to the usage of the CRM Sale module.,"gamification, sale_crm",True,True,False,addons/gamification_sale_crm,__manifest__.py
+hr_timesheet,Task Logs,1.0,Third-Party,Services/Timesheets,Unknown,Track employee time on tasks,"
+This module implements a timesheet system.
+==========================================
+
+Each employee can encode and track their time spent on the different projects.
+
+Lots of reporting on time and em","hr, analytic, project, uom",False,True,False,addons/hr_timesheet,__manifest__.py
+hw_escpos,ESC/POS Hardware Driver,15.0.1.0.0,Third-Party,Sales/Point of Sale,Unknown,Hardware Driver for ESC/POS Printers and Cashdrawers,"
+ESC/POS Hardware Driver
+=======================
+
+This module allows Odoo to print with ESC/POS compatible printers and
+to open ESC/POS controlled cashdrawers in the point of sale and other modules
+th",,False,False,False,addons/hw_escpos,__manifest__.py
+mrp_subcontracting_account,Subcontracting Management with Stock Valuation,0.1,Third-Party,Hidden,Unknown,,"
+        This bridge module allows to manage subcontracting with valuation.
+    ","mrp_subcontracting, mrp_account",True,True,False,addons/mrp_subcontracting_account,__manifest__.py
+website_event_booth_sale_exhibitor,Booths Sale/Exhibitors Bridge,1.0,Third-Party,Marketing/Events,Unknown,Bridge module between website_event_booth_exhibitor and website_event_booth_sale.,"
+    ","website_event_exhibitor, website_event_booth_sale",True,True,False,addons/website_event_booth_sale_exhibitor,__manifest__.py
+hr_skills_slides,Skills e-learning,1.0,Third-Party,Hidden,Unknown,Add completed courses to resumé of your employees,"
+E-learning and Skills for HR
+============================
+
+This module add completed courses to resumé for employees.
+        ","hr_skills, website_slides",True,True,False,addons/hr_skills_slides,__manifest__.py
+l10n_eg_edi_eta,Egyptian E-Invoice Integration,0.2,Third-Party,account,odoo,"
+            Egyptian Tax Authority Invoice Integration
+        ","
+       This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.
+       Special thanks to Plementus <info@plementus.com> for their help in developin","account_edi, l10n_eg",False,True,False,addons/l10n_eg_edi_eta,__manifest__.py
+hr_gamification,HR Gamification,1.0,Third-Party,Human Resources,Unknown,,"Use the HR resources for the gamification process.
+
+The HR officer can now manage challenges and badges.
+This allow the user to send badges to employees instead of simple users.
+Badge received are dis","gamification, hr",True,True,False,addons/hr_gamification,__manifest__.py
+l10n_ma,Morocco - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,kazacube,,"
+This is the base module to manage the accounting chart for Morocco.
+====================================================================
+
+Ce Module charge le modèle du plan de comptes standard Maroca","base, account",False,True,False,addons/l10n_ma,__manifest__.py
+l10n_de_skr03,Germany SKR03 - Accounting,3.0,Third-Party,Accounting/Localizations/Account Charts,openbig.org,,"
+Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
+==============================================================================
+
+German accounting chart and localization",l10n_de,True,True,False,addons/l10n_de_skr03,__manifest__.py
+pos_gift_card,Gift Card for point of sales module,1.0,Third-Party,Sales/Sales,Unknown,Use gift card in your sales orders,Integrate gift card mechanism in sales orders.,"gift_card, point_of_sale",True,True,False,addons/pos_gift_card,__manifest__.py
+mrp_repair,Mrp Repairs,1.0,Third-Party,Inventory/Inventory,Unknown,,,"repair, mrp",True,True,False,addons/mrp_repair,__manifest__.py
+l10n_de_stock,Germany - Stock,15.0.1.0.0,Third-Party,Accounting/Localizations,Unknown,,,"l10n_de, stock",True,True,False,addons/l10n_de_stock,__manifest__.py
+event_sale,Events Sales,1.2,Third-Party,Marketing/Events,Unknown,,"
+Creating registration with sales orders.
+========================================
+
+This module allows you to automate and connect your registration creation with
+your main sale flow and therefore, to","event, sale_management",True,True,False,addons/event_sale,__manifest__.py
+website_jitsi,Website Jitsi,1.0,Third-Party,Hidden,Unknown,Create Jitsi room on website.,Create Jitsi room on website.,website,False,True,False,addons/website_jitsi,__manifest__.py
+payment_adyen,Adyen Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Adyen Implementation,Adyen Payment Acquirer,payment,False,True,True,addons/payment_adyen,__manifest__.py
+note,Notes,1.0,Third-Party,Productivity/Notes,Unknown,Organize your work with memos,,mail,False,True,True,addons/note,__manifest__.py
+account_edi_ubl_bis3,Import/Export invoices with UBL (BIS3),1.0,Third-Party,Accounting/Accounting,Unknown,,"
+    Support for Export/Import in UBL format (BIS3).
+    ",account_edi_ubl,False,True,False,addons/account_edi_ubl_bis3,__manifest__.py
+maintenance,Maintenance,1.0,Third-Party,Manufacturing/Maintenance,Unknown,Track equipment and manage maintenance requests,"
+        Track equipments and maintenance requests",mail,False,True,True,addons/maintenance,__manifest__.py
+mail,Discuss,1.5,Third-Party,Productivity/Discuss,Unknown,"Chat, mail gateway and private channels",,"base, base_setup, bus, web_tour",False,True,True,addons/mail,__manifest__.py
+delivery_mondialrelay,delivery_mondialrelay,0.1,Third-Party,Inventory/Delivery,Unknown, Let's choose a Point Relais® as shipping address ,"
+        This module allow your customer to choose a Point Relais® and use it as shipping address.
+        This module doesn't implement the WebService. It is only the integration of the widget.
+
+    ",delivery,False,True,False,addons/delivery_mondialrelay,__manifest__.py
+l10n_cn,China - Accounting,1.8,Third-Party,Accounting/Localizations/Account Charts,www.openerp-china.org,,"
+Includes the following data for the Chinese localization
+========================================================
+
+Account Type/科目类型
+
+State Data/省份数据
+
+    科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
+
+   ","base, account, l10n_multilang",False,True,False,addons/l10n_cn,__manifest__.py
+purchase_product_matrix,Purchase Matrix,1.0,Third-Party,Inventory/Purchase,Unknown,"
+       Add variants to your purchase orders through an Order Grid Entry.
+    ","
+        This module allows to fill Purchase Orders rapidly
+        by choosing product variants quantity through a Grid Entry.
+    ","purchase, product_matrix",False,True,False,addons/purchase_product_matrix,__manifest__.py
+pos_epson_printer_restaurant,pos_epson_printer_restaurant,1.0,Third-Party,Sales/Point of Sale,Unknown,Epson Printers as Order Printers,"
+
+Use Epson Printers as Order Printers in the Point of Sale without the IoT Box
+","pos_epson_printer, pos_restaurant",True,True,False,addons/pos_epson_printer_restaurant,__manifest__.py
+l10n_do,Dominican Republic - Accounting,2.0,Core,Accounting/Localizations/Account Charts,Gustavo Valverde - iterativo | Consultores de Odoo,,"
+
+Localization Module for Dominican Republic
+===========================================
+
+Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para
+**Internacionalización** con **NIIF","account, base_iban",False,True,False,addons/l10n_do,__manifest__.py
+fetchmail_gmail,Fetchmail Gmail,1.0,Third-Party,Hidden,Unknown,,Google authentication for incoming mail server,"google_gmail, fetchmail",True,True,False,addons/fetchmail_gmail,__manifest__.py
+microsoft_calendar,Outlook Calendar,1.0,Third-Party,Productivity,Unknown,,,"microsoft_account, calendar",False,True,False,addons/microsoft_calendar,__manifest__.py
+l10n_fi_sale,Finland - Sale,1.0,Third-Party,Localization,Unknown,,Finland Sale,"l10n_fi, sale",True,True,False,addons/l10n_fi_sale,__manifest__.py
+payment_ogone,Ogone Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Ogone Implementation,Ogone Payment Acquirer,payment,False,True,True,addons/payment_ogone,__manifest__.py
+repair,Repairs,1.0,Third-Party,Inventory/Inventory,Unknown,Repair damaged products,"
+The aim is to have a complete module to manage all products repairs.
+====================================================================
+
+The following topics are covered by this module:
+-----------","stock, sale_management, account",False,True,True,addons/repair,__manifest__.py
+sms,SMS gateway,2.2,Third-Party,Hidden/Tools,Unknown,SMS Text Messaging,"
+This module gives a framework for SMS text messaging
+----------------------------------------------------
+
+The service is provided by the In App Purchase Odoo platform.
+","base, iap_mail, mail, phone_validation",True,True,False,addons/sms,__manifest__.py
+account_edi_ubl,Import/Export invoices with generic UBL,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+    Support for Export/Import in UBL format (2.1).
+    ",account_edi,False,True,False,addons/account_edi_ubl,__manifest__.py
+purchase_requisition_stock,Purchase Requisition Stock,1.2,Third-Party,Inventory/Purchase,Unknown,,,"purchase_requisition, purchase_stock",True,True,False,addons/purchase_requisition_stock,__manifest__.py
+product_email_template,Product Email Template,15.0.1.0.0,Third-Party,Accounting/Accounting,Unknown,,"
+Add email templates to products to be sent on invoice confirmation
+==================================================================
+
+With this module, link your products to a template to send compl",account,False,True,False,addons/product_email_template,__manifest__.py
+base_setup,Initial Setup Tools,1.0,Third-Party,Hidden,Unknown,,"
+This module helps to configure the system at the installation of a new database.
+================================================================================
+
+Shows you a list of applications fea","base, web",False,True,False,addons/base_setup,__manifest__.py
+link_tracker,Link Tracker,1.1,Third-Party,Marketing,Unknown,,"
+Shorten URLs and use them to track clicks and UTMs
+","utm, mail",False,True,False,addons/link_tracker,__manifest__.py
+l10n_ae_pos,United Arab Emirates - Point of Sale,15.0.1.0.0,Core,Accounting/Localizations/Point of Sale,Odoo PS,,"
+United Arab Emirates POS Localization
+=======================================================
+    ","l10n_ae, point_of_sale",True,True,False,addons/l10n_ae_pos,__manifest__.py
+mrp_product_expiry,Manufacturing Expiry,1.0,Third-Party,Manufacturing/Manufacturing,Unknown,Manufacturing Expiry,"
+Technical module.
+    ","mrp, product_expiry",True,True,False,addons/mrp_product_expiry,__manifest__.py
+hr_work_entry_contract,Work Entries - Contract,15.0.1.0.0,Third-Party,Human Resources/Employees,Unknown,Manage work entries,,"hr_work_entry, hr_contract",False,True,False,addons/hr_work_entry_contract,__manifest__.py
+snailmail_account,snailmail_account,0.1,Third-Party,Hidden/Tools,Unknown,,"
+Allows users to send invoices by post
+=====================================================
+        ","account, snailmail",True,True,False,addons/snailmail_account,__manifest__.py
+iap_mail,IAP / Mail,1.0,Third-Party,Hidden/Tools,Unknown,Bridge between IAP and mail,Bridge between IAP and mail,"iap, mail",True,True,False,addons/iap_mail,__manifest__.py
+pos_sale_product_configurator,pos_sale_product_configurator,1.0,Third-Party,Hidden,Unknown,Link module between point_of_sale and sale_product_configurator,"
+This module adds features depending on both modules.
+","point_of_sale, sale_product_configurator",True,True,False,addons/pos_sale_product_configurator,__manifest__.py
+coupon,Coupon,1.0,Third-Party,Sales,Unknown,Use discount coupons in different sales channels.,Integrate coupon mechanism in orders.,account,False,True,False,addons/coupon,__manifest__.py
+auth_password_policy_signup,Password Policy support for Signup,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,,"auth_password_policy, auth_signup",True,True,False,addons/auth_password_policy_signup,__manifest__.py
+l10n_no,Norway - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Rolv Råen,,"This is the module to manage the accounting chart for Norway in Odoo.
+
+Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
+","account, base_iban, base_vat",False,True,False,addons/l10n_no,__manifest__.py
+transifex,Transifex integration,1.0,Third-Party,Hidden/Tools,Unknown,Add a link to edit a translation in Transifex,"
+Transifex integration
+=====================
+This module will add a link to the Transifex project in the translation view.
+The purpose of this module is to speed up translations of the main modules.
+
+",base,False,True,False,addons/transifex,__manifest__.py
+l10n_latam_invoice_document,LATAM Document,1.0,Third-Party,Accounting/Localizations,ADHOC SA,LATAM Document Types,"
+Functional
+----------
+
+In some Latinamerica countries, including Argentina and Chile, some accounting transactions like invoices and vendor bills are classified by a document types defined by the gov","account, account_debit_note",False,True,False,addons/l10n_latam_invoice_document,__manifest__.py
+sale_purchase,Sale Purchase,1.0,Third-Party,Hidden,Unknown,Sale based on service outsourcing.,"
+Allows the outsourcing of services. This module allows one to sell services provided
+by external providers and will automatically generate purchase orders directed to the service seller.
+    ","sale, purchase",True,True,False,addons/sale_purchase,__manifest__.py
+l10n_us,United States - Accounting,1.1,Third-Party,Accounting/Localizations/Account Charts,Unknown,,"
+United States - Chart of accounts.
+==================================
+    ",l10n_generic_coa,False,True,False,addons/l10n_us,__manifest__.py
+resource,Resource,1.1,Third-Party,Hidden,Unknown,,"
+Module for resource management.
+===============================
+
+A resource represent something that can be scheduled (a developer on a task or a
+work center on manufacturing orders). This module man","base, web",False,True,False,addons/resource,__manifest__.py
+l10n_at,Austria - Accounting,3.0,Third-Party,Accounting/Localizations/Account Charts,"WT-IO-IT GmbH, Wolfgang Taferner",Austrian Standardized Charts & Tax,"
+
+Austrian charts of accounts (Einheitskontenrahmen 2010).
+==========================================================
+
+    * Defines the following chart of account templates:
+        * Austrian Genera","account, base_iban, base_vat",False,True,False,addons/l10n_at,__manifest__.py
+pos_coupon,Point of Sale Coupons,1.0,Third-Party,Sales/Point Of Sale,Unknown,Use coupons in Point of Sale,,"coupon, point_of_sale",False,True,False,addons/pos_coupon,__manifest__.py
+website_sale_coupon_delivery,Free Delivery with Coupon on eCommerce,1.0,Third-Party,Website/Website,Unknown,Allows to offer free shippings in coupon reward on eCommerce,Allows to offer free shippings in coupon reward on eCommerce,"website_sale_delivery, sale_coupon_delivery",True,True,False,addons/website_sale_coupon_delivery,__manifest__.py
+mass_mailing_event,Mass mailing on attendees,1.0,Third-Party,Hidden,Unknown,,"
+Mass mail event attendees
+=========================
+
+Bridge module adding UX requirements to ease mass mailing of event attendees.
+        ","event, mass_mailing",True,True,False,addons/mass_mailing_event,__manifest__.py
+hr_skills,Skills Management,1.0,Third-Party,Human Resources/Employees,Unknown,"Manage skills, knowledge and resumé of your employees","
+Skills and Resumé for HR
+========================
+
+This module introduces skills and resumé management for employees.
+        ",hr,False,True,True,addons/hr_skills,__manifest__.py
+delivery,Delivery Costs,1.0,Third-Party,Inventory/Delivery,Unknown,,"
+Allows you to add delivery methods in sale orders and picking.
+==============================================================
+
+You can define your own carrier for prices. When creating
+invoices from ","sale_stock, sale_management",False,True,False,addons/delivery,__manifest__.py
+l10n_multilang,Multi Language Chart of Accounts,1.1,Third-Party,Accounting/Localizations,Unknown,,"
+    * Multi language support for Chart of Accounts, Taxes, Tax Codes, Journals,
+      Accounting Templates, Analytic Chart of Accounts and Analytic Journals.
+    * Setup wizard changes
+        - Copy",account,False,True,False,addons/l10n_multilang,__manifest__.py
+l10n_fr_pos_cert,France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis),1.0,Third-Party,Accounting/Localizations/Point of Sale,Unknown,,"
+This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data ","l10n_fr, point_of_sale",True,True,False,addons/l10n_fr_pos_cert,__manifest__.py
+sale_coupon,Sale Coupon,1.0,Third-Party,Sales/Sales,Unknown,Use discount coupons in sales orders,Integrate coupon mechanism in sales orders.,"coupon, sale",False,True,False,addons/sale_coupon,__manifest__.py
+base_import,Base import,2.0,Third-Party,Hidden/Tools,Unknown,,"
+New extensible file import for Odoo
+======================================
+
+Re-implement Odoo's file import system:
+
+* Server side, the previous system forces most of the logic into the
+  client whic",web,True,True,False,addons/base_import,__manifest__.py
+website_payment,Website Payment,1.0,Third-Party,Hidden,Unknown,Payment integration with website,"
+This is a bridge module that adds multi-website support for payment acquirers.
+    ","website, payment, portal",True,True,False,addons/website_payment,__manifest__.py
+mass_mailing_event_track,Mass mailing on track speakers,1.0,Third-Party,Hidden,Unknown,,"
+Mass mail event track speakers
+==============================
+
+Bridge module adding UX requirements to ease mass mailing of event track speakers.
+        ","website_event_track, mass_mailing",True,True,False,addons/mass_mailing_event_track,__manifest__.py
+l10n_in_upi,Indian - UPI,1.0,Third-Party,Accounting/Localizations,Unknown,,"
+Invoice with UPI QR code
+=========================
+This module adds QR code in invoice report for UPI payment allowing to make payment via any UPI app.
+
+To print UPI Qr code add UPI id in company and",l10n_in,True,True,False,addons/l10n_in_upi,__manifest__.py
+l10n_ro,Romania - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,Fekete Mihai (NextERP Romania SRL),,"
+This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
+It also adds the Registration Number for Romania in Odoo.
+==========================================","account, base_vat",False,True,False,addons/l10n_ro,__manifest__.py
+pos_cache,pos_cache,1.0,Third-Party,Sales/Point of Sale,Unknown,Enable a cache on products for a lower POS loading time.,"
+This creates a product cache per POS config. It drastically lowers the
+time it takes to load a POS session with a lot of products.
+    ",point_of_sale,False,True,False,addons/pos_cache,__manifest__.py
+purchase_requisition,Purchase Agreements,0.1,Third-Party,Inventory/Purchase,Unknown,,"
+This module allows you to manage your Purchase Agreements.
+===========================================================
+
+Manage calls for tenders and blanket orders. Calls for tenders are used to get
+",purchase,False,True,False,addons/purchase_requisition,__manifest__.py
+l10n_sa,Saudi Arabia - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,DVIT.ME,,"
+Odoo Arabic localization for most arabic countries and Saudi Arabia.
+
+This initially includes chart of accounts of USA translated to Arabic.
+
+In future this module will include some payroll rules for","account, l10n_multilang",False,True,False,addons/l10n_sa,__manifest__.py
+mass_mailing_sale_sms,Mass mailing sms on sale orders,1.0,Third-Party,Hidden,Unknown,Add sale order info on mass mailing sms,Mass mailing sms on sale orders,"mass_mailing_sale, mass_mailing_sms",True,True,False,addons/mass_mailing_sale_sms,__manifest__.py
+purchase_mrp,Purchase and MRP Management,1.0,Third-Party,Inventory/Purchase,Unknown,,"
+This module provides facility to the user to install mrp and purchase modules at a time.
+========================================================================================
+
+It is basically used","mrp, purchase_stock",True,True,False,addons/purchase_mrp,__manifest__.py
+calendar,Calendar,1.1,Third-Party,Productivity/Calendar,Unknown,Schedule employees' meetings,"
+This is a full-featured calendar system.
+========================================
+
+It supports:
+------------
+    - Calendar of events
+    - Recurring events
+
+If you need to manage your meetings, you ","base, mail",False,True,True,addons/calendar,__manifest__.py
+contacts,Contacts,15.0.1.0.0,Third-Party,Sales/CRM,Unknown,Centralize your address book,"
+This module gives you a quick view of your contacts directory, accessible from your home page.
+You can track your vendors, customers and other contacts.
+","base, mail",False,True,True,addons/contacts,__manifest__.py
+l10n_generic_coa,Generic - Accounting,1.1,Third-Party,Accounting/Localizations/Account Charts,Unknown,,"
+This is the base module to manage the generic accounting chart in Odoo.
+==============================================================================
+
+Install some generic chart of accounts.
+    ",account,False,True,False,addons/l10n_generic_coa,__manifest__.py
+l10n_sg,Singapore - Accounting,2.1,Third-Party,Accounting/Localizations/Account Charts,Tech Receptives,,"
+Singapore accounting chart and localization.
+=======================================================
+
+This module add, for accounting:
+ - The Chart of Accounts of Singapore
+ - Field UEN (Unique Entit","base, account",False,True,False,addons/l10n_sg,__manifest__.py
+google_drive,Google Drive™ integration,0.2,Third-Party,Productivity,Unknown,,"
+Integrate google document to Odoo record.
+============================================
+
+This module allows you to integrate google documents to any of your Odoo record quickly and easily using OAuth ","base_setup, google_account",False,True,False,addons/google_drive,__manifest__.py
+l10n_lu,Luxembourg - Accounting,2.1,Core,Accounting/Localizations/Account Charts,"OpenERP SA, ADN, ACSONE SA/NV",,"
+This is the base module to manage the accounting chart for Luxembourg.
+======================================================================
+
+    * the Luxembourg Official Chart of Accounts (law of ","account, base_iban, base_vat, l10n_multilang",False,True,False,addons/l10n_lu,__manifest__.py
+l10n_cz,Czech - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,26HOUSE,,"
+Czech accounting chart and localization.  With Chart of Accounts with taxes and basic fiscal positions.
+
+Tento modul definuje:
+
+- Českou účetní osnovu za rok 2020
+
+- Základní sazby pro DPH z prodeje ","account, base_iban, base_vat",False,True,False,addons/l10n_cz,__manifest__.py
+l10n_eg,Egypt - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo SA,,"
+This is the base module to manage the accounting chart for Egypt in Odoo.
+==============================================================================
+    ","account, l10n_multilang",False,True,False,addons/l10n_eg,__manifest__.py
+sale_quotation_builder,Quotation Builder,1.0,Third-Party,Sales/Sales,Unknown,Build great quotation templates,Design great quotation templates with building blocks to significantly boost your success rate.,"website, sale_management, website_mail",False,True,False,addons/sale_quotation_builder,__manifest__.py
+event_booth_sale,Events Booths Sales,1.0,Third-Party,Marketing/Events,Unknown,Manage event booths sale,"
+Sell your event booths and track payments on sale orders.
+    ","event_booth, event_sale",True,True,False,addons/event_booth_sale,__manifest__.py
+project,Project,1.2,Third-Party,Services/Project,Unknown,Organize and plan your projects,,"analytic, base_setup, mail, portal, rating, resource, web, web_tour, digest",False,True,True,addons/project,__manifest__.py
+hr_expense,Expenses,2.0,Third-Party,Human Resources/Expenses,Unknown,"Submit, validate and reinvoice employee expenses","
+Manage expenses by Employees
+============================
+
+This application allows you to manage your employees' daily expenses. It gives you access to your employees’ fee notes and give you the righ","hr_contract, account, web_tour",False,True,True,addons/hr_expense,__manifest__.py
+website_google_map,Google Maps,1.0,Third-Party,Website/Website,Unknown,Show your company address on Google Maps,"
+Show your company address/partner address on Google Maps. Configure an API key in the Website settings.
+    ","base_geolocalize, website_partner",False,True,False,addons/website_google_map,__manifest__.py
+l10n_in_purchase_stock,India Purchase and Warehouse Management,1.0,Core,Accounting/Localizations/Purchase,Odoo,"
+        Define default purchase journal on the warehouse","
+        Define default purchase journal on the warehouse,
+        help you to choose correct purchase journal on the purchase order when
+        you change the picking operation.
+        useful when ","l10n_in_purchase, l10n_in_stock",True,True,False,addons/l10n_in_purchase_stock,__manifest__.py
+point_of_sale,Point of Sale,1.0.1,Third-Party,Sales/Point of Sale,Unknown,User-friendly PoS interface for shops and restaurants,,"stock_account, barcodes, web_editor, digest",False,True,True,addons/point_of_sale,__manifest__.py
+iap,In-App Purchases,1.1,Third-Party,Hidden/Tools,Unknown,Basic models and helpers to support In-App purchases.,"
+This module provides standard tools (account model, context manager and helpers)
+to support In-App purchases inside Odoo. ","web, base_setup",True,True,False,addons/iap,__manifest__.py
+product_margin,Margins by Products,15.0.1.0.0,Third-Party,Sales/Sales,Unknown,,"
+Adds a reporting menu in products that computes sales, purchases, margins and other interesting indicators based on invoices.
+=========================================================================",account,False,True,False,addons/product_margin,__manifest__.py
+auth_password_policy_portal,Password Policy support for Signup,15.0.1.0.0,Third-Party,Tools,Unknown,,,"auth_password_policy, portal",True,True,False,addons/auth_password_policy_portal,__manifest__.py
+hr_maintenance,Maintenance - HR,1.0,Third-Party,Human Resources,Unknown,"Equipments, Assets, Internal Hardware, Allocation Tracking","
+        Bridge between HR and Maintenance.","hr, maintenance",True,True,False,addons/hr_maintenance,__manifest__.py
+sale_purchase_stock,MTO Sale <-> Purchase,1.0,Third-Party,Hidden,Unknown,SO/PO relation in case of MTO,"
+Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.
+","sale_stock, purchase_stock, sale_purchase",True,True,False,addons/sale_purchase_stock,__manifest__.py
+l10n_co,Colombia - Accounting,0.8,Third-Party,Accounting/Localizations/Account Charts,David Arnold (XOE Solutions),,Colombian Accounting and Tax Preconfiguration,"account, base_address_city, account_debit_note, l10n_latam_base",False,True,False,addons/l10n_co,__manifest__.py
+gift_card,Gift Card,1.0,Third-Party,Sales/Sales,Unknown,Use gift card,Integrate gift card mechanism,product,False,True,False,addons/gift_card,__manifest__.py
+barcodes_gs1_nomenclature,Barcode - GS1 Nomenclature,1.0,Third-Party,Hidden,Unknown,Parse barcodes according to the GS1-128 specifications,,"barcodes, uom",False,True,False,addons/barcodes_gs1_nomenclature,__manifest__.py
+website_mail,Website Mail,0.1,Third-Party,Hidden,Unknown,Website Module for Mail,"
+Module holding mail improvements for website. It holds the follow widget.
+","website, mail",True,True,False,addons/website_mail,__manifest__.py
+l10n_ar,Argentina - Accounting,3.5,Third-Party,Accounting/Localizations/Account Charts,ADHOC SA,,"
+Functional
+----------
+
+This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP","l10n_latam_invoice_document, l10n_latam_base",False,True,False,addons/l10n_ar,__manifest__.py
+l10n_in_edi,Indian - E-invoicing,1.03.00,Third-Party,Accounting/Localizations/EDI,Unknown,,"
+Indian - E-invoicing
+====================
+To submit invoicing through API to the government.
+We use ""Tera Software Limited"" as GSP
+
+Step 1: First you need to create an API username and password in th","account_edi, l10n_in, iap",False,True,False,addons/l10n_in_edi,__manifest__.py
+l10n_fi,Finnish Localization,13.0.1,Third-Party,Accounting/Localizations/Account Charts,"Avoin.Systems, Tawasta, Vizucom, Sprintit",,"
+This is the Odoo module to manage the accounting in Finland.
+============================================================
+
+After installing this module, you'll have access to :
+    * Finnish chart of","account, base_iban, base_vat",False,True,False,addons/l10n_fi,__manifest__.py
+hr_org_chart,HR Org Chart,1.0,Third-Party,Hidden,Unknown,,"
+Org Chart Widget for HR
+=======================
+
+This module extend the employee form with a organizational chart.
+(N+1, N+2, direct subordinates)
+        ",hr,True,True,False,addons/hr_org_chart,__manifest__.py
+product_matrix,Product Matrix,1.0,Third-Party,Sales/Sales,Unknown,"
+       Technical module: Matrix Implementation
+    ","
+Please refer to Sale Matrix or Purchase Matrix for the use of this module.
+    ",account,False,True,False,addons/product_matrix,__manifest__.py
+payment_buckaroo,Buckaroo Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Buckaroo Implementation,Buckaroo Payment Acquirer,payment,False,True,True,addons/payment_buckaroo,__manifest__.py
+auth_oauth,OAuth2 Authentication,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,"
+Allow users to login through OAuth2 Provider.
+=============================================
+","base, web, base_setup, auth_signup",False,True,False,addons/auth_oauth,__manifest__.py
+l10n_syscohada,OHADA - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,Baamtu Senegal,,"
+This module implements the accounting chart for OHADA area.
+===========================================================
+
+It allows any company or association to manage its financial accounting.
+
+Coun",account,False,True,False,addons/l10n_syscohada,__manifest__.py
+payment,Payment Acquirer,2.0,Third-Party,Hidden,Unknown,Base Module for Payment Acquirers,Payment Acquirer Base Module,account,True,True,False,addons/payment,__manifest__.py
+base_vat,VAT Number Validation,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+VAT validation for Partner's VAT numbers.
+=========================================
+
+After installing this module, values entered in the VAT field of Partners will
+be validated for all supported coun",account,False,True,False,addons/base_vat,__manifest__.py
+l10n_vn,Vietnam - Accounting,2.0.1,Third-Party,Accounting/Localizations/Account Charts,General Solutions,,"
+This is the module to manage the accounting chart for Vietnam in Odoo.
+=========================================================================
+
+This module applies to companies based in Vietnamese ","account, base_iban, l10n_multilang",False,True,False,addons/l10n_vn,__manifest__.py
+website_event_questions,Questions on Events,1.2,Third-Party,Marketing,Unknown,,Questions on Events,website_event,False,True,False,addons/website_event_questions,__manifest__.py
+l10n_uk,United Kingdom - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,SmartMode LTD,,"
+This is the latest UK Odoo localisation necessary to run Odoo accounting for UK SME's with:
+=================================================================================================
+    - a C","account, base_iban, base_vat",False,True,False,addons/l10n_uk,__manifest__.py
+l10n_mx,Mexico - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Vauxoo,,"
+Minimal accounting configuration for Mexico.
+============================================
+
+This Chart of account is a minimal proposal to be able to use OoB the
+accounting feature of Odoo.
+
+This does",account,False,True,False,addons/l10n_mx,__manifest__.py
+l10n_hu,Hungarian - Accounting,3.0,Core,Accounting/Localizations/Account Charts,Odoo S.A.,,"
+
+Base module for Hungarian localization
+==========================================
+
+This module consists of:
+
+ - Generic Hungarian chart of accounts
+ - Hungarian taxes
+ - Hungarian Bank information
+ ",account,False,True,False,addons/l10n_hu,__manifest__.py
+l10n_in_pos,Indian - Point of Sale,1.0,Third-Party,Accounting/Localizations/Point of Sale,Unknown,,GST Point of Sale,"l10n_in, point_of_sale",True,True,False,addons/l10n_in_pos,__manifest__.py
+website_sale_delivery_mondialrelay,website_sale_delivery_mondialrelay,0.1,Third-Party,Website/Website,Unknown, Let's choose Point Relais® on your ecommerce ,"
+        This module allow your customer to choose a Point Relais® and use it as shipping address.
+    ","website_sale_delivery, delivery_mondialrelay",True,True,False,addons/website_sale_delivery_mondialrelay,__manifest__.py
+website_forum,Forum,1.1,Third-Party,Website/Website,Unknown,Manage a forum with FAQ and Q&A,"
+Ask questions, get answers, no distractions
+        ","auth_signup, website_mail, website_profile",False,True,True,addons/website_forum,__manifest__.py
+website_customer,Customer References,1.0,Third-Party,Website/Website,Unknown,Publish your customer references,"
+Publish your customers as business references on your website to attract new potential prospects.
+    ","website_crm_partner_assign, website_partner, website_google_map",False,True,False,addons/website_customer,__manifest__.py
+website,Website,1.0,Third-Party,Website/Website,Unknown,Enterprise website builder,,"digest, web, web_editor, http_routing, portal, social_media, auth_signup, mail, google_recaptcha, utm",False,True,True,addons/website,__manifest__.py
+website_sale_wishlist,Shopper's Wishlist,1.0,Core,Website/Website,Odoo SA,Allow shoppers to enlist products,"
+Allow shoppers of your eCommerce store to create personalized collections of products they want to buy and save them for future reference.
+    ",website_sale,False,True,False,addons/website_sale_wishlist,__manifest__.py
+l10n_ua,Ukraine - Accounting,1.4,Third-Party,Accounting/Localizations/Account Charts,ERP Ukraine,,"
+Ukraine - Chart of accounts.
+============================
+    ",account,False,True,False,addons/l10n_ua,__manifest__.py
+l10n_hr,Croatia - Accounting (RRIF 2012),13.0,Core,Accounting/Localizations/Account Charts,OpenERP Croatian Community,,"
+Croatian localisation.
+======================
+
+Author: Goran Kliska, Slobodni programi d.o.o., Zagreb
+        https://www.slobodni-programi.hr
+
+Contributions:
+  Tomislav Bošnjaković, Storm Computers:",account,False,True,False,addons/l10n_hr,__manifest__.py
+crm_sms,SMS in CRM,1.1,Third-Party,Sales/CRM,Unknown,Add SMS capabilities to CRM,,"crm, sms",True,True,False,addons/crm_sms,__manifest__.py
+event,Events Organization,1.6,Third-Party,Marketing/Events,Unknown,"Trainings, Conferences, Meetings, Exhibitions, Registrations","
+Organization and management of Events.
+======================================
+
+The event module allows you to efficiently organize events and all related tasks: planning, registration tracking,
+atten","base_setup, mail, portal, utm",False,True,False,addons/event,__manifest__.py
+test_mail,Mail Tests,1.0,Third-Party,Hidden,Unknown,Mail Tests: performances and tests specific to mail,"This module contains tests related to mail. Those are
+present in a separate module as it contains models used only to perform
+tests independently to functional aspects of other models. ","test_performance, mail",False,True,False,addons/test_mail,__manifest__.py
+l10n_it,Italy - Accounting,0.3,Core,Accounting/Localizations/Account Charts,OpenERP Italian Community,,"
+Piano dei conti italiano di un'impresa generica.
+================================================
+
+Italian accounting chart and localization.
+    ","account, base_iban, base_vat",False,True,False,addons/l10n_it,__manifest__.py
+crm,CRM,1.6,Third-Party,Sales/CRM,Unknown,Track leads and close opportunities,,"base_setup, sales_team, mail, calendar, resource, fetchmail, utm, web_tour, web_kanban_gauge, contacts, digest, phone_validation",False,True,True,addons/crm,__manifest__.py
+sale_gift_card,Gift Card for sales module,1.0,Third-Party,Sales/Sales,Unknown,Use gift card in your sales orders,Integrate gift card mechanism in sales orders.,"gift_card, sale",True,True,False,addons/sale_gift_card,__manifest__.py
+attachment_indexation,Attachments List and Document Indexation,2.1,Third-Party,Hidden/Tools,Unknown,,"
+Attachments list and document indexation
+========================================
+* Show attachment on the top of the forms
+* Document Indexation: odt, pdf, xlsx, docx
+
+The `pdfminer.six` Python libr",web,False,True,False,addons/attachment_indexation,__manifest__.py
+iap_crm,IAP / CRM,1.0,Third-Party,Hidden/Tools,Unknown,Bridge between IAP and CRM,Bridge between IAP and CRM,"crm, iap_mail",True,True,False,addons/iap_crm,__manifest__.py
+l10n_account_edi_ubl_cii_tests,Testing the Import/Export invoices with UBL/CII,1.0,Third-Party,Hidden/Tests,Unknown,,"
+    This module tests the module 'account_edi_ubl_cii', it is separated since dependencies to some 
+    localizations were required. Its name begins with 'l10n' to not overload runbot.
+    
+    The t","l10n_generic_coa, account_edi_ubl_cii, l10n_fr, l10n_be, l10n_de, l10n_nl_edi",False,True,False,addons/l10n_account_edi_ubl_cii_tests,__manifest__.py
+website_twitter,Twitter Snippet,1.0,Third-Party,Website/Website,Unknown,Twitter scroller snippet in website,"
+This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.
+    ",website,False,True,False,addons/website_twitter,__manifest__.py
+test_mail_full,Mail Tests (Full),1.0,Third-Party,Hidden,Unknown,Mail Tests: performances and tests specific to mail with all sub-modules,"This module contains tests related to various mail features
+and mail-related sub modules. Those tests are present in a separate module as it
+contains models used only to perform tests independently to","test_mail, test_mass_mailing, mail, mail_bot, mass_mailing, mass_mailing_sms, phone_validation, sms",False,True,False,addons/test_mail_full,__manifest__.py
+l10n_tw,Taiwan - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo PS,,"
+This is the base module to manage the accounting chart for Taiwan in Odoo.
+==============================================================================
+    ","account, base_address_city, l10n_multilang",False,True,False,addons/l10n_tw,__manifest__.py
+l10n_de_purchase,Germany - Purchase,15.0.1.0.0,Third-Party,Accounting/Localizations,Unknown,,,"l10n_de, purchase",True,True,False,addons/l10n_de_purchase,__manifest__.py
+theme_default,Default Theme,1.0,Third-Party,Theme,Unknown,,Default website theme,website,False,True,False,addons/theme_default,__manifest__.py
+l10n_ke_edi_tremol,Kenya Tremol Device EDI Integration,1.0,Core,Accounting/Localizations/EDI,Odoo,"
+            Kenya Tremol Device EDI Integration
+        ","
+       This module integrates with the Kenyan G03 Tremol control unit device to the KRA through TIMS.
+    ",l10n_ke,False,True,False,addons/l10n_ke_edi_tremol,__manifest__.py
+crm_mail_plugin,CRM Mail Plugin,1.0,Third-Party,Sales/CRM,Unknown,Turn emails received in your mailbox into leads and log their content as internal notes.,Turn emails received in your mailbox into leads and log their content as internal notes.,"crm, mail_plugin",True,True,False,addons/crm_mail_plugin,__manifest__.py
+test_base_automation,Test - Base Automation,1.0,Third-Party,Hidden,Unknown,Base Automation Tests: Ensure Flow Robustness,"This module contains tests related to base automation. Those are
+present in a separate module as it contains models used only to perform
+tests independently to functional aspects of other models.",base_automation,False,True,False,addons/test_base_automation,__manifest__.py
+test_mass_mailing,Mass Mail Tests,1.0,Third-Party,Hidden,Unknown,Mass Mail Tests: feature and performance tests for mass mailing,"This module contains tests related to mass mailing. Those
+are present in a separate module to use specific test models defined in
+test_mail. ","test_mail, mass_mailing",False,True,False,addons/test_mass_mailing,__manifest__.py
+project_account,Project Accounting,1.0,Third-Party,Services/account,Unknown,Project accounting,Bridge created to remove the profitability setting if the account module is installed,"project, account",True,True,False,addons/project_account,__manifest__.py
+note_pad,Memos pad,0.1,Third-Party,Productivity/Notes,Unknown,"Sticky memos, Collaborative","
+This module update memos inside Odoo for using an external pad
+=================================================================
+
+Use for update your text memo in real time with the following user th","mail, pad, note",True,True,False,addons/note_pad,__manifest__.py
+website_event_meet_quiz,Quiz and Meet on community,1.0,Third-Party,Marketing/Events,Unknown,Quiz and Meet on community route,,"website_event_meet, website_event_track_quiz",True,True,False,addons/website_event_meet_quiz,__manifest__.py
+l10n_ch,Switzerland - Accounting,11.0,Third-Party,Accounting/Localizations/Account Charts,Unknown,,"
+Swiss localization
+==================
+This module defines a chart of account for Switzerland (Swiss PME/KMU 2015), taxes and enables the generation of ISR and QR-bill when you print an invoice or sen","account, l10n_multilang, base_iban",False,True,False,addons/l10n_ch,__manifest__.py
+microsoft_outlook,Microsoft Outlook,1.0,Third-Party,Hidden,Unknown,,Outlook support for outgoing mail servers,mail,False,True,False,addons/microsoft_outlook,__manifest__.py
+hr_timesheet_attendance,Timesheets/attendances reporting,1.0,Third-Party,Hidden,Unknown,,"
+    Module linking the attendance module to the timesheet app.
+    ","hr_timesheet, hr_attendance",True,True,False,addons/hr_timesheet_attendance,__manifest__.py
+product_expiry,Products Expiration Date,15.0.1.0.0,Third-Party,Inventory/Inventory,Unknown,,"
+Track different dates on products and production lots.
+======================================================
+
+Following dates can be tracked:
+-------------------------------
+    - end of life
+    - ",stock,False,True,False,addons/product_expiry,__manifest__.py
+l10n_de,Germany - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations,openbig.org,,"
+Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
+==============================================================================
+
+German accounting chart and localization","account, base_iban, base_vat",False,True,False,addons/l10n_de,__manifest__.py
+hw_drivers,Hardware Proxy,15.0.1.0.0,Third-Party,Hidden,Unknown,Connect the Web Client to Hardware Peripherals,"
+Hardware Poxy
+=============
+
+This module allows you to remotely use peripherals connected to this server.
+
+This modules only contains the enabling framework. The actual devices drivers
+are found in o",,False,False,False,addons/hw_drivers,__manifest__.py
+website_slides,eLearning,2.4,Third-Party,Website/eLearning,Unknown,Manage and publish an eLearning platform,"
+Create Online Courses
+=====================
+
+Featuring
+
+ * Integrated course and lesson management
+ * Fullscreen navigation
+ * Support Youtube videos, Google documents, PDF, images, web pages
+ * Test","portal_rating, website, website_mail, website_profile",False,True,True,addons/website_slides,__manifest__.py
+sale_mrp_margin,Sale Mrp Margin,0.1,Third-Party,Sales/Sales,Unknown,,Handle BoM prices to compute sale margin.,"sale_mrp, sale_stock_margin",False,True,False,addons/sale_mrp_margin,__manifest__.py
+payment_alipay,Alipay Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Alipay Implementation,Alipay Payment Acquirer,payment,False,True,True,addons/payment_alipay,__manifest__.py
+account_edi_proxy_client,Proxy features for account_edi,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+This module adds generic features to register an Odoo DB on the proxy responsible for receiving data (via requests from web-services).
+- An edi_proxy_user has a unique identification on a specific fo",account_edi,False,True,False,addons/account_edi_proxy_client,__manifest__.py
+sale_crm,Opportunity to Quotation,1.0,Third-Party,Hidden,Unknown,,"
+This module adds a shortcut on one or several opportunity cases in the CRM.
+===========================================================================
+
+This shortcut allows you to generate a sales o","sale_management, crm",True,True,False,addons/sale_crm,__manifest__.py
+l10n_de_repair,Germany - Repair,15.0.1.0.0,Third-Party,Accounting/Localizations,Unknown,,,"l10n_de, repair",True,True,False,addons/l10n_de_repair,__manifest__.py
+survey,Surveys,3.4,Third-Party,Marketing/Surveys,Unknown,Create surveys and analyze answers,"
+Create beautiful surveys and visualize answers
+==============================================
+
+It depends on the answers or reviews of some questions by different users. A
+survey may have multiple pa","auth_signup, http_routing, mail, web_tour, gamification",False,True,True,addons/survey,__manifest__.py
+event_sms,SMS on Events,1.0,Third-Party,Marketing/Events,Unknown,,Schedule SMS in event management,"event, sms",True,True,False,addons/event_sms,__manifest__.py
+mail_bot,OdooBot,1.2,Third-Party,Productivity/Discuss,Unknown,Add OdooBot in discussions,,mail,True,True,False,addons/mail_bot,__manifest__.py
+l10n_gt,Guatemala - Accounting,3.0,Third-Party,Accounting/Localizations/Account Charts,José Rodrigo Fernández Menegazzo,,"
+This is the base module to manage the accounting chart for Guatemala.
+=====================================================================
+
+Agrega una nomenclatura contable para Guatemala. También i","base, account",False,True,False,addons/l10n_gt,__manifest__.py
+hr_holidays_attendance,HR Attendance Holidays,1.0,Third-Party,Human Resources,Unknown,Attendance Holidays,"
+Convert employee's extra hours to leave allocations.
+    ","hr_attendance, hr_holidays",True,True,False,addons/hr_holidays_attendance,__manifest__.py
+account_qr_code_sepa,account_qr_code_sepa,0.1,Third-Party,Accounting/Payment,Unknown,,"
+        This module adds support for SEPA Credit Transfer QR-code generation.
+    ","account, base_iban",True,True,False,addons/account_qr_code_sepa,__manifest__.py
+l10n_it_edi_sdicoop,Italy - E-invoicing (SdiCoop),0.3,Core,Accounting/Localizations/EDI,Odoo,,"
+E-invoice implementation for Italy with the web-service. Ability to send and receive document from SdiCoop. Files sent by SdiCoop are first stored on the proxy
+and then fetched by this module.
+    ","l10n_it_edi, account_edi, account_edi_proxy_client",False,True,False,addons/l10n_it_edi_sdicoop,__manifest__.py
+sale_mrp,Sales and MRP Management,1.0,Third-Party,Hidden,Unknown,,"
+This module provides facility to the user to install mrp and sales modulesat a time.
+====================================================================================
+
+It is basically used when we","mrp, sale_stock",True,True,False,addons/sale_mrp,__manifest__.py
+mass_mailing,Email Marketing,2.5,Third-Party,Marketing/Email Marketing,Unknown,"Design, send and track emails",,"contacts, mail, utm, link_tracker, web_editor, web_kanban_gauge, social_media, web_tour, digest",False,True,True,addons/mass_mailing,__manifest__.py
+project_timesheet_holidays,Timesheet when on Time Off,1.0,Third-Party,Human Resources,Unknown,Schedule timesheet when on time off,"
+Bridge module to integrate leaves in timesheet
+================================================
+
+This module allows to automatically log timesheets when employees are
+on leaves. Project and task can ","hr_timesheet, hr_holidays",True,True,False,addons/project_timesheet_holidays,__manifest__.py
+l10n_dk,Denmark - Accounting,1.0,Core,Accounting/Localizations/Account Charts,"Odoo House ApS, VK DATA ApS",,"
+
+Localization Module for Denmark
+===============================
+
+This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S
+
+**Mo","account, base_iban, base_vat",False,True,False,addons/l10n_dk,__manifest__.py
+l10n_pl,Poland - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Grzegorz Grzelak (OpenGLOBE),,"
+This is the module to manage the accounting chart and taxes for Poland in Odoo.
+==================================================================================
+
+To jest moduł do tworzenia wzorcowe","account, base_iban, base_vat",False,True,False,addons/l10n_pl,__manifest__.py
+website_sale,eCommerce,1.1,Third-Party,Website/Website,Unknown,Sell your products online,,"website, sale, website_payment, website_mail, portal_rating, digest",False,True,True,addons/website_sale,__manifest__.py
+website_sale_comparison_wishlist,Product Availability Notifications,15.0.1.0.0,Third-Party,Website/Website,Unknown,Bridge module for Website sale comparison and wishlist,"
+It allows for comparing products from the wishlist
+    ","website_sale_comparison, website_sale_wishlist",True,True,False,addons/website_sale_comparison_wishlist,__manifest__.py
+fetchmail,Email Gateway,1.0,Third-Party,Hidden/Tools,Unknown,,"
+Retrieve incoming email on POP/IMAP servers.
+============================================
+
+Enter the parameters of your POP/IMAP account(s), and any incoming emails on
+these accounts will be automati",mail,True,True,False,addons/fetchmail,__manifest__.py
+hr_fleet,Fleet History,1.0,Third-Party,Human Resources,Unknown,Get history of driven cars by employees,,"hr, fleet",True,True,False,addons/hr_fleet,__manifest__.py
+base_address_city,City Addresses,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,Add a many2one field city on addresses,"
+City Management in Addresses
+============================
+
+This module allows to enforce users to choose the city of a partner inside a given list instead of a free text field.
+        ",base,False,True,False,addons/base_address_city,__manifest__.py
+mrp_subcontracting,mrp_subcontracting,0.1,Third-Party,Manufacturing/Manufacturing,Unknown,Subcontract Productions,,mrp,False,True,False,addons/mrp_subcontracting,__manifest__.py
+test_website_modules,Website Modules Test,1.0,Third-Party,Hidden,Unknown,,"This module contains tests related to website modules.
+It allows to test website business code when another website module is
+installed.","theme_default, website, website_blog, website_event_sale, website_slides",False,True,False,addons/test_website_modules,__manifest__.py
+pos_sale_margin,pos_sale_margin,1.1,Third-Party,Hidden,Unknown,Link module between Point of Sale and Sales Margin,"
+
+This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.
+","pos_sale, sale_margin",True,True,False,addons/pos_sale_margin,__manifest__.py
+l10n_au,Australian - Accounting,1.1,Third-Party,Accounting/Localizations/Account Charts,Richard deMeester - Willow IT,,"
+Australian Accounting Module
+============================
+
+Australian accounting basic charts and localizations.
+
+Also:
+    - activates a number of regional currencies.
+    - sets up Australian taxes",account,False,True,False,addons/l10n_au,__manifest__.py
+l10n_it_edi,Italy - E-invoicing,0.3,Core,Accounting/Localizations/EDI,Odoo,,"
+E-invoice implementation
+    ","l10n_it, fetchmail, account_edi",False,True,False,addons/l10n_it_edi,__manifest__.py
+mail_bot_hr,mail_bot_hr,1.0,Third-Party,Productivity/Discuss,Unknown,Bridge module between hr and mailbot.,This module adds the OdooBot state and notifications in the user form modified by hr.,"mail_bot, hr",True,True,False,addons/mail_bot_hr,__manifest__.py
+hr_contract,Employee Contracts,1.0,Third-Party,Human Resources/Contracts,Unknown,,"
+Add all information on the employee form to manage contracts.
+=============================================================
+
+    * Contract
+    * Place of Birth,
+    * Medical Examination Date
+    * ",hr,False,True,True,addons/hr_contract,__manifest__.py
+payment_paypal,Paypal Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Paypal Implementation,Paypal Payment Acquirer,payment,False,True,True,addons/payment_paypal,__manifest__.py
+l10n_jp,Japan - Accounting,2.2,Third-Party,Accounting/Localizations/Account Charts,Quartile Limited,,"
+
+Overview:
+---------
+
+* Chart of Accounts and Taxes template for companies in Japan.
+* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify acc",account,False,True,False,addons/l10n_jp,__manifest__.py
+sale_timesheet_margin,Service Margins in Sales Orders,1.0,Third-Party,Hidden,Unknown,Bridge module between Sales Margin and Sales Timesheet,"
+Allows to compute accurate margin for Service sales.
+======================================================
+","sale_margin, sale_timesheet",True,True,False,addons/sale_timesheet_margin,__manifest__.py
+base_address_extended,Extended Addresses,15.0.1.0.0,Third-Party,Hidden,Unknown,Add extra fields on addresses,"
+Extended Addresses Management
+=============================
+
+This module holds all extra fields one may need to manage accurately addresses.
+
+For example, in legal reports, some countries need to spl",base,False,True,False,addons/base_address_extended,__manifest__.py
+fetchmail_outlook,Fetchmail Outlook,1.0,Third-Party,Hidden,Unknown,,OAuth authentication for incoming Outlook mail server,"microsoft_outlook, fetchmail",True,True,False,addons/fetchmail_outlook,__manifest__.py
+snailmail,Snail Mail,0.3,Third-Party,Hidden/Tools,Unknown,,"
+Allows users to send documents by post
+=====================================================
+        ","iap_mail, mail",True,True,False,addons/snailmail,__manifest__.py
+website_event_track,Advanced Events,1.3,Third-Party,Marketing,Unknown,"Sponsors, Tracks, Agenda, Event News",,website_event,False,True,False,addons/website_event_track,__manifest__.py
+l10n_in_edi_ewaybill,Indian - E-waybill,1.03.00,Third-Party,Accounting/Localizations/EDI,Unknown,,"
+Indian - E-waybill
+====================================
+To submit E-waybill through API to the government.
+We use ""Tera Software Limited"" as GSP
+
+Step 1: First you need to create an API username and ",l10n_in_edi,False,True,False,addons/l10n_in_edi_ewaybill,__manifest__.py
+l10n_my,Malaysia - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo PS,,"
+This is the base module to manage the accounting chart for Malaysia in Odoo.
+==============================================================================
+    ","account, l10n_multilang",False,True,False,addons/l10n_my,__manifest__.py
+l10n_hk,Hong Kong - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo SA,, This is the base module to manage chart of accounting and localization for Hong Kong ,account,False,True,False,addons/l10n_hk,__manifest__.py
+mrp_subcontracting_purchase,Purchase and Subcontracting Management,0.1,Third-Party,Manufacturing/Purchase,Unknown,,"
+        This bridge module adds some smart buttons between Purchase and Subcontracting
+    ","mrp_subcontracting, purchase_mrp",True,True,False,addons/mrp_subcontracting_purchase,__manifest__.py
+l10n_fr_fec,France - FEC Export,15.0.1.0.0,Core,Accounting/Localizations/Reporting,"Akretion,Odoo Community Association (OCA)",Fichier d'Échange Informatisé (FEC) for France,,"l10n_fr, account",True,True,False,addons/l10n_fr_fec,__manifest__.py
+google_spreadsheet,Google Spreadsheet,1.0,Third-Party,Hidden/Tools,Unknown,,"
+The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.
+=================================================================================================
+",google_drive,False,True,False,addons/google_spreadsheet,__manifest__.py
+stock,Inventory,1.1,Third-Party,Inventory/Inventory,Unknown,Manage your stock and logistics activities,,"product, barcodes, digest",False,True,True,addons/stock,__manifest__.py
+http_routing,Web Routing,15.0.1.0.0,Third-Party,Hidden,Unknown,Web Routing,"
+Proposes advanced routing options not available in web or base to keep
+base modules simple.
+",web,False,True,False,addons/http_routing,__manifest__.py
+l10n_lt,Lithuania - Accounting,1.0.0,Third-Party,Accounting/Localizations/Account Charts,Focusate,,"
+        Chart of Accounts (COA) Template for Lithuania's Accounting.
+
+        This module also includes:
+
+        * List of available banks in Lithuania.
+        * Tax groups.
+        * Most common L",l10n_multilang,False,True,False,addons/l10n_lt,__manifest__.py
+sale_sms,Sale - SMS,1.0,Third-Party,Hidden,Unknown,Ease SMS integration with sales capabilities,Ease SMS integration with sales capabilities,"sale, sms",True,True,False,addons/sale_sms,__manifest__.py
+board,Dashboards,1.0,Third-Party,Productivity,Unknown,Build your own dashboards,"
+Lets the user create a custom dashboard.
+========================================
+
+Allows users to create custom dashboard.
+    ","base, web",False,True,True,addons/board,__manifest__.py
+l10n_sa_invoice,Saudi Arabia - Invoice,1.0.0,Core,Accounting/Localizations,Odoo S.A.,,"
+    Invoices for the Kingdom of Saudi Arabia
+","l10n_sa, l10n_gcc_invoice",False,True,False,addons/l10n_sa_invoice,__manifest__.py
+website_event_booth_exhibitor,Booths/Exhibitors Bridge,1.0,Third-Party,Marketing/Events,Unknown,"Event Booths, automatically create a sponsor.","
+Automatically create a sponsor when renting a booth.
+    ","website_event_exhibitor, website_event_booth",True,True,False,addons/website_event_booth_exhibitor,__manifest__.py
+web_editor,Web Editor,15.0.1.0.0,Third-Party,Hidden,Unknown,,"
+Odoo Web Editor widget.
+==========================
+
+",web,True,True,False,addons/web_editor,__manifest__.py
+l10n_hn,Honduras - Accounting,0.2,Third-Party,Accounting/Localizations/Account Charts,Salvatore Josue Trimarchi Pinto,,"
+This is the base module to manage the accounting chart for Honduras.
+====================================================================
+
+Agrega una nomenclatura contable para Honduras. También incl","base, account",False,True,False,addons/l10n_hn,__manifest__.py
+auth_totp,Two-Factor Authentication (TOTP),15.0.1.0.0,Third-Party,Extra Tools,Unknown,,"
+Two-Factor Authentication (TOTP)
+================================
+Allows users to configure two-factor authentication on their user account
+for extra security, using time-based one-time passwords (TO",web,True,True,False,addons/auth_totp,__manifest__.py
+mrp_subcontracting_dropshipping,Dropship and Subcontracting Management,0.1,Third-Party,Inventory/Purchase,Unknown,,"
+        This bridge module allows to manage subcontracting with the dropshipping module.
+    ","mrp_subcontracting, stock_dropshipping",True,True,False,addons/mrp_subcontracting_dropshipping,__manifest__.py
+sale_product_configurator,Sale Product Configurator,1.0,Third-Party,Hidden,Unknown,Configure your products,"
+Technical module installed when the user checks the ""module_sale_product_configurator"" setting.
+The main purpose is to override the sale_order view to allow configuring products in the SO form.
+
+It a",sale,False,True,False,addons/sale_product_configurator,__manifest__.py
+sale,Sales,1.2,Third-Party,Sales/Sales,Unknown,Sales internal machinery,"
+This module contains all the common features of Sales Management and eCommerce.
+    ","sales_team, payment, portal, utm",False,True,False,addons/sale,__manifest__.py
+payment_payulatam,PayuLatam Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: PayuLatam Implementation,Payulatam payment acquirer,payment,False,True,True,addons/payment_payulatam,__manifest__.py
+hr_recruitment_survey,Hr Recruitment Interview Forms,1.0,Third-Party,Human Resources,Unknown,Surveys,"
+        Use interview forms during recruitment process.
+        This module is integrated with the survey module
+        to allow you to define interviews for different jobs.
+    ","survey, hr_recruitment",False,True,False,addons/hr_recruitment_survey,__manifest__.py
+base_automation,Automated Action Rules,1.0,Third-Party,Sales/Sales,Unknown,,"
+This module allows to implement action rules for any object.
+============================================================
+
+Use automated actions to automatically trigger actions for various screens.
+","base, resource, mail",False,True,False,addons/base_automation,__manifest__.py
+event_booth,Events Booths,1.0,Third-Party,Marketing/Events,Unknown,Manage event booths,"
+Create booths for your favorite event.
+    ",event,False,True,False,addons/event_booth,__manifest__.py
+hr_recruitment,Recruitment,1.1,Third-Party,Human Resources/Recruitment,Unknown,Track your recruitment pipeline,,"hr, calendar, fetchmail, utm, attachment_indexation, web_tour, digest",False,True,True,addons/hr_recruitment,__manifest__.py
+website_crm,Contact Form,2.1,Third-Party,Website/Website,Unknown,Generate leads from a contact form,"
+Add capability to your website forms to generate leads or opportunities in the CRM app.
+Forms has to be customized inside the *Website Builder* in order to generate leads.
+
+This module includes conta","website, crm",True,True,False,addons/website_crm,__manifest__.py
+website_sale_comparison,Product Comparison,1.0,Core,Website/Website,Odoo SA,Allow shoppers to compare products based on their attributes,"
+This module adds a comparison tool to your eCommerce shop, so that your shoppers can easily compare products based on their attributes. It will considerably accelerate their purchasing decision.
+
+To ",website_sale,False,True,False,addons/website_sale_comparison,__manifest__.py
+test_xlsx_export,test xlsx export,0.1,Third-Party,Hidden/Tests,Unknown,,A module to test xlsx export.,"web, test_mail",False,True,False,addons/test_xlsx_export,__manifest__.py
+web,Web,1.0,Third-Party,Hidden,Unknown,,"
+Odoo Web core module.
+========================
+
+This module provides the core of the Odoo Web Client.
+",base,True,True,False,addons/web,__manifest__.py
+website_sale_digital,Digital Products,0.1,Third-Party,Website/Website,Unknown,Sell digital products in your eCommerce store,"
+Sell e-goods in your eCommerce store (e.g. webinars, articles, e-books, video tutorials).
+To do so, create the product and attach the file to share via the *Files* button of the product form.
+Once th","attachment_indexation, website_sale",False,True,False,addons/website_sale_digital,__manifest__.py
+account_tax_python,Define Taxes as Python Code,1.0,Third-Party,Accounting/Accounting,Unknown,Use python code to define taxes,"
+A tax defined as python code consists of two snippets of python code which are executed in a local environment containing data such as the unit price, product or partner.
+
+""Applicable Code"" defines i",account,False,True,False,addons/account_tax_python,__manifest__.py
+mass_mailing_sms,SMS Marketing,1.0,Third-Party,Marketing/Email Marketing,Unknown,"Design, send and track SMS",,"portal, mass_mailing, sms",False,True,True,addons/mass_mailing_sms,__manifest__.py
+account_sale_timesheet,Account Sale Timesheet,1.0,Third-Party,Account/sale/timesheet,Unknown,Account sale timesheet,Bridge created to add the number of invoices linked to an AA to a project form,"account, sale_timesheet",True,True,False,addons/account_sale_timesheet,__manifest__.py
+payment_test,Test Payment Acquirer,2.0,Third-Party,Hidden,Unknown,,"
+This module adds a simple payment acquirer allowing to make test payments.
+It should never be used in production environment. Make sure to disable it before going live.
+",payment,False,True,False,addons/payment_test,__manifest__.py
+google_gmail,Google Gmail,1.0,Third-Party,Hidden,Unknown,,Gmail support for incoming / outgoing mail servers,"mail, google_account",True,True,False,addons/google_gmail,__manifest__.py
+website_event_exhibitor,Event Exhibitors,1.1,Third-Party,Marketing/Events,Unknown,Event: manage sponsors and exhibitors,,"website_event, website_jitsi",False,True,False,addons/website_event_exhibitor,__manifest__.py
+l10n_et,Ethiopia - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Michael Telahun Makonnen <mmakonnen@gmail.com>,,"
+Base Module for Ethiopian Localization
+======================================
+
+This is the latest Ethiopian Odoo localization and consists of:
+    - Chart of Accounts
+    - VAT tax structure
+    - Wi",account,False,True,False,addons/l10n_et,__manifest__.py
+account_debit_note,Debit Notes,1.0,Third-Party,Accounting/Accounting,Unknown,Debit Notes,"
+In a lot of countries, a debit note is used as an increase of the amounts of an existing invoice 
+or in some specific cases to cancel a credit note. 
+It is like a regular invoice, but we need to keep",account,False,True,False,addons/account_debit_note,__manifest__.py
+website_sale_stock_wishlist,Product Availability Notifications,15.0.1.0.0,Third-Party,Website/Website,Unknown,Notify the user when a product is back in stock,"
+Allow the user to select if he wants to receive email notifications when a product of his wishlist gets back in stock.
+    ","website_sale_stock, website_sale_wishlist",True,True,False,addons/website_sale_stock_wishlist,__manifest__.py
+pos_mercury,Vantiv Payment Services,1.0,Third-Party,Sales/Point of Sale,Unknown,Credit card support for Point Of Sale,"
+Allow credit card POS payments
+==============================
+
+This module allows customers to pay for their orders with credit
+cards. The transactions are processed by Vantiv (developed by Wells
+Far","web, barcodes, point_of_sale",False,True,False,addons/pos_mercury,__manifest__.py
+payment_stripe,Stripe Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Stripe Implementation,Stripe Payment Acquirer,payment,False,True,True,addons/payment_stripe,__manifest__.py
+mass_mailing_event_track_sms,Track Speakers SMS Marketing,1.0,Third-Party,Hidden,Unknown,,"
+SMS Marketing on event track speakers
+=====================================
+
+Bridge module adding UX requirements to ease SMS marketing on event track
+speakers..
+        ","mass_mailing, mass_mailing_sms, sms, website_event_track",True,True,False,addons/mass_mailing_event_track_sms,__manifest__.py
+google_calendar,Google Calendar,1.0,Third-Party,Productivity,Unknown,,,"google_account, calendar",False,True,False,addons/google_calendar,__manifest__.py
+website_sale_delivery,eCommerce Delivery,1.0,Third-Party,Website/Website,Unknown,Add delivery costs to online sales,"
+Add a selection of delivery methods to your eCommerce store.
+Configure your own methods with a pricing grid or integrate with carriers for a fully automated shipping process.
+    ","website_sale, delivery, website_sale_stock",True,True,False,addons/website_sale_delivery,__manifest__.py
+google_account,Google Users,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,"
+The module adds google user in res user.
+========================================
+",base_setup,False,True,False,addons/google_account,__manifest__.py
+l10n_dz,Algeria - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,Osis,,"
+This is the module to manage the accounting chart for Algeria in Odoo.
+======================================================================
+This module applies to companies based in Algeria.
+","account, l10n_multilang",False,True,False,addons/l10n_dz,__manifest__.py
+rating,Customer Rating,1.0,Third-Party,Productivity,Unknown,,"
+This module allows a customer to give rating.
+",mail,False,True,False,addons/rating,__manifest__.py
+l10n_in_sale_stock,India Sales and Warehouse Management,0.1,Core,Accounting/Localizations/Sale,Odoo,"
+        Define default sales journal on the warehouse","
+        Define default sales journal on the warehouse,
+        help you to choose correct sales journal on the sales order when
+        you change the warehouse.
+        useful when you setup the mul","l10n_in_sale, l10n_in_stock",True,True,False,addons/l10n_in_sale_stock,__manifest__.py
+crm_iap_enrich,Lead Enrichment,1.1,Third-Party,Sales/CRM,Unknown,Enrich Leads/Opportunities using email address domain,,"iap_crm, iap_mail",True,True,False,addons/crm_iap_enrich,__manifest__.py
+l10n_id,Indonesian - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,vitraining.com,,"
+This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:
+=================================================================================================
+    -","account, base_iban, base_vat, l10n_multilang",False,True,False,addons/l10n_id,__manifest__.py
+account_edi_facturx,Import/Export invoices with Factur-X,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+    Support for invoice Export/Import in Factur-x format (1.0.04).
+    ",account_edi,True,True,False,addons/account_edi_facturx,__manifest__.py
+phone_validation,Phone Numbers Validation,2.1,Third-Party,Hidden,Unknown,Validate and format phone numbers,"
+Phone Numbers Validation
+========================
+
+This module adds the feature of validation and formatting phone numbers
+according to a destination country.
+
+It also adds phone blacklist management","base, mail",True,True,False,addons/phone_validation,__manifest__.py
+lunch,Lunch,1.0,Third-Party,Human Resources/Lunch,Unknown,Handle lunch orders of your employees,"
+The base module to manage lunch.
+================================
+
+Many companies order sandwiches, pizzas and other, from usual vendors, for their employees to offer them more facilities.
+
+However l",mail,False,True,True,addons/lunch,__manifest__.py
+mass_mailing_crm_sms,Mass mailing sms on lead / opportunities,1.0,Third-Party,Hidden,Unknown,Add lead / opportunities info on mass mailing sms,Mass mailing sms on lead / opportunities,"mass_mailing_crm, mass_mailing_sms",True,True,False,addons/mass_mailing_crm_sms,__manifest__.py
+pad,Collaborative Pads,2.0,Third-Party,Hidden/Tools,Unknown,,"
+Adds enhanced support for (Ether)Pad attachments in the web client.
+===================================================================
+
+Lets the company customize which Pad installation should be us","web, base_setup",False,True,False,addons/pad,__manifest__.py
+l10n_th,Thailand - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Almacom,,"
+Chart of Accounts for Thailand.
+===============================
+
+Thai accounting chart and localization.
+    ",account,False,True,False,addons/l10n_th,__manifest__.py
+sale_timesheet,Sales Timesheet,15.0.1.0.0,Third-Party,Hidden,Unknown,Sell based on timesheets,"
+Allows to sell timesheets in your sales order
+=============================================
+
+This module set the right product on all timesheet lines
+according to the order/contract you work on. This","sale_project, hr_timesheet",True,True,False,addons/sale_timesheet,__manifest__.py
+l10n_ve,Venezuela - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,"['Odoo S.A.', 'Vauxoo']",,"
+Chart of Account for Venezuela.
+===============================
+
+Venezuela doesn't have any chart of account by law, but the default
+proposed in Odoo should comply with some Accepted best practices i",account,False,True,False,addons/l10n_ve,__manifest__.py
+payment_authorize,Authorize.Net Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Authorize.net Implementation,Authorize.Net Payment Acquirer,payment,False,True,True,addons/payment_authorize,__manifest__.py
+website_sale_delivery_giftcard,Website Sale Delivery Giftcard,1.0,Third-Party,Website/Website,Unknown,,,"website_sale_delivery, website_sale_gift_card",True,True,False,addons/website_sale_delivery_giftcard,__manifest__.py
+event_crm_sale,Event CRM Sale,1.0,Third-Party,Marketing/Events,Unknown,,Add information of sale order linked to the registration for the creation of the lead.,"event_crm, event_sale",True,True,False,addons/event_crm_sale,__manifest__.py
+l10n_ar_website_sale,Argentinean eCommerce,1.0,Core,Accounting/Localizations/Website,"Odoo, ADHOC SA",,Be able to see Identification Type and AFIP Responsibility in ecommerce checkout form.,"website_sale, l10n_ar",True,True,False,addons/l10n_ar_website_sale,__manifest__.py
+website_event_sale,Online Event Ticketing,15.0.1.0.0,Third-Party,Website/Website,Unknown,Sell event tickets online,"
+Sell event tickets through eCommerce app.
+    ","website_event, event_sale, website_sale",True,True,False,addons/website_event_sale,__manifest__.py
+website_event_booth,Online Event Booths,1.0,Third-Party,Marketing/Events,Unknown,"Events, display your booths on your website","
+Display your booths on your website for the users to register.
+    ","website_event, event_booth",True,True,False,addons/website_event_booth,__manifest__.py
+im_livechat_mail_bot,OdooBot for livechat,1.0,Third-Party,Productivity/Discuss,Unknown,Add livechat support for OdooBot,,"mail_bot, im_livechat",True,True,False,addons/im_livechat_mail_bot,__manifest__.py
+l10n_it_stock_ddt,l10n_it_stock_ddt,0.1,Third-Party,Accounting/Localizations/EDI,Unknown,,"
+Documento di Trasporto (DDT)
+
+Whenever goods are transferred between A and B, the DDT serves
+as a legitimation e.g. when the police would stop you. 
+
+When you want to print an outgoing picking in an ","l10n_it_edi, delivery, stock_account",True,True,False,addons/l10n_it_stock_ddt,__manifest__.py
+l10n_pa,Panama - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,Cubic ERP,,"
+Panamenian accounting chart and tax localization.
+
+Plan contable panameño e impuestos de acuerdo a disposiciones vigentes
+
+Con la Colaboración de
+- AHMNET CORP http://www.ahmnet.com
+
+    ",account,False,True,False,addons/l10n_pa,__manifest__.py
+account_payment,Payment - Account,1.0,Third-Party,Accounting/Accounting,Unknown,Account and Payment Link and Portal,"Link Account and Payment and add Portal Payment
+
+Provide tools for account-related payment as well as portal options to
+enable payment.
+
+ * UPDATE ME
+",payment,False,True,False,addons/account_payment,__manifest__.py
+website_sale_stock,Product Availability,15.0.1.0.0,Third-Party,Website/Website,Unknown,Manage product inventory & availability,"
+Manage the inventory of your products and display their availability status in your eCommerce store.
+In case of stockout, you can decide to block further sales or to keep selling.
+A default behavior ","website_sale, sale_stock",True,True,False,addons/website_sale_stock,__manifest__.py
+website_event,Events,1.4,Third-Party,Marketing/Events,Unknown,"Publish events, sell tickets",,"event, website, website_partner, website_mail",False,True,True,addons/website_event,__manifest__.py
+l10n_br,Brazilian - Accounting,15.0.1.0.0,Core,Accounting/Localizations/Account Charts,"Akretion, Odoo Brasil",,"
+Base module for the Brazilian localization
+==========================================
+
+This module consists of:
+
+ - Generic Brazilian chart of accounts
+ - Brazilian taxes such as:
+
+        - IPI
+    ",account,False,True,False,addons/l10n_br,__manifest__.py
+product,Products & Pricelists,1.2,Third-Party,Sales/Sales,Unknown,,"
+This is the base module for managing products and pricelists in Odoo.
+========================================================================
+
+Products support variants, different pricing methods, v","base, mail, uom",False,True,False,addons/product,__manifest__.py
+website_event_booth_sale,Online Event Booth Sale,1.0,Third-Party,Marketing/Events,Unknown,"Events, sell your booths online","
+Use the e-commerce to sell your event booths.
+    ","event_booth_sale, website_event_booth, website_sale",True,True,False,addons/website_event_booth_sale,__manifest__.py
+im_livechat,Live Chat,1.0,Third-Party,Website/Live Chat,Unknown,Chat with your website visitors,"
+Live Chat Support
+==========================
+
+Allow to drop instant messaging widgets on any web page that will communicate
+with the current server and dispatch visitors request amongst several live
+","mail, rating, digest",False,True,True,addons/im_livechat,__manifest__.py
+website_mass_mailing,Newsletter Subscribe Button,1.0,Third-Party,Website/Website,Unknown,Attract visitors to subscribe to mailing lists,"
+This module brings a new building block with a mailing list widget to drop on any page of your website.
+On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing ","website, mass_mailing, google_recaptcha","['website', 'mass_mailing']",True,False,addons/website_mass_mailing,__manifest__.py
+website_sale_gift_card,Website Sale Gift Card,1.0,Third-Party,Website/Website,Unknown,Use gift card in eCommerce,Integrate gift card mechanism in your ecommerce.,"website_sale, sale_gift_card",False,True,False,addons/website_sale_gift_card,__manifest__.py
+partner_autocomplete,Partner Autocomplete,1.1,Core,Hidden/Tools,Odoo SA,Auto-complete partner companies' data,"
+       Auto-complete partner companies' data
+    ",iap_mail,True,True,False,addons/partner_autocomplete,__manifest__.py
+product_images,Product Images,1.0,Third-Party,Technical,Unknown,,"
+Automatically set product images based on the barcode
+=====================================================
+
+This module integrates with the Google Custom Search API to set images on products based o",product,False,True,False,addons/product_images,__manifest__.py
+sale_stock_margin,Sale Stock Margin,0.1,Third-Party,Sales/Sales,Unknown,,"Once the delivery is validated, update the cost on the SO to have an exact margin computation.","sale_stock, sale_margin",True,True,False,addons/sale_stock_margin,__manifest__.py
+website_livechat,Website Live Chat,1.0,Third-Party,Hidden,Unknown,Chat with your website visitors,"
+Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.
+    ","website, im_livechat",True,True,False,addons/website_livechat,__manifest__.py
+bus,IM Bus,1.0,Third-Party,Hidden,Unknown,,"Instant Messaging Bus allow you to send messages to users, in live.","base, web",False,True,False,addons/bus,__manifest__.py
+mail_plugin,Mail Plugin,1.0,Third-Party,Sales/CRM,Unknown,Allows integration with mail plugins.,"Integrate Odoo with your mailbox, get information about contacts directly inside your mailbox, log content of emails as internal notes","web, contacts, iap",False,True,False,addons/mail_plugin,__manifest__.py
+web_unsplash,Unsplash Image Library,1.1,Third-Party,Hidden,Unknown,Find free high-resolution images from Unsplash,Explore the free high-resolution image library of Unsplash.com and find images to use in Odoo. An Unsplash search bar is added to the image library modal.,"base_setup, web_editor",True,True,False,addons/web_unsplash,__manifest__.py
+l10n_se,Sweden - Accounting,1.0,Core,Accounting/Localizations/Account Charts,"XCLUDE, Odoo SA",,"
+Swedish Accounting
+------------------
+
+This is the base module to manage the accounting chart for Sweden in Odoo.
+It also includes the invoice OCR payment reference handling.
+    ","account, base_vat",False,True,False,addons/l10n_se,__manifest__.py
+website_profile,Website profile,1.0,Third-Party,Hidden,Unknown,Access the website profile of the users,"Allows to access the website profile of the users and see their statistics (karma, badges, etc..)","website_partner, gamification",False,True,False,addons/website_profile,__manifest__.py
+portal_rating,Portal Rating,1.0,Third-Party,Hidden,Unknown,,"
+Bridge module adding rating capabilities on portal. It includes notably
+inclusion of rating directly within the customer portal discuss widget.
+        ","portal, rating",True,True,False,addons/portal_rating,__manifest__.py
+website_sms,Send SMS to Visitor,1.0,Third-Party,Website/Website,Unknown,Allows to send sms to website visitor,Allows to send sms to website visitor if the visitor is linked to a partner.,"website, sms",True,True,False,addons/website_sms,__manifest__.py
+analytic,Analytic Accounting,1.1,Third-Party,Accounting/Accounting,Unknown,,"
+Module for defining analytic accounting object.
+===============================================
+
+In Odoo, analytic accounts are linked to general accounts but are treated
+totally independently. So, y","base, mail, uom",False,True,False,addons/analytic,__manifest__.py
+sale_coupon_delivery,Sale Coupon Delivery,1.0,Third-Party,Sales/Sales,Unknown,Allows to offer free shippings in coupon reward,Integrate coupon mechanism with shipping costs.,"sale_coupon, delivery",True,True,False,addons/sale_coupon_delivery,__manifest__.py
+mrp_account,Accounting - MRP,1.0,Third-Party,Manufacturing/Manufacturing,Unknown,Analytic accounting in Manufacturing,"
+Analytic Accounting in MRP
+==========================
+
+* Cost structure report
+
+Also, allows to compute the cost of the product based on its BoM, using the costs of its components and work center ope","mrp, stock_account",True,True,False,addons/mrp_account,__manifest__.py
+account_check_printing,Check Printing Base,1.0,Third-Party,Accounting/Accounting,Unknown,Check printing basic features,"
+This module offers the basic functionalities to make payments by printing checks.
+It must be used as a dependency for modules that provide country-specific check templates.
+The check settings are loc",account,False,True,False,addons/account_check_printing,__manifest__.py
+mrp,Manufacturing,2.0,Third-Party,Manufacturing/Manufacturing,Unknown,Manufacturing Orders & BOMs,,"product, stock, resource",False,True,True,addons/mrp,__manifest__.py
+sale_project,Sales - Project,15.0.1.0.0,Third-Party,Hidden,Unknown,Task Generation from Sales Orders,"
+Allows to create task from your sales order
+=============================================
+This module allows to generate a project/task from sales orders.
+","sale_management, project",True,True,False,addons/sale_project,__manifest__.py
+hw_l10n_eg_eta,Egypt ETA Hardware Driver,15.0.1.0.0,Third-Party,Accounting/Accounting,Unknown,Egypt ETA Hardware Driver,"
+Egypt ETA Hardware Driver
+=======================
+
+This module allows Odoo to digitally sign invoices using an USB key approved by the egyptian government
+
+Special thanks to Plementus <info@plementus",,False,False,False,addons/hw_l10n_eg_eta,__manifest__.py
+payment_transfer,Wire Transfer Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: Wire Transfer Implementation,Wire Transfer Payment Acquirer,payment,True,True,False,addons/payment_transfer,__manifest__.py
+l10n_il,Israel - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,Unknown,,"
+This is the latest basic Israelian localisation necessary to run Odoo in Israel:
+================================================================================
+
+This module consists of:
+ - Generic ",l10n_multilang,False,True,False,addons/l10n_il,__manifest__.py
+l10n_rs,Serbia - Accounting,1.0,Core,Accounting/Localizations/Account Charts,"Modoolar, Odoo S.A.",,"
+        This is the base module of the Serbian localization. It manages chart of accounts and taxes.
+    ","account, base_vat",False,True,False,addons/l10n_rs,__manifest__.py
+website_event_track_live_quiz,Quiz on Live Event Tracks,1.0,Third-Party,Hidden,Unknown,"Bridge module to support quiz features during ""live"" tracks. ",,"website_event_track_live, website_event_track_quiz",True,True,False,addons/website_event_track_live_quiz,__manifest__.py
+l10n_pk,Pakistan - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo S.A.,, This is the base module to manage chart of accounts and localization for the Pakistan ,account,False,True,False,addons/l10n_pk,__manifest__.py
+l10n_fr_facturx_chorus_pro,France - Factur-X integration with Chorus Pro,1.0,Third-Party,Accounting/Localizations/EDI,Unknown,,"
+Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.
+","account, account_edi_facturx, l10n_fr",False,True,False,addons/l10n_fr_facturx_chorus_pro,__manifest__.py
+l10n_bo,Bolivia - Accounting,2.0,Third-Party,Accounting/Localizations/Account Charts,Cubic ERP,,"
+Bolivian accounting chart and tax localization.
+
+Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
+
+    ",account,False,True,False,addons/l10n_bo,__manifest__.py
+account,Invoicing,1.2,Third-Party,Accounting/Accounting,Unknown,Invoices & Payments,"
+Invoicing & Payments
+====================
+The specific and easy-to-use Invoicing system in Odoo allows you to keep track of your accounting, even when you are not an accountant. It provides an easy w","base_setup, product, analytic, portal, digest",False,True,True,addons/account,__manifest__.py
+base_sparse_field,Sparse Fields,1.0,Third-Party,Hidden,Unknown,Implementation of sparse fields.,"
+        The purpose of this module is to implement ""sparse"" fields, i.e., fields
+        that are mostly null. This implementation circumvents the PostgreSQL
+        limitation on the number of colum",base,False,True,False,addons/base_sparse_field,__manifest__.py
+l10n_cn_city,China - City Data,1.8,Third-Party,Accounting/Localizations,Jeffery Chen Fan<jeffery9@gmail.com>,,"
+Includes the following data for the Chinese localization
+========================================================
+
+City Data/城市数据
+
+    ","l10n_cn, base_address_city",False,True,False,addons/l10n_cn_city,__manifest__.py
+l10n_si,Slovenian - Accounting,1.1,Third-Party,Accounting/Localizations/Account Charts,Mentis d.o.o.,,Kontni načrt za gospodarske družbe,"account, base_iban",False,True,False,addons/l10n_si,__manifest__.py
+l10n_in_stock,Indian - Stock Report(GST),1.0,Third-Party,Accounting/Localizations,Unknown,,GST Stock Report,"l10n_in, stock",True,True,False,addons/l10n_in_stock,__manifest__.py
+l10n_ph,Philippines - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo PS,"
+        This is the module to manage the accounting chart for The Philippines.
+    ",,"account, base_vat, l10n_multilang",False,True,False,addons/l10n_ph,__manifest__.py
+sale_project_account,Project Sales Accounting,1.0,Third-Party,Services/account,Unknown,Project sales accounting,Bridge created to add the number of vendor bills linked to an AA to a project form,"sale_timesheet, account",True,True,False,addons/sale_project_account,__manifest__.py
+l10n_ke,Kenya - Accounting,1.0,Core,Accounting/Localizations/Account Charts,Odoo S.A.,,"
+This provides a base chart of accounts and taxes template for use in Odoo.
+    ",account,False,True,False,addons/l10n_ke,__manifest__.py
+website_crm_partner_assign,Resellers,1.0,Third-Party,Website/Website,Unknown,Publish your resellers/partners and forward leads to them,"
+This module allows to publish your resellers/partners on your website and to forward incoming leads/opportunities to them.
+
+
+**Publish a partner**
+
+To publish a partner, set a *Level* in their contac","base_geolocalize, crm, account, website_partner, website_google_map, portal",False,True,False,addons/website_crm_partner_assign,__manifest__.py
+auth_totp_mail,2FA Invite mail,15.0.1.0.0,Third-Party,Extra Tools,Unknown,,"
+2FA Invite mail
+===============
+Allow the users to invite another user to use Two-Factor authentication
+by sending an email to the target user. This email redirect him to :
+- the users security setti","auth_totp, mail",True,True,False,addons/auth_totp_mail,__manifest__.py
+mass_mailing_crm,Mass mailing on lead / opportunities,1.0,Third-Party,Hidden,Unknown,Add lead / opportunities UTM info on mass mailing,UTM and mass mailing on lead / opportunities,"crm, mass_mailing",True,True,False,addons/mass_mailing_crm,__manifest__.py
+l10n_es,Spain - Accounting (PGCE 2008),5.0,Third-Party,Accounting/Localizations/Account Charts,Spanish Localization Team,,"
+Spanish charts of accounts (PGCE 2008).
+========================================
+
+    * Defines the following chart of account templates:
+        * Spanish general chart of accounts 2008
+        * Sp","account, base_iban, base_vat",False,True,False,addons/l10n_es,__manifest__.py
+stock_sms,Stock - SMS,1.0,Third-Party,Hidden,Unknown,Send text messages when final stock move,Send text messages when final stock move,"stock, sms",True,True,False,addons/stock_sms,__manifest__.py
+stock_picking_batch,Warehouse Management: Batch Transfer,1.0,Third-Party,Inventory/Inventory,Unknown,,"
+This module adds the batch transfer option in warehouse management
+==================================================================
+    ",stock,False,True,False,addons/stock_picking_batch,__manifest__.py
+web_kanban_gauge,Gauge Widget for Kanban,1.0,Third-Party,Hidden,Unknown,,"
+This widget allows to display gauges using d3 library.
+",web,True,True,False,addons/web_kanban_gauge,__manifest__.py
+hw_posbox_homepage,IoT Box Homepage,15.0.1.0.0,Third-Party,Sales/Point of Sale,Unknown,A homepage for the IoT Box,"
+IoT Box Homepage
+================
+
+This module overrides Odoo web interface to display a simple
+Homepage that explains what's the iotbox and shows the status,
+and where to find documentation.
+
+If you",,False,False,False,addons/hw_posbox_homepage,__manifest__.py
+sale_stock,Sales and Warehouse Management,1.0,Third-Party,Hidden,Unknown,"Quotation, Sales Orders, Delivery & Invoicing Control","
+Manage sales quotations and orders
+==================================
+
+This module makes the link between the sales and warehouses management applications.
+
+Preferences
+-----------
+* Shipping: Choice","sale, stock_account",True,True,False,addons/sale_stock,__manifest__.py
+purchase_requisition_stock_dropshipping,Purchase Requisition Stock Dropshipping,1.0,Third-Party,Hidden,Unknown,"Purchase Requisition, Stock, Dropshipping","
+This module makes the link between the purchase requisition and dropshipping applications.
+
+Set shipping address on purchase orders created from purchase agreements
+and link with originating sale ord","purchase_requisition_stock, stock_dropshipping",True,True,False,addons/purchase_requisition_stock_dropshipping,__manifest__.py
+auth_password_policy,Password Policy,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,Implement basic password policy configuration & check,,"base_setup, web",False,True,False,addons/auth_password_policy,__manifest__.py
+l10n_nl_edi,Netherlands - E-Invoicing (NLCIUS 1.0.3),0.1,Third-Party,Accounting/Localizations/EDI,Unknown,"E-Invoicing, Universal Business Language (NLCIUS 1.0.3), nlc","
+NLCIUS is the Dutch implementation of EN 16931 norm. Both for UBL and UN / CEFACT XML CII.
+    ","l10n_nl, account_edi_ubl_bis3",True,True,False,addons/l10n_nl_edi,__manifest__.py
+hr_work_entry_holidays,Time Off in Payslips,1.0,Third-Party,Human Resources/Payroll,Unknown,Manage Time Off in Payslips,"
+Manage Time Off in Payslips
+============================
+
+This application allows you to integrate time off in payslips.
+    ","hr_holidays, hr_work_entry_contract",True,True,False,addons/hr_work_entry_holidays,__manifest__.py
+utm,UTM Trackers,1.1,Third-Party,Hidden,Unknown,,"
+Enable management of UTM trackers: campaign, medium, source.
+","base, web",False,True,False,addons/utm,__manifest__.py
+payment_sips,Worldline SIPS,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,,"
+Worldline SIPS Payment Acquirer for online payments
+
+Implements the Worldline SIPS API for payment acquirers.
+Other SIPS providers may be compatible, though this is
+not guaranteed.",payment,False,True,True,addons/payment_sips,__manifest__.py
+stock_landed_costs,WMS Landed Costs,1.1,Third-Party,Inventory/Inventory,Unknown,Landed Costs,"
+Landed Costs Management
+=======================
+This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into acc","stock_account, purchase_stock",False,True,False,addons/stock_landed_costs,__manifest__.py
+l10n_in_purchase,Indian - Purchase Report(GST),1.0,Third-Party,Accounting/Localizations/Purchase,Unknown,,GST Purchase Report,"l10n_in, purchase",True,True,False,addons/l10n_in_purchase,__manifest__.py
+account_edi,Import/Export Invoices From XML/PDF,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+Electronic Data Interchange
+=======================================
+EDI is the electronic interchange of business information using a standardized format.
+
+This is the base module for import and expo",account,True,True,False,addons/account_edi,__manifest__.py
+project_mail_plugin,Project Mail Plugin,1.0,Third-Party,Services/Project,Unknown,Integrate your inbox with projects,Turn emails received in your mailbox into tasks and log their content as internal notes.,"project, mail_plugin",True,True,False,addons/project_mail_plugin,__manifest__.py
+l10n_gcc_invoice,G.C.C. - Arabic/English Invoice,1.0.0,Core,Accounting/Localizations,Odoo,,"
+    Arabic/English for GCC
+",account,False,True,False,addons/l10n_gcc_invoice,__manifest__.py
+mass_mailing_event_sms,Event Attendees SMS Marketing,1.0,Third-Party,Hidden,Unknown,,"
+SMS Marketing on event attendees
+================================
+
+Bridge module adding UX requirements to ease SMS marketing o, event attendees.
+        ","event, mass_mailing, mass_mailing_sms, sms",True,True,False,addons/mass_mailing_event_sms,__manifest__.py
+website_event_crm_questions,Website Event CRM Questions,1.0,Third-Party,Marketing/Events,Unknown,,"
+        Add information when we build the description of a lead to include
+        the questions and answers linked to the registrations.
+    ","website_event_crm, website_event_questions",True,True,False,addons/website_event_crm_questions,__manifest__.py
+l10n_nl,Netherlands - Accounting,3.0,Third-Party,Accounting/Localizations/Account Charts,Onestein,,,"account, base_iban, base_vat, base_address_extended",False,True,False,addons/l10n_nl,__manifest__.py
+portal,Customer Portal,15.0.1.0.0,Third-Party,Hidden,Unknown,Customer Portal,"
+This module adds required base code for a fully integrated customer portal.
+It contains the base controller class and base templates. Business addons
+will add their specific templates and controllers","web, web_editor, http_routing, mail, auth_signup",False,True,False,addons/portal,__manifest__.py
+website_event_crm,Website Events CRM,1.0,Third-Party,Website/Website,Unknown,,Allow per-order lead creation mode,"event_crm, website_event",True,True,False,addons/website_event_crm,__manifest__.py
+sale_expense,Sales Expense,1.0,Third-Party,Sales/Sales,Unknown,"Quotation, Sales Orders, Delivery & Invoicing Control","
+Reinvoice Employee Expense
+==========================
+
+Create some products for which you can re-invoice the costs.
+This module allow to reinvoice employee expense, by setting the SO directly on the ","sale_management, hr_expense",True,True,False,addons/sale_expense,__manifest__.py
+fleet,Fleet,0.1,Third-Party,Human Resources/Fleet,Unknown,Manage your fleet and track car costs,"
+Vehicle, leasing, insurances, cost
+==================================
+With this module, Odoo helps you managing all your vehicles, the
+contracts associated to those vehicle as well as services, costs","base, mail",False,True,True,addons/fleet,__manifest__.py
+website_sale_coupon,Coupons & Promotions for eCommerce,1.0,Third-Party,Website/Website,Unknown,Use coupon & promotion programs in your eCommerce store,"
+Create coupon and promotion codes to share in order to boost your sales (free products, discounts, etc.). Shoppers can use them in the eCommerce checkout.
+
+Coupon & promotion programs can be edited i","website_sale, website_links, sale_coupon","['website_sale', 'sale_coupon']",True,False,addons/website_sale_coupon,__manifest__.py
+l10n_tr,Turkey - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,"Ahmet Altınışık, Can Tecim",,"
+Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
+==========================================================
+
+Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
+    * Sihirbaz ",account,False,True,False,addons/l10n_tr,__manifest__.py
+website_event_meet,Event Meeting / Rooms,1.0,Third-Party,Marketing/Events,Unknown,Event: meeting and chat rooms,,"website_event, website_jitsi",False,True,False,addons/website_event_meet,__manifest__.py
+barcodes,Barcode,2.0,Third-Party,Hidden,Unknown,Scan and Parse Barcodes,,web,False,True,False,addons/barcodes,__manifest__.py
+l10n_gcc_pos,Gulf Cooperation Council - Point of Sale,15.0.1.0.0,Core,Accounting/Localizations/Point of Sale,Odoo S.A,,"
+GCC POS Localization
+=======================================================
+    ","point_of_sale, l10n_gcc_invoice",True,True,False,addons/l10n_gcc_pos,__manifest__.py
+website_mail_group,Website Mail Group,1.0,Third-Party,Uncategorized,Unknown,Add a website snippet for the mail groups.,,"mail_group, website",True,True,False,addons/website_mail_group,__manifest__.py
+test_event_full,Test Full Event Flow,1.0,Third-Party,Hidden/Tests,Unknown,,"
+This module will test the main event flows of Odoo, both frontend and backend.
+It installs sale capabilities, front-end flow, eCommerce, questions and
+automatic lead generation, full Online support, ","event, event_booth, event_crm, event_sale, website_event_booth_sale_exhibitor, website_event_crm_questions, website_event_exhibitor, website_event_questions, website_event_meet, website_event_sale, website_event_track, website_event_track_live, website_event_track_quiz",False,True,False,addons/test_event_full,__manifest__.py
+l10n_be_edi,"Belgium - E-Invoicing (UBL 2.0, e-fff)",0.1,Third-Party,Accounting/Localizations/EDI,Unknown,"E-Invoicing, Universal Business Language (UBL 2.0), e-fff protocol","
+Universal Business Language (UBL <http://ubl.xml.org/>`_) is a library of standard electronic XML business documents such as
+invoices. The UBL standard became the `ISO/IEC 19845
+<http://www.iso.org/i","l10n_be, account_edi_ubl",True,True,False,addons/l10n_be_edi,__manifest__.py
+account_lock,Irreversible Lock Date,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+    Make the lock date irreversible:
+
+    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Da",account,False,True,False,addons/account_lock,__manifest__.py
+l10n_cl,Chile - Accounting,3.0,Third-Party,Accounting/Localizations/Account Charts,Blanco Martín & Asociados,,"
+Chilean accounting chart and tax localization.
+Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
+    ","contacts, base_address_city, base_vat, l10n_latam_base, l10n_latam_invoice_document, uom",False,True,False,addons/l10n_cl,__manifest__.py
+website_hr_recruitment,Online Jobs,1.0,Third-Party,Website/Website,Unknown,Manage your online hiring process,This module allows to publish your available job positions on your website and keep track of application submissions easily. It comes as an add-on of *Recruitment* app.,"hr_recruitment, website_mail","['hr_recruitment', 'website_mail']",True,True,addons/website_hr_recruitment,__manifest__.py
+association,Associations Management,0.1,Third-Party,Marketing,Unknown,,"
+This module is to configure modules related to an association.
+==============================================================
+
+It installs the profile for associations to manage events, registrations","base_setup, membership, event",False,True,False,addons/association,__manifest__.py
+membership,Members,1.0,Third-Party,Sales/Sales,Unknown,,"
+This module allows you to manage all operations for managing memberships.
+=========================================================================
+
+It supports different kind of members:
+-----------",account,False,True,False,addons/membership,__manifest__.py
+website_sale_slides,Sell Courses,1.0,Third-Party,Hidden,Unknown,Sell your courses online,Sell your courses using the e-commerce features of the website.,"website_slides, website_sale",False,True,False,addons/website_sale_slides,__manifest__.py
+test_website,Website Test,1.0,Third-Party,Hidden,Unknown,"Website Test, mainly for module install/uninstall tests","This module contains tests related to website. Those are
+present in a separate module as we are testing module install/uninstall/upgrade
+and we don't want to reload the website module every time, incl","web_unsplash, website, theme_default",False,True,False,addons/test_website,__manifest__.py
+auth_ldap,Authentication via LDAP,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,,"base, base_setup",False,True,False,addons/auth_ldap,__manifest__.py
+hr_presence,Employee Presence Control,1.0,Third-Party,Human Resources,Unknown,,"
+Control Employees Presence
+==========================
+
+Based on:
+    * The IP Address
+    * The User's Session
+    * The Sent Emails
+
+Allows to contact directly the employee in case of unjustified ab","hr, hr_holidays, sms",False,True,False,addons/hr_presence,__manifest__.py
+sale_margin,Margins in Sales Orders,1.0,Third-Party,Sales/Sales,Unknown,,"
+This module adds the 'Margin' on sales order.
+=============================================
+
+This gives the profitability by calculating the difference between the Unit
+Price and Cost Price.
+    ",sale_management,False,True,False,addons/sale_margin,__manifest__.py
+google_recaptcha,Google reCAPTCHA integration,1.0,Third-Party,Hidden,Unknown,,"
+        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.
+    ",base_setup,False,True,False,addons/google_recaptcha,__manifest__.py
+uom,Units of measure,1.0,Third-Party,Sales/Sales,Unknown,,"
+This is the base module for managing Units of measure.
+========================================================================
+    ",base,False,True,False,addons/uom,__manifest__.py
+l10n_nz,New Zealand - Accounting,1.1,Third-Party,Accounting/Localizations/Account Charts,Richard deMeester - Willow IT,,"
+New Zealand Accounting Module
+=============================
+
+New Zealand accounting basic charts and localizations.
+
+Also:
+    - activates a number of regional currencies.
+    - sets up New Zealand t",account,False,True,False,addons/l10n_nz,__manifest__.py
+l10n_mn,Mongolia - Accounting,1.0,Core,Accounting/Localizations/Account Charts,"BumanIT LLC, Odoo S.A.",,"
+This is the module to manage the accounting chart for Mongolia.
+===============================================================
+
+    * the Mongolia Official Chart of Accounts,
+    * the Tax Code Char",account,False,True,False,addons/l10n_mn,__manifest__.py
+payment_payumoney,PayuMoney Payment Acquirer,2.0,Third-Party,Accounting/Payment Acquirers,Unknown,Payment Acquirer: PayuMoney Implementation,"
+PayuMoney Payment Acquirer for India.
+
+PayUmoney payment gateway supports only INR currency.
+",payment,False,True,True,addons/payment_payumoney,__manifest__.py
+pos_restaurant,Restaurant,1.0,Third-Party,Sales/Point of Sale,Unknown,Restaurant extensions for the Point of Sale ,"
+
+This module adds several features to the Point of Sale that are specific to restaurant management:
+- Bill Printing: Allows you to print a receipt before the order is paid
+- Bill Splitting: Allows yo",point_of_sale,False,True,False,addons/pos_restaurant,__manifest__.py
+l10n_ie,Ireland - Accounting,1.0,Third-Party,Accounting/Localizations/Account Charts,Target Integration,,"
+    This module is for all the Irish SMEs who would like to setup their accounting quickly. The module provides:
+
+    - a Chart of Accounts customised to Ireland
+    - VAT Rates and Structure","account, base_iban, base_vat",False,True,False,addons/l10n_ie,__manifest__.py
+l10n_uy,Uruguay - Accounting,0.1,Third-Party,Accounting/Localizations/Account Charts,"Uruguay l10n Team, Guillem Barba",,"
+General Chart of Accounts.
+==========================
+
+Provide Templates for Chart of Accounts, Taxes for Uruguay.
+
+",account,False,True,False,addons/l10n_uy,__manifest__.py
+crm_iap_mine,Lead Generation,1.2,Third-Party,Sales/CRM,Unknown,"Generate Leads/Opportunities based on country, industries, size, etc.",,"iap_crm, iap_mail",True,True,False,addons/crm_iap_mine,__manifest__.py
+l10n_latam_base,LATAM Localization Base,1.0,Core,Accounting/Localizations,"Odoo, ADHOC SA",LATAM Identification Types,"
+Add a new model named ""Identification Type"" that extend the vat field functionality in the partner and let the user to identify (an eventually invoice) to contacts not only with their fiscal tax ID (","contacts, base_vat",False,True,False,addons/l10n_latam_base,__manifest__.py
+l10n_de_sale,Germany - Sale,15.0.1.0.0,Third-Party,Accounting/Localizations,Unknown,,,"l10n_de, sale",True,True,False,addons/l10n_de_sale,__manifest__.py
+base_iban,IBAN Bank Accounts,15.0.1.0.0,Third-Party,Hidden/Tools,Unknown,,"
+This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for it's validity.
+================================================================================","account, web",False,True,False,addons/base_iban,__manifest__.py
+auth_totp_portal,TOTPortal,15.0.1.0.0,Third-Party,Hidden,Unknown,,,"portal, auth_totp",True,True,False,addons/auth_totp_portal,__manifest__.py
+event_crm,Event CRM,1.0,Third-Party,Marketing/Events,Unknown,,Create leads from event registrations.,"event, crm",True,True,False,addons/event_crm,__manifest__.py
+account_edi_ubl_cii,Import/Export electronic invoices with UBL/CII,1.0,Third-Party,Accounting/Accounting,Unknown,,"
+Electronic invoicing module
+===========================
+
+Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).
+When generating the PDF on the invoice, ",account_edi,False,True,False,addons/account_edi_ubl_cii,__manifest__.py
+pos_adyen,POS Adyen,1.0,Third-Party,Sales/Point of Sale,Unknown,Integrate your POS with an Adyen payment terminal,,point_of_sale,False,True,False,addons/pos_adyen,__manifest__.py
+l10n_ca,Canada - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,Savoir-faire Linux,,"
+This is the module to manage the Canadian accounting chart in Odoo.
+===========================================================================================
+
+Canadian accounting charts and localiz","account, base_iban, l10n_multilang",False,True,False,addons/l10n_ca,__manifest__.py
+l10n_cr,Costa Rica - Accounting,15.0.1.0.0,Third-Party,Accounting/Localizations/Account Charts,ClearCorp S.A.,,"
+Chart of accounts for Costa Rica.
+=================================
+
+Includes:
+---------
+    * account.account.template
+    * account.tax.template
+    * account.chart.template
+
+Everything is in Engli",account,False,True,False,addons/l10n_cr,__manifest__.py
+l10n_co_pos,Colombian - Point of Sale,1.0,Third-Party,Accounting/Localizations/Point of Sale,Unknown,,Colombian - Point of Sale,"l10n_co, point_of_sale",True,True,False,addons/l10n_co_pos,__manifest__.py
+l10n_de_skr04,Germany SKR04 - Accounting,3.0,Third-Party,Accounting/Localizations/Account Charts,openbig.org,,"
+Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.
+==============================================================================
+
+German accounting chart and localization",l10n_de,False,True,False,addons/l10n_de_skr04,__manifest__.py
+purchase,Purchase,1.2,Third-Party,Inventory/Purchase,Unknown,"Purchase orders, tenders and agreements",,account,False,True,True,addons/purchase,__manifest__.py
+pos_restaurant_adyen,POS Restaurant Adyen,1.0,Third-Party,Point of Sale,Unknown,Adds American style tipping to Adyen,,"pos_adyen, pos_restaurant, payment_adyen",False,True,False,addons/pos_restaurant_adyen,__manifest__.py
+calendar_sms,Calendar - SMS,1.1,Third-Party,Hidden,Unknown,Send text messages as event reminders,Send text messages as event reminders,"calendar, sms",True,True,False,addons/calendar_sms,__manifest__.py
+pos_epson_printer,pos_epson_printer,1.0,Third-Party,Sales/Point of Sale,Unknown,Epson ePOS Printers in PoS,"
+
+Use Epson ePOS Printers without the IoT Box in the Point of Sale
+",point_of_sale,True,True,False,addons/pos_epson_printer,__manifest__.py
+report_pdf_options,Pdf report options,15.0.1.0.0,Custom,Productivity,Luis Rodrigo Mejia Mateus,"shows a modal window with options for printing, downloading or opening pdf reports","
+        Choose one of the following options when printing a pdf report:
+        - print. print the pdf report directly with the browser
+        - download. download the pdf report on your computer
+  ",web,False,True,False,addons_custom/report_pdf_options,__manifest__.py
+jupiter_accounts,jupiter_accounts,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, purchase_extension, itsys_real_estate, project_transactions, real_estate_extension, account_check_printing, base_accounting_kit",False,True,False,addons_custom/jupiter_accounts,__manifest__.py
+real_estate_extension,Real Estate Masters,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, base_accounting_kit, bank_reconciliation, itsys_real_estate, inexoft_account_voucher, inexoft_account_payments, purchase, account_vouchers, purchase_extension, cash_book, day_book, general_ledger, trial_balance, manufacturing_trading, profit_loss_balance_sheet, purchase_detail",False,True,False,addons_custom/real_estate_extension,__manifest__.py
+odoo_de_brand,De-brand Module 15,15.0.0.0.1,Custom,Uncategorized,,"
+        De-brand Module for odoo 15
+        ","
+        De-brand Module
+        with Error De-branding,
+        Prevent form auto-save on close and reload 
+    ","base, web, mail, mail_bot",True,True,False,addons_custom/odoo_de_brand,__manifest__.py
+hide_menu_user,Hide Any Menu User Wise,15.0.1.0.0,Custom,Extra Tools,Cybrosys Techno Solutions,Hide Any Menu Item User Wise,"Hide Any Menu Item User Wise, Hide Menu Items, Hide Menu",base,False,True,False,addons_custom/hide_menu_user,__manifest__.py
+jupiter_dashboard_deux,Jupiter Dashboard II,15.0.0.1,Custom,dashboard,ks-subinraj,"
+        Jupiter Dashboard II
+    ","
+        Jupiter Dashboard II
+    ",base,False,True,False,addons_custom/jupiter_dashboard_deux,__manifest__.py
+kg_hide_menu,Hide Menu,15.0.1.0.0,Custom,Extra Rights,Klystron Global,"
+        Restrict Menu Items from Specific Users","
+        Restrict Menu Items from Specific Users","base, web",False,True,False,addons_custom/kg_hide_menu,__manifest__.py
+real_estate_sheets,Project Evaluation Sheet,15.0,Custom,Real Estate,Unknown,"
+            Project Evaluation Sheet,
+            Competition Sheet,
+            Retention Sheet,
+            Term Sheet,
+            Term Sheet Template,
+            Walk in Configuration
+        ",,"base, itsys_real_estate",False,True,False,addons_custom/real_estate_sheets,__manifest__.py
+partner_account_creation,Partner Account Creation,15.0.0.1,Custom,account,,"
+        Partner Account Creation","
+        Partner Account Creation
+    ",account,False,True,False,addons_custom/partner_account_creation,__manifest__.py
+payment_adjustment,Payment Adjustment,13.0.1.1.0,Custom,,Unknown,,,"account, account",False,True,False,addons_custom/payment_adjustment,__manifest__.py
+jupiter_dashboard_optima,jupiter_dashboard_optima,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, base_setup, jupiter_dashboard_tres",False,True,False,addons_custom/jupiter_dashboard_optima,__manifest__.py
+base_account_budget,Odoo 15 Budget Management,15.0.1.1.0,Custom,Accounting,Cybrosys Techno Solutions, Budget Management for Odoo 15 Community Edition. ," This module allows accountants to manage analytic and budgets.
+
+     Once the Budgets are defined (in Accounting/Accounting/Budgets), the Project Managers
+     can set the planned amount on each Anal","base, account",False,True,False,addons_custom/base_account_budget,__manifest__.py
+project_transactions,Project Transactions,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, itsys_real_estate, real_estate_extension",False,True,False,addons_custom/project_transactions,__manifest__.py
+disable_quick_create,Disable Quick Create,13.0.1,Custom,Web,Inexoft Technologies,"Disable ""quick create"" for all and ""create and edit"" for specific models",,web,False,True,False,addons_custom/disable_quick_create,__manifest__.py
+itsys_real_estate,Real Estate.,1.0,Custom,Real Estate,Fatma Yousef,," Real Estate Management
+      - Properties Hierarchy
+      - Google Maps Integration
+      - Units Reservation
+      - Ownership Contracts Managament
+      - Easy Tenant Management
+      - Invoicing M","base, account, sale_management, analytic",False,True,True,addons_custom/itsys_real_estate,__manifest__.py
+base_accounting_kit,Odoo 15 Full Accounting Kit,15.0.2.2.2,Custom,Accounting,"Cybrosys Techno Solutions, Odoo SA"," Asset and Budget Management,
+                 Accounting Reports, PDC, Lock dates,
+                 Credit Limit, Follow Ups,
+                 Day-Bank-Cash book reports.","
+                    AccountingKit, Fullaccounting, Odoo accounting, Odooaccounting, all in one accounting,
+                    allinoneaccounting, accounting,
+                    Odoo 15 Accounting,A","base, account, sale, account_check_printing, base_account_budget",False,True,True,addons_custom/base_accounting_kit,__manifest__.py
+jupiter_dashboard,Jupiter Dashboard,0.1,Custom,Uncategorized,ks-subinraj,"
+        Jupiter Dashboard showing booking and registration details","
+        Jupiter Dashboard showing booking and registration details as charts
+    ",base,False,True,False,addons_custom/jupiter_dashboard,__manifest__.py
+ms_query,Execute Query,1.0,Custom,Extra Tools,Miftahussalam,Execute query from database,"
+        Execute query without open postgres
+Goto : Settings > Technical
+    ","base, mail",False,True,True,addons_custom/ms_query,__manifest__.py
+jupiter_dashboard_tres,jupiter_dashboard_tres,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, base_setup",False,True,False,addons_custom/jupiter_dashboard_tres,__manifest__.py
+gst_invoice,GST - Returns and Invoices,2.0.0,Custom,Accounting,Webkul Software Pvt. Ltd.,Odoo GST - Returns and Invoices helps to file the monthly return that summarizes all outward supplies by registered taxpayers,"GST - Returns and Invoices
+GST
+One Nation One Tax
+Tax
+Odoo Tax
+Odoo GST
+Returns and Invoices
+Goods and Services Tax
+Tax module
+Tax App
+GST module
+Goods and Services Tax in Odoo","l10n_in, account_tax_python",False,True,True,addons_custom/gst_invoice,__manifest__.py
+journal_extension,Journal Extension,0.1,Custom,account,Inexoft technologies,"
+        Account Opening
+        ","
+        Account Opening
+    ","base, account",False,True,False,common/journal_extension,__manifest__.py
+accounts_transactions_voucher_balance,"Accounts, Transactions Voucher Journal Balance",0.1,Custom,Uncategorized,My Company,"
+        Receipt,Payment Voucher Journal Balance
+        Customer Receipt, Vendor Payments Journal Balance
+        ","
+            Long description of module's purpose
+        ","base, account, inexoft_account_voucher, base_accounting_kit",False,True,False,common/accounts_transactions_voucher_balance,__manifest__.py
+bank_reconciliation,Manual Bank Reconciliation,15.0.1.0.0,Custom,Accounting,Unknown,Replacing default bank statement reconciliation method by traditional way,Replacing default bank statement reconciliation method by traditional way,account,False,True,False,common/bank_reconciliation,__manifest__.py
+total_in_words,total_in_words,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, account, l10n_in, inexoft_account_voucher",False,True,False,common/total_in_words,__manifest__.py
+inexoft_account_opening,Account Opening,0.1,Custom,account,Inexoft technologies,"
+        Account Opening
+        ","
+        Account Opening
+    ",account,False,True,False,common/inexoft_account_opening,__manifest__.py
+account_opening_extension,Account Opening Extension,15.0,Custom,Accounts Opening,Inexoft Technologies, Financial Year ,,"base, inexoft_account_opening",False,True,False,common/account_opening_extension,__manifest__.py
+account_vouchers,Accounts Transaction and Report,15.0.1.0.0,Custom,Accounts Vouchers,Inexoft Technologies, To Fulfill all accounting needs,"
+        Contains
+
+            ♦ Receipt Voucher
+
+            ♦ Payment Voucher
+
+            ♦ Journal Voucher
+
+            ♦ Customer Receipt
+
+            ♦ Vendor Receipt
+
+            ♦ Bank Reconci","base, account, base_accounting_kit, bank_reconciliation, base_account_budget, inexoft_account_payments, inexoft_account_voucher, cash_book, day_book, daybook_co_op, general_ledger, trial_balance, manufacturing_trading, profit_loss_balance_sheet, partner_ledger, rnd_register, l10n_in",False,True,False,common/account_vouchers,__manifest__.py
+stock_receipt_issue,Stock Receipt Damage Issue Voucher,15.0,Custom,Stock Inventory,Inexoft Technologies, Stock Receipt Damage Issue Voucher ,,"base, stock, product",False,True,False,common/stock_receipt_issue,__manifest__.py
+journal_voucher_extension,Journal Voucher Extension,0.1,Custom,account,Inexoft technologies,"
+        ","
+    hide cash account from journal voucher accounts list
+    ",account,False,True,False,common/journal_voucher_extension,__manifest__.py
+om_payroll_custom, ♦ Hr Payroll Customization ♦,13.0,Custom,sales,Inexoft Technologies, Hr Payroll Customizationn,,"base, account, hr, om_hr_payroll, om_hr_payroll_account",False,True,False,common/om_payroll_custom,__manifest__.py
+expiry_return_replacement,Expiry Return and Replacement,15.0.1.0.0,Custom,Expiry Return and Replacement,Inexoft Technologies, Expiry Return and Replacement ,"
+        Contains
+
+            ♦ Expiry Return 
+
+            ♦ Expiry Replacement
+           
+    ","base, account, stock, purchase, inexoft_direct_sales_purchase, inexoft_freight_charges, uom",False,True,False,common/expiry_return_replacement,__manifest__.py
+om_hr_payroll,Odoo 15 HR Payroll,15.0.4.0.0,Custom,Generic Modules/Human Resources,"Odoo Mates, Odoo SA",Payroll For Odoo 15 Community Edition,"Odoo 15 Payroll, Payroll Odoo 15, Odoo Community Payroll","mail, hr_contract, hr_holidays",False,True,True,common/om_hr_payroll,__manifest__.py
+inexoft_account_voucher_access,Account Voucher Access by Inexoft,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, account, snailmail_account, inexoft_account_voucher, inexoft_freight_charges, l10n_in",False,True,False,common/inexoft_account_voucher_access,__manifest__.py
+advance_search_widget,Advance Search Widget,13.0.1.0.0,Custom,Tools,,"
+        
+    ","
+    To display Advance search widget use widget=""advance_search_many2one"" in <field> tag.
+    To display fields in autocomplete popup you have to provide 'adv_fields' attribute in <field> tag
+    wit","web, product",False,True,False,common/advance_search_widget,__manifest__.py
+purchase_extension,Purchase Extension,15.0.1.0.0,Custom,Purchase,Inexoft Technologies, Contains Purchase Modification ,"
+        Contains
+
+            ♦ Purchase 
+
+            ♦ Purchase Return
+
+            ♦ Purchase Order
+
+            ♦ Supplier Master
+
+            ♦ Product Master  
+    ","base, account, stock, purchase, inexoft_direct_sales_purchase, inexoft_freight_charges, uom",False,True,False,common/purchase_extension,__manifest__.py
+stock_inventory_reset_draft_cancel,"Stock Receipt, Issue Note Reset To Draft",0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ","base, stock, stock_receipt_issue",False,True,False,common/stock_inventory_reset_draft_cancel,__manifest__.py
+inexoft_freight_charges,Freight Charges,0.1,Custom,account,Inexoft Technologies,"
+        Freight Charges
+        ","
+        Freight Charges
+    ",account,False,True,False,common/inexoft_freight_charges,__manifest__.py
+inexoft_direct_sales_purchase_cancel,Cancel Direct Sales & Purchase,0.1,Custom,sales,Inexoft Technologies,"
+        Cancel Direct Sales & Purchase","
+        Cancel Direct Sales & Purchase
+    ","account, inexoft_direct_sales_purchase, stock_picking_cancel_extended",False,True,False,common/inexoft_direct_sales_purchase_cancel,__manifest__.py
+inexoft_account_payments,Account Payments,0.1,Custom,accounting,Inexoft Technologies,"
+        Account Payments
+        ","
+        Account Payments
+    ","account, base_accounting_kit",False,True,False,common/inexoft_account_payments,__manifest__.py
+account_move_name_sequence,Account Move Number Sequence,15.0.1.0.0,Custom,Accounting,"Akretion,Vauxoo,Odoo Community Association (OCA)",Generate journal entry number from sequence,,account,False,True,False,common/account_move_name_sequence,__manifest__.py
+om_hr_payroll_account,Odoo 15 Payroll Accounting,15.0.0.0.0,Custom,Generic Modules/Human Resources,"Odoo Mates, Odoo SA",Generic Payroll system Integrated with Accounting,Generic Payroll system Integrated with Accounting,"om_hr_payroll, account",False,True,True,common/om_hr_payroll_account,__manifest__.py
+stock_picking_cancel_extended,Stock Picking Cancel/Reverse/Revert Odoo,13.0.0.5,Custom,"Warehouse,Stock",BrowseInfo,Apps for cancel stock picking reverse stock picking cancel done picking reverse workflow delivery order cancel incoming shipment cancel cancel picking order cancel delivery order cancel stock move cancel done picking reverse picking process done delivery,"
+    stock picking reverse workflow stock picking cancel delivery order cancel incoming shipment cancel, cancel picking order, cancel delivery order, cancel incoming shipment, cancel order, set to dra","stock, purchase",False,True,False,common/stock_picking_cancel_extended,__manifest__.py
+disable_quick_create,Disable Quick Create,13.0.1,Custom,Web,Inexoft Technologies,"Disable ""quick create"" for all and ""create and edit"" for specific models",,web,False,True,False,common/disable_quick_create,__manifest__.py
+inexoft_direct_sales_purchase,Direct Sales & Purchase,15.0.1,Custom,sales,Inexoft Technologies, Direct Sales & Purchase, Direct Sales & Purchase ,"account, purchase, sale, stock, stock_account",False,True,False,common/inexoft_direct_sales_purchase,__manifest__.py
+inexoft_account_voucher,Account Voucher,0.1,Custom,accounting,Inexoft Technologies,"
+        Account Voucher
+        ","
+        Account Voucher
+    ",account,False,True,False,common/inexoft_account_voucher,__manifest__.py
+multi_update_modules,Multi Update Modules,15.0.0.0.0,Custom,Extra Tools,Arxi,Updates multiple Odoo modules,,base,False,True,False,common/multi_update_modules,__manifest__.py
+evaluation_sheet_comparison,Evaluation Sheet Comparison,15.0.1,Custom,Accounting,,"
+        Odoo 15 Evaluation Sheet Comparison
+    ",,"base, beta_reports_base, real_estate_sheets",False,True,False,reports15/JUPITER_DEMO/evaluation_sheet_comparison,__manifest__.py
+booking_log_report,Booking Log Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Booking Log Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/booking_log_report,__manifest__.py
+debtors_outstanding_statement,Debtors Outstanding Statement,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Debtors Outstanding Statement
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/debtors_outstanding_statement,__manifest__.py
+booking_report,Booking Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Booking Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/booking_report,__manifest__.py
+budget_actual_comparison,Collection Target Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Collection Target Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/budget_actual_comparison,__manifest__.py
+project_wise_registration_report,Project Wise Registration Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Project Wise Registration Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/project_wise_registration_report,__manifest__.py
+cluster_head_report,Cluster Head Wise Booking Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Cluster Head Wise Booking Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/cluster_head_report,__manifest__.py
+crm_target_report,CRM Target Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 CRM Target Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/crm_target_report,__manifest__.py
+term_sheet_report,Term Sheet Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Term Sheet Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/term_sheet_report,__manifest__.py
+registration_report,Registration Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Registration Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/registration_report,__manifest__.py
+billing_collection_report,Billing & Collection Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Billing & Collection Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/billing_collection_report,__manifest__.py
+developer_ageing_report,Developer Ageing Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Developer Ageing
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/developer_ageing_report,__manifest__.py
+employee_project_details,Employee Project Details,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Employee Project Details
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/employee_project_details,__manifest__.py
+flat_inventory,Flat Inventory,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Flat Inventory Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/flat_inventory,__manifest__.py
+collection_target_report,Collection Target Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Collection Target Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER_DEMO/collection_target_report,__manifest__.py
+profit_loss_balance_sheet,Profit Loss & Balance Sheet,15.0.1,Custom,Accounting,,"
+        Odoo 15 Profit Loss & Balance Sheet
+    ",,"base, beta_reports_base, account, base_accounting_kit, manufacturing_trading",False,True,False,reports15/accounting/profit_loss_balance_sheet,__manifest__.py
+partner_ledger, ♦ Partner Ledger ♦ ,15.0.1,Custom,Accounts Report, Inexoft Technologies, Shows receivable and payable journal entries of the partners ,,"base, beta_reports_base, account",False,True,False,reports15/accounting/partner_ledger,__manifest__.py
+cash_book,Cash Book,15.0.1,Custom,Accounting,,"
+        Odoo 15 Cash Book
+    ",,"base, beta_reports_base, account",False,True,False,reports15/accounting/cash_book,__manifest__.py
+daybook_co_op, ♦ Daybook Co-Op ♦ ,15.0.1,Custom,Accounts Report,Inexoft Technologies, Daybook Co-Op Odoo 15 ,,"base, beta_reports_base, account, base_setup",False,True,False,reports15/accounting/daybook_co_op,__manifest__.py
+rnd_register,Receipt and Disbursement,15.0,Custom,Accounts Report, Inexoft Technologies , Used to construct a cash flow forecast ,,"base, beta_reports_base, account",False,True,False,reports15/accounting/rnd_register,__manifest__.py
+manufacturing_trading,Manufacturing & Trading A/C,15.0.1,Custom,Accounting,,"
+        Odoo 15 Manufacturing & Trading A/C
+    ",,"base, beta_reports_base, account, base_accounting_kit",False,True,False,reports15/accounting/manufacturing_trading,__manifest__.py
+trial_balance,Trial Balance,15.0.1,Custom,Accounting,,"
+        Odoo 15 Trial Balance
+    ",,"base, beta_reports_base, account",False,True,False,reports15/accounting/trial_balance,__manifest__.py
+general_ledger,General Ledger,15.0.1,Custom,Accounting,,"
+        Odoo 15 General Ledger
+    ",,"base, beta_reports_base, account",False,True,False,reports15/accounting/general_ledger,__manifest__.py
+day_book,Day Book,15.0.1,Custom,Accounting,,"
+        Odoo 15 Day Book
+    ",,"base, beta_reports_base, account",False,True,False,reports15/accounting/day_book,__manifest__.py
+inexoft_account_head_type,Inexoft Account Head Type,15.0.1,Custom,Accounts,Inexoft Technologies, Inexoft Account Head Type , Inexoft Account Head Type ,"account, base_accounting_kit, manufacturing_trading",False,True,False,reports15/accounting/inexoft_account_head_type,__manifest__.py
+beta_register_marking, Payroll register making ,15.0,Custom,Register Making,Inexoft Technologies, Payroll Register Making ,,"base, beta_reports_base, hr",False,True,False,reports15/accounting/beta_register_marking,__manifest__.py
+general_ledger_report,General Ledger 15,0.1,Custom,Uncategorized,,"
+        general ledger for 15","
+        general ledger 15
+    ","base, account",False,True,False,reports15/accounting/general_ledger_report,__manifest__.py
+category_wise_asset,Category Wise Asset Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Category Wise Asset Report
+    ",,"base, beta_reports_base, base_accounting_kit, account_vouchers",False,True,False,reports15/accounting/category_wise_asset,__manifest__.py
+beta_payroll_report,Payroll Report,15.0,Custom,Payroll Report,Inexoft Technologies, Payroll Report ,,"base, beta_reports_base, stock",False,True,False,reports15/accounting/beta_payroll_report,__manifest__.py
+sales_summary,Sales Summary,15.0.1,Custom,Sales,,"
+        Odoo 15 Sales Summary
+    ",,"base, beta_reports_base, account",False,True,False,reports15/SALES/sales_summary,__manifest__.py
+spot_booking_invoice_report,Spot Booking Invoice Report,15.0.1,Custom,Sales,,"
+        Odoo 15 Spot Booking Invoice Reports
+    ",,"base, beta_reports_base, real_estate_extension",False,True,False,reports15/SALES/spot_booking_invoice_report,__manifest__.py
+incentive_invoice_report,Incentive Invoice Report,15.0.1,Custom,Sales,,"
+        Odoo 15 Incentive Invoice Reports
+    ",,"base, beta_reports_base, real_estate_extension",False,True,False,reports15/SALES/incentive_invoice_report,__manifest__.py
+cp_brokerage_invoice_report,CP Brokerage Invoice Report,15.0.1,Custom,Sales,,"
+        Odoo 15 CP Brokerage Invoice Reports
+    ",,"base, beta_reports_base, real_estate_extension",False,True,False,reports15/SALES/cp_brokerage_invoice_report,__manifest__.py
+sales_tax_report,Sales Tax Report,15.0.1,Custom,Sales,,"
+        Odoo 15 Sales Tax Reports
+    ",,"base, beta_reports_base, account",False,True,False,reports15/SALES/sales_tax_report,__manifest__.py
+developer_invoice_report,Developer Invoice Report,15.0.1,Custom,Sales,,"
+        Odoo 15 Developer Invoice Reports
+    ",,"base, beta_reports_base, real_estate_extension",False,True,False,reports15/SALES/developer_invoice_report,__manifest__.py
+customer_sales_report,Customer Sales Report,15.0.1,Custom,Sales,,"
+        Odoo 15 Customer Sales Reports
+    ",,"base, beta_reports_base, account",False,True,False,reports15/SALES/customer_sales_report,__manifest__.py
+stock_recipt_issue_report,Stock Issue/Receipt Report,15.0,Custom,Stock Issue/Receipt Report,Inexoft Technologies, Stock Issue/Receipt Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, stock, purchase",False,True,False,reports15/inventory/stock_recipt_issue_report,__manifest__.py
+product_ledger,Product Ledger,15.0,Custom,Product Ledger,Inexoft Technologies, Product Ledger ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account, stock",False,True,False,reports15/inventory/product_ledger,__manifest__.py
+batchwise_product_report,Batchwise Product Report,15.0,Custom,Batchwise Product Report,Inexoft Technologies, Batchwise Product Report,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account, stock",False,True,False,reports15/inventory/batchwise_product_report,__manifest__.py
+batchwise_stock_report,Batchwise Stock Report,15.0,Custom,Batchwise Stock Report ,Inexoft Technologies, Batchwise Stock Report,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/inventory/batchwise_stock_report,__manifest__.py
+inventory_report,Inventory Report,15.0,Custom,Inventory Report,Inexoft Technologies, Inventory Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/inventory/inventory_report,__manifest__.py
+reports_script,Reports Script,0.1,Custom,Uncategorized,My Company,"
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com","
+        Long description of module's purpose
+    ",base,False,True,False,reports15/BASE/reports_script,__manifest__.py
+reports_menu,Report Menus,15.0,Custom,Report Menus,Inexoft Technologies, Report Menus ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/BASE/reports_menu,__manifest__.py
+beta_reports_base,Beta Report Base 15,15.0.1,Custom,Reports,Unknown,,,base,False,True,False,reports15/BASE/beta_reports_base,__manifest__.py
+evaluation_sheet_comparison,Evaluation Sheet Comparison,15.0.1,Custom,Accounting,,"
+        Odoo 15 Evaluation Sheet Comparison
+    ",,"base, beta_reports_base, real_estate_sheets",False,True,False,reports15/JUPITER/evaluation_sheet_comparison,__manifest__.py
+booking_log_report,Booking Log Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Booking Log Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/booking_log_report,__manifest__.py
+debtors_outstanding_statement,Debtors Outstanding Statement,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Debtors Outstanding Statement
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/debtors_outstanding_statement,__manifest__.py
+booking_report,Booking Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Booking Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/booking_report,__manifest__.py
+budget_actual_comparison,Collection Target Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Collection Target Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/budget_actual_comparison,__manifest__.py
+project_wise_registration_report,Project Wise Registration Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Project Wise Registration Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/project_wise_registration_report,__manifest__.py
+cluster_head_report,Cluster Head Wise Booking Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Cluster Head Wise Booking Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/cluster_head_report,__manifest__.py
+crm_target_report,CRM Target Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 CRM Target Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/crm_target_report,__manifest__.py
+term_sheet_report,Term Sheet Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Term Sheet Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/term_sheet_report,__manifest__.py
+registration_report,Registration Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Registration Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/registration_report,__manifest__.py
+billing_collection_report,Billing & Collection Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Billing & Collection Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/billing_collection_report,__manifest__.py
+developer_ageing_report,Developer Ageing Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Developer Ageing
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/developer_ageing_report,__manifest__.py
+employee_project_details,Employee Project Details,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Employee Project Details
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/employee_project_details,__manifest__.py
+flat_inventory,Flat Inventory,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Flat Inventory Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/flat_inventory,__manifest__.py
+collection_target_report,Collection Target Report,15.0.1,Custom,Real Estate,,"
+        Odoo 15 Collection Target Report
+    ",,"base, beta_reports_base, itsys_real_estate",False,True,False,reports15/JUPITER/collection_target_report,__manifest__.py
+product_wise_purchase_report,Product Wise Purchase Report,15.0,Custom,Product Wise Purchase Report,Inexoft Technologies, Product Wise Purchase Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/purchase/product_wise_purchase_report,__manifest__.py
+supplier_wise_purchase_report,Supplier Wise Purchase Report,15.0,Custom,Purchase Summary Report,Inexoft Technologies, Dynamic Supplier Wise Purchase Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/purchase/supplier_wise_purchase_report,__manifest__.py
+purchase_summary_report,Purchase Summary Report,15.0,Custom,Purchase Summary Report,Inexoft Technologies, Dynamic Purchase Summary Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/purchase/purchase_summary_report,__manifest__.py
+beta_purchase_detail,Purchase Details Register,0.1,Custom,beta,,,,"base, beta_reports_base, stock",False,True,False,reports15/purchase/beta_purchase_detail,__manifest__.py
+supplier_purchase_report,Supplier Wise Purchase Report,15.0,Custom,Purchase Summary Report,Inexoft Technologies, Dynamic Supplier Wise Purchase Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/purchase/supplier_purchase_report,__manifest__.py
+purchase_detail,Cash Book,15.0.1,Custom,Accounting,,"
+        Odoo 15 Cash Book
+    ",,"base, beta_reports_base, account",False,True,False,reports15/purchase/purchase_detail,__manifest__.py
+purchase_tax_report,Purchase tax Report,15.0,Custom,Purchase Report,Inexoft Technologies, Dynamic Purchase Tax Report ,"
+        A patient appointment is a scheduled meeting between a patient and a healthcare provider 
+        for medical consultation or treatment.The appointment involves the patient checking in,
+     ","base, beta_reports_base, account",False,True,False,reports15/purchase/purchase_tax_report,__manifest__.py
+anita_theme_base,anita_theme_base,15.0.0.7,Theme,Theme/Backend,Funenc Odoo Team,"
+        Base for anita odoo themes, it support free login for odoo
+    ","
+        Odoo Login, 
+        Odoo login page, 
+        Odoo login theme
+        Login, 
+        Anita Theme Base,
+        Anita Theme,
+        Awesome Theme,
+        Multi tab theme,
+        Pop form","base, web",False,True,True,themes15/anita_theme_base,__manifest__.py
+dark_mode_backend,Dark Mode Backend Theme,15.0.1.0.0,Theme,Themes/Backend,Cybrosys Techno Solutions,Dark Mode Backend Theme V15 is an attractive theme for backend,"Minimalist and elegant backend theme for Odoo 15, Backend Theme, Theme","base, web, mail",False,True,False,themes15/dark_mode_backend,__manifest__.py
+code_backend_theme,Code Backend Theme V15,15.0.1.0.5,Theme,Themes/Backend,Cybrosys Techno Solutions,Code Backend Theme V15 is an attractive theme for backend,"Minimalist and elegant backend theme for Odoo 14, Backend Theme, Theme","base, web, mail",False,True,False,themes15/code_backend_theme,__manifest__.py
+backend_theme_infinito,Infinito Backend Theme,15.0.1.0.0,Theme,Themes/Backend,Cybrosys Techno Solutions,"The Backend Theme Infinito Is A Dynamic And Ultimate Theme
+     For Your Odoo V15. This Theme Will Give You A New Experience With Odoo.
+      Main Highlight Of The Theme Is You Can Dynamically Change The Colors,
+       Views, Buttons, Different Types Sidebar...Etc",Utmost and dynamic backend theme for Odoo 15,web,False,True,False,themes15/backend_theme_infinito,__manifest__.py
+artify_backend_theme,Artify Backend Theme V15,15.0.1.0.0,Theme,Themes/Backend,Cybrosys Techno Solutions,Artify Backend Theme V15 is an attractive theme for backend,"Minimalist and elegant backend theme for Odoo 15, Backend Theme, Theme","base, web, mail",False,True,False,themes15/artify_backend_theme,__manifest__.py
+vista_backend_theme,Vista Backend Theme V15,15.0.1.0.1,Theme,Themes/Backend,Cybrosys Techno Solutions,Vista Backend Theme V15 is an attractive theme for backend,"Minimalist and elegant backend theme for Odoo 14, Backend Theme, Theme","base, web, mail",False,True,False,themes15/vista_backend_theme,__manifest__.py
+anita_dark_theme,anita_dark_theme,15.0.0.1,Theme,Theme/Backend,Fuenec Odoo Team,"
+        Dark mode theme for odoo","
+        Dark mode theme for odoo, free, free, free!
+    ","base, anita_theme_base",False,True,False,themes15/anita_dark_theme,__manifest__.py
+muk_web_theme,MuK Backend Theme,15.0.1.0.1,Theme,Themes/Backend,MuK IT,Odoo Community Backend Theme,,"base_setup, web_editor, mail",False,True,False,themes15/muk_web_theme,__manifest__.py
+modern_theme,Modern Backend Theme,15.0.1.0.0,Theme,Themes/Backend,"Odoo Land, Fadoo","
+        Odoo Land Modern Theme","
+        Modern theme is a Odoo backend theme for Community edition, with the latest template design methods and support full responsive.
+    ","base, web, mail, web_responsive",False,True,False,themes15/modern_theme,__manifest__.py
+dodger_blue,Dodger Blue Backend Theme,15.0.1.0.0,Theme,Themes/Backend,Cybrosys Techno Solutions,Outrageous Blue Backend Theme,Backend theme for Odoo 15.0 community edition. Blue theme blue backend theme odoo backend theme,"website, portal",False,True,False,themes15/dodger_blue,__manifest__.py
+web_responsive,Web Responsive,15.0.1.1.4,Theme,Website,"LasLabs, Tecnativa, ITerra, Odoo Community Association (OCA)","Responsive web client, community-supported",,"web, mail",False,True,False,themes15/web_responsive,__manifest__.py
+jazzy_backend_theme,Jazzy Backend Theme v15,15.0.1.0.0,Theme,Themes/Backend,Cybrosys Techno Solutions,Jazzy backed Theme V15 is an attractive theme for backend,"Minimalist and elegant backend theme for Odoo 15, Backend Theme, Theme","base, web, mail",False,True,False,themes15/jazzy_backend_theme,__manifest__.py
