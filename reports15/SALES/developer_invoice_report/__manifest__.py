@@ -8,7 +8,7 @@
 
     'author': "",
     'category': 'Sales',
-    'version': '15.0.1',
+    'version': '18.0.1',
 
     'depends': ['base', 'beta_reports_base', 'real_estate_extension'],
 

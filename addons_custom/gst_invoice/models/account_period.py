@@ -71,7 +71,7 @@ class AccountPeriod(models.Model):
                         'Either some periods are overlapping ' \
                         'or the period\'s dates are not matching the scope of the fiscal year.'))
 
-    @api.returns('self')
+    # @api.returns('self')  # Deprecated in Odoo 18
     def next(self, period, step):
         ids = self.search([('date_start', '>', period.date_start)])
         if len(ids) >= step:

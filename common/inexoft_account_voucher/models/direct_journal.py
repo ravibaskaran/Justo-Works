@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    @api.returns('self', lambda value: value.id)
+    # @api.returns  # Deprecated in Odoo 18('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         if self.direct_journal_entry_inx and self.direct_journal_type_inx in ['receipt', 'payment']:

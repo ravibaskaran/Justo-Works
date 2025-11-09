@@ -4,7 +4,7 @@
     'name': 'Odoo 15 Payroll Accounting',
     'category': 'Generic Modules/Human Resources',
     'author': 'Odoo Mates, Odoo SA',
-    'version': '15.0.0.0.0',
+    'version': '18.0.0.0.0',
     'sequence': 1,
     'license': 'LGPL-3',
     'website': 'https://odoomates.tech',

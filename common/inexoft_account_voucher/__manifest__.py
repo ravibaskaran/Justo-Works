@@ -11,7 +11,7 @@
     'website': "https://www.inexoft.com",
 
     'category': 'accounting',
-    'version': '0.1',
+    'version': '18.0.0.1',
     'depends': ['account'],
     'data': [
         'security/security.xml',

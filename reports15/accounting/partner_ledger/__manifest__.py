@@ -10,7 +10,7 @@
     # Categories can be used to filter modules in modules listing
     # for the full list
     'category': 'Accounts Report',
-    'version': '15.0.1',
+    'version': '18.0.1',
 
     # any module necessary for this one to work correctly
     'depends': [

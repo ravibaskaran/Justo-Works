@@ -14,7 +14,7 @@ class Menu(models.Model):
     _inherit = 'ir.ui.menu'
 
     @api.model
-    @api.returns('self')
+    # @api.returns('self')  # Deprecated in Odoo 18
     def get_user_roots(self):
         """ Return all root menu ids visible for the user.
 

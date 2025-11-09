@@ -3,7 +3,7 @@
 
 {
     "name": "Stock Picking Cancel/Reverse/Revert Odoo",
-    "version": "13.0.0.5",
+    "version": "18.0.0.5",
     "author": "BrowseInfo",
     'category': 'Warehouse,Stock',
     "website": "https://www.browseinfo.in",

@@ -6,7 +6,7 @@
     'author': "Inexoft Technologies",
     'website': "http://www.inexoft.com",
     'category': 'sales',
-    'version': '13.0',
+    'version': '18.0',
     'depends': ['base', 'account', 'hr','om_hr_payroll', 'om_hr_payroll_account'],
     'data': [
             'views/hr_payroll_views.xml',

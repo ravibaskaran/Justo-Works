@@ -9,7 +9,7 @@
     'author': "Inexoft Technologies",
     'website': "http://www.inexoft.com",
     'category': 'sales',
-    'version': '0.1',
+    'version': '18.0.0.1',
     'depends': ['account','inexoft_direct_sales_purchase','stock_picking_cancel_extended'],
     'data': [
         'security/security.xml',

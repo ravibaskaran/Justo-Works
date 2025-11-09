@@ -2,7 +2,7 @@
 
 {
     "name": "Advance Search Widget",
-    "version": "13.0.1.0.0",
+    "version": "18.0.1.0.0",
     "author": "",
     "maintainer": "",
     "complexity": "easy",

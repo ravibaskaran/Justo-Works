@@ -12,7 +12,7 @@
     'author': "",
     'website': "",
     'category': 'Uncategorized',
-    'version': '15.0.0.0.1',
+    'version': '18.0.0.0.1',
     'depends': ['base', 'web', 'mail', 'mail_bot'],
     'data': [
         'views/templates.xml',

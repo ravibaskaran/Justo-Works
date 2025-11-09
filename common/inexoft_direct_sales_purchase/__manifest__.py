@@ -10,7 +10,7 @@
     'website': "http://www.inexoft.com",
 
     'category': 'sales',
-    'version': '15.0.1',
+    'version': '18.0.1',
 
     'depends': [
         'account',

@@ -1,6 +1,6 @@
 {
     "name": "Payment Adjustment",
-    "version": "13.0.1.1.0",
+    "version": "18.0.1.1.0",
     "category": "",
     "depends": [
         'account','account'

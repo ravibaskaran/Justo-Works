@@ -2,7 +2,7 @@
 {
     'name': "Beta Report Base 15",
     'category': 'Reports',
-    'version': '15.0.1',
+    'version': '18.0.1',
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',

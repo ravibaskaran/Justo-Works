@@ -10,7 +10,7 @@
     'author': "Inexoft Technologies",
     'website': "http://www.inexoft.com",
     'category': 'account',
-    'version': '0.1',
+    'version': '18.0.0.1',
     'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',

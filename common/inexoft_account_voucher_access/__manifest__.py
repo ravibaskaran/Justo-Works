@@ -14,7 +14,7 @@
     'website': "http://www.yourcompany.com",
 
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '18.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'account', 'snailmail_account', 'inexoft_account_voucher', 'inexoft_freight_charges', 'l10n_in'],

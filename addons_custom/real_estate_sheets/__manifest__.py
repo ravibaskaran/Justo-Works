@@ -12,7 +12,7 @@
         """,
 
     'category': 'Real Estate',
-    'version': '15.0',
+    'version': '18.0',
 
     'depends': [
         'base',

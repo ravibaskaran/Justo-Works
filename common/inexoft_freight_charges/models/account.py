@@ -17,7 +17,7 @@ class AccountMove(models.Model):
         res['formatted_other_charge_total'] = formatLang(self.env, self.other_charge_total, currency_obj=currency)
         return res
 
-    @api.returns('self', lambda value: value.id)
+    # @api.returns  # Deprecated in Odoo 18('self', lambda value: value.id)
     def copy(self, default=None):
         res = super(AccountMove, self).copy(default=default)
         print(res,"resssssssssssssssssssssssss")

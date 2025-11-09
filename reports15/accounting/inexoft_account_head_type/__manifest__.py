@@ -9,7 +9,7 @@
     'author': "Inexoft Technologies",
     'website': "https://www.inexoft.com",
     'category': 'Accounts',
-    'version': '15.0.1',
+    'version': '18.0.1',
     'depends': [
         'account',
         'base_accounting_kit',

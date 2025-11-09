@@ -8,7 +8,7 @@
 
     'author': "",
     'category': 'Real Estate',
-    'version': '15.0.1',
+    'version': '18.0.1',
 
     'depends': ['base', 'beta_reports_base', 'base_accounting_kit', 'account_vouchers'],
 
