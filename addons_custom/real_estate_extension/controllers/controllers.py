@@ -801,6 +801,9 @@ class RealEstateExtension(http.Controller):
     # create api key with scope customer
     @http.route(['/project/customer_master_create'], type='json', auth='public', methods=['POST'])
     def customer_master_create(self, **kwargs):
+        # Start timing for performance tracking
+        start_time = time.time()
+
         failed_response = {
             'data': 'Access Denied',
             'status': 'Failed',
@@ -808,12 +811,18 @@ class RealEstateExtension(http.Controller):
         }
         user_id = request.env["res.users.apikeys"]._check_credentials(scope='customer', key=kwargs.get('password'))
         if not user_id:
+            exec_time = (time.time() - start_time) * 1000
             self.add_api_log('', 201, str(failed_response), 'customer',
-                             'failed', '', 'in', kwargs)
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         if request.env['res.users'].sudo().browse(user_id).login != kwargs.get('login'):
+            exec_time = (time.time() - start_time) * 1000
             self.add_api_log('', 201, str(failed_response), 'customer',
-                             'failed', '', 'in', kwargs)
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         else:
             vals = kwargs.get('record')
@@ -833,26 +842,34 @@ class RealEstateExtension(http.Controller):
                     elif gender.upper() == 'O':
                         gender = 'other'
                     else:
-                        self.add_api_log('', 201, str('Invalid input for gender'), 'customer',
-                                         'failed', '', 'in', kwargs)
-                        return {
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = {
                             'data': 'Invalid input for gender '
                                     '(Valid inputs: F or f for Female, M or m for Male, O or o for Other)',
                             'status': 'Failed',
                             'code': 201
                         }
+                        self.add_api_log('', 201, str('Invalid input for gender'), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                 dob = vals.get('date_of_birth')
                 if dob:
                     dob = is_valid_date_format(dob)
                     if not dob:
-                        self.add_api_log('', 201, str('Invalid input for Date of Birth (Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)'), 'customer',
-                                         'failed', '', 'in', kwargs)
-                        return {
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = {
                             'data': 'Invalid input for Date of Birth'
                                     '(Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)',
                             'status': 'Failed',
                             'code': 201
                         }
+                        self.add_api_log('', 201, str('Invalid input for Date of Birth (Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)'), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                 else:
                     dob = False
                 credit_days = vals.get('credit_days')
@@ -860,25 +877,33 @@ class RealEstateExtension(http.Controller):
                     try:
                         credit_days = int(credit_days)
                     except:
-                        self.add_api_log('', 201, str('Invalid input for credit_days'), 'customer',
-                                         'failed', '', 'in', kwargs)
-                        return {
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = {
                             'data': 'Invalid input for credit_days',
                             'status': 'Failed',
                             'code': 201
                         }
+                        self.add_api_log('', 201, str('Invalid input for credit_days'), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                 income = vals.get('income')
                 if income:
                     try:
                         income = float(income)
                     except:
-                        self.add_api_log('', 201, str('Invalid input for income'), 'customer',
-                                         'failed', '', 'in', kwargs)
-                        return {
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = {
                             'data': 'Invalid input for income',
                             'status': 'Failed',
                             'code': 201
                         }
+                        self.add_api_log('', 201, str('Invalid input for income'), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                 try:
                     if vals.get('customer_id'):
                         cp = request.env['res.partner'].sudo().search([('jv_cid', '=', vals.get('customer_id'))], limit=1)
@@ -911,12 +936,16 @@ class RealEstateExtension(http.Controller):
 
                         else:
                             if not vals.get('name'):
-                                self.add_api_log('', 201, str('Name not provided'), 'customer', 'failed', '', 'in', kwargs)
-                                return {
+                                exec_time = (time.time() - start_time) * 1000
+                                error_response = {
                                     'data': 'Name not provided',
                                     'status': 'Failed',
                                     'code': 201
                                 }
+                                self.add_api_log('', 201, str('Name not provided'), 'customer', 'failed', '', 'in', kwargs,
+                                                 request_data=kwargs, response_data=error_response,
+                                                 execution_time=exec_time, request_obj=request)
+                                return error_response
                             state_id = request.env.company.state_id
                             country_id = request.env.company.country_id
                             cp = request.env['res.partner'].sudo().create({
@@ -954,22 +983,33 @@ class RealEstateExtension(http.Controller):
                             'status': 'Success',
                             'code': 200
                         }
-                        self.add_api_log(cp.id, 200, str(success_response), 'customer', 'success', cp.name, 'in', kwargs)
+                        exec_time = (time.time() - start_time) * 1000
+                        self.add_api_log(cp.id, 200, str(success_response), 'customer', 'success', cp.name, 'in', kwargs,
+                                         request_data=kwargs, response_data=success_response,
+                                         execution_time=exec_time, request_obj=request)
                     else:
-                        self.add_api_log('', 201, str('customer_id is required!'), 'customer',
-                                         'failed', '', 'in', kwargs)
-                        return {
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = {
                             'data': 'customer_id is required!',
                             'status': 'Failed',
                             'code': 201
                         }
+                        self.add_api_log('', 201, str('customer_id is required!'), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                 except Exception as e:
-                    self.add_api_log('', 201, str(e), 'customer', 'failed', '', 'in', kwargs)
-                    return {
-                        'data': e,
+                    exec_time = (time.time() - start_time) * 1000
+                    error_response = {
+                        'data': str(e),
                         'status': 'Failed',
                         'code': 201
                     }
+                    self.add_api_log('', 201, str(e), 'customer', 'failed', '', 'in', kwargs,
+                                     request_data=kwargs, response_data=error_response,
+                                     execution_time=exec_time, request_obj=request)
+                    return error_response
                 return success_response
                     # else:
                     #     return {
@@ -990,7 +1030,10 @@ class RealEstateExtension(http.Controller):
                 #         'code': 201
                 #     }
             else:
-                self.add_api_log('', 201, str(failed_response), 'customer', 'failed', '', 'in', kwargs)
+                exec_time = (time.time() - start_time) * 1000
+                self.add_api_log('', 201, str(failed_response), 'customer', 'failed', '', 'in', kwargs,
+                                 request_data=kwargs, response_data=failed_response,
+                                 execution_time=exec_time, request_obj=request)
                 return failed_response
 
     # Api for creating employee and returning employee code
