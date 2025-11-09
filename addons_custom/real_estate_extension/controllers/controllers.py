@@ -1449,66 +1449,127 @@ class RealEstateExtension(http.Controller):
     # create api key with scope cp
     @http.route(['/cp/fetch_channel_partner_id'], type='json', auth='public', methods=['POST'])
     def fetch_channel_partner_details(self, **kwargs):
-        failed_response = {
-            'data': 'Access Denied',
-            'status': 'Failed',
-            'code': 201
-        }
+        # Start timing for performance tracking
+        start_time = time.time()
+
+        failed_response = APIResponseBuilder.forbidden(message="Access Denied")
+
         user_id = request.env["res.users.apikeys"]._check_credentials(scope='cp', key=kwargs.get('password'))
         if not user_id:
-            self.add_api_log('', 201,
-                             str(failed_response), 'cp',
-                             'failed', '', 'in', kwargs)
+            exec_time = (time.time() - start_time) * 1000
+            self.add_api_log('', 403, str(failed_response), 'cp',
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         if request.env['res.users'].sudo().browse(user_id).login != kwargs.get('login'):
-            self.add_api_log('', 201,
-                             str(failed_response), 'cp',
-                             'failed', '', 'in', kwargs)
+            exec_time = (time.time() - start_time) * 1000
+            self.add_api_log('', 403, str(failed_response), 'cp',
+                             'failed', '', 'in', kwargs,
+                             request_data=kwargs, response_data=failed_response,
+                             execution_time=exec_time, request_obj=request)
             return failed_response
         else:
             vals = kwargs.get('record')
             if vals:
-                # if vals.get('name'):
-                # country_id = request.env['res.country'].search([('code', '=', vals.get('country_code'))])
-                # country_id = request.env.user.company_id.country_id
-                # if country_id:
-                #     state_id = request.env['res.country.state'].search([('code', '=', vals.get('state_code')), ('country_id', '=', country_id.id)])
-                #     if state_id:
-                # if vals.get('mobile'):
+                # Initialize validator
+                validator = DataValidator(env=request.env)
+
+                # VALIDATION: Email format
+                if vals.get('email'):
+                    is_valid, error_msg = validator.validate_email(vals.get('email'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'cp',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Phone format
+                if vals.get('phone'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('phone'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'cp',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: Mobile format
+                if vals.get('mobile'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('mobile'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'cp',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: State and Country codes (if provided)
+                state_id = None
+                country_id = None
+                if vals.get('state_code') or vals.get('country_code'):
+                    is_valid, error_msg, country_rec, state_rec = validator.validate_state_country(
+                        vals.get('state_code'),
+                        vals.get('country_code')
+                    )
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'cp',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    country_id = country_rec
+                    state_id = state_rec
+
                 try:
+                    # VALIDATION: Required field - cp_id
                     if not vals.get('cp_id') or (vals.get('cp_id') and vals['cp_id'] == ''):
-                        self.add_api_log('', 201,
-                                         str('cp_id is required!'), 'cp',
-                                         'failed', '', 'in', kwargs)
-                        return {
-                            'data': 'cp_id is required!',
-                            'status': 'Failed',
-                            'code': 201
-                        }
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message="cp_id is required",
+                            errors=["cp_id: Field is required"]
+                        )
+                        self.add_api_log('', 400, str(error_response['message']), 'cp',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
                     cp = request.env['res.partner'].sudo().search(
                         [('jv_cp_id', '=', vals.get('cp_id')),
                          ('is_channel', '=', True)], limit=1)
+                    is_update = False  # Track if this is an update or create
+
                     if cp:
-                        # cp = request.env['res.partner'].sudo().search(
-                        #     [('channel_id', '=', vals.get('cp_id')),
-                        #      ('is_channel', '=', True)])
-                        # if not cp:
-                        #     self.add_api_log('', 201,
-                        #                      str('Channel Partner with the provided id is not found!'), 'cp',
-                        #                      'failed', '', 'in', kwargs)
-                        #     return {
-                        #         'data': 'Channel Partner with the provided id is not found!',
-                        #         'status': 'Failed',
-                        #         'code': 201
-                        #     }
+                        is_update = True  # Existing channel partner found - UPDATE operation
                         cp.write({
                             'name': vals.get('name') if vals.get('name') else cp.name,
                             'owner_name': vals.get('owner_name') if vals.get('owner_name') else cp.owner_name,
                             'street': vals.get('street') if vals.get('street') else cp.street,
                             'street2': vals.get('street2') if vals.get('street2') else cp.street2,
                             'city': vals.get('city') if vals.get('city') else cp.city,
-                            # 'state_id': state_id.id if state_id else cp.state_id,
-                            # 'country_id': country_id.id if country_id else cp.country_id,
+                            'state_id': state_id.id if state_id else cp.state_id,
+                            'country_id': country_id.id if country_id else cp.country_id,
                             'zip': vals.get('zip') if vals.get('zip') else cp.zip,
                             'vat': vals.get('gstin') if vals.get('gstin') else cp.vat,
                             'rera_number': vals.get('rera_number') if vals.get('rera_number') else cp.rera_number,
@@ -1526,15 +1587,25 @@ class RealEstateExtension(http.Controller):
                         })
 
                     else:
+                        # VALIDATION: Required field - Name (for new channel partner creation)
                         if not vals.get('name'):
-                            self.add_api_log('', 201,
-                                             str('Name not provided'), 'cp',
-                                             'failed', '', 'in', kwargs)
-                            return {
-                                'data': 'Name not provided',
-                                'status': 'Failed',
-                                'code': 201
-                            }
+                            exec_time = (time.time() - start_time) * 1000
+                            error_response = APIResponseBuilder.bad_request(
+                                message="Name is required for new channel partner creation",
+                                errors=["name: Field is required"]
+                            )
+                            self.add_api_log('', 400, str(error_response['message']), 'cp',
+                                             'failed', '', 'in', kwargs,
+                                             request_data=kwargs, response_data=error_response,
+                                             execution_time=exec_time, request_obj=request)
+                            return error_response
+
+                        # Use validated state/country or fall back to company defaults
+                        if not state_id:
+                            state_id = request.env.company.state_id
+                        if not country_id:
+                            country_id = request.env.company.country_id
+
                         cp = request.env['res.partner'].sudo().create({
                             'is_channel': True,
                             'is_company': True,
@@ -1544,8 +1615,8 @@ class RealEstateExtension(http.Controller):
                             'street': vals.get('street'),
                             'street2': vals.get('street2'),
                             'city': vals.get('city'),
-                            'state_id': request.env.company.state_id.id,
-                            'country_id': request.env.company.country_id.id,
+                            'state_id': state_id.id,
+                            'country_id': country_id.id,
                             'zip': vals.get('zip'),
                             'vat': vals.get('gstin'),
                             'rera_number': vals.get('rera_number'),
@@ -1560,25 +1631,40 @@ class RealEstateExtension(http.Controller):
                             'account_number': vals.get('account_number'),
                             'jv_cp_id': vals.get('cp_id')
                         })
-                    success_response = {
-                        'data': {
-                            'cp_id': cp.jv_cp_id,
-                        },
-                        'status': 'Success',
-                        'code': 200
-                    }
-                    self.add_api_log(cp.id, 201,
-                                     str(success_response), 'cp',
-                                     'success', str(cp.name), 'in', kwargs)
+
+                    # Build success response with proper HTTP code (200 for update, 201 for create)
+                    exec_time = (time.time() - start_time) * 1000
+                    if is_update:
+                        success_response = APIResponseBuilder.success(
+                            data={'cp_id': cp.jv_cp_id},
+                            message="Channel Partner updated successfully",
+                            code=200
+                        )
+                        http_code = 200
+                    else:
+                        success_response = APIResponseBuilder.created(
+                            data={'cp_id': cp.jv_cp_id},
+                            message="Channel Partner created successfully",
+                            resource_id=cp.jv_cp_id
+                        )
+                        http_code = 201
+
+                    self.add_api_log(cp.id, http_code, str(success_response), 'cp',
+                                     'success', str(cp.name), 'in', kwargs,
+                                     request_data=kwargs, response_data=success_response,
+                                     execution_time=exec_time, request_obj=request)
                 except Exception as e:
-                    self.add_api_log('', 201,
-                                     str(e), 'cp',
-                                     'failed', '', 'in', kwargs)
-                    return {
-                        'data': e,
-                        'status': 'Failed',
-                        'code': 201
-                    }
+                    # Handle unexpected server errors
+                    exec_time = (time.time() - start_time) * 1000
+                    error_response = APIResponseBuilder.server_error(
+                        message="An error occurred while processing the channel partner data",
+                        exception=e
+                    )
+                    # Log the actual exception for debugging (sanitized by add_api_log)
+                    self.add_api_log('', 500, str(e), 'cp', 'failed', '', 'in', kwargs,
+                                     request_data=kwargs, response_data=error_response,
+                                     execution_time=exec_time, request_obj=request)
+                    return error_response
                 return success_response
                 # else:
                 #     self.add_api_log('', 201,
@@ -1614,10 +1700,17 @@ class RealEstateExtension(http.Controller):
                 #         'code': 201
                 #     }
             else:
-                self.add_api_log('', 201,
-                                 str(failed_response), 'cp',
-                                 'failed', '', 'in', kwargs)
-                return failed_response
+                # No record data provided
+                exec_time = (time.time() - start_time) * 1000
+                error_response = APIResponseBuilder.bad_request(
+                    message="No record data provided",
+                    errors=["record: Field is required"]
+                )
+                self.add_api_log('', 400, str(error_response['message']), 'cp',
+                                 'failed', '', 'in', kwargs,
+                                 request_data=kwargs, response_data=error_response,
+                                 execution_time=exec_time, request_obj=request)
+                return error_response
 
     @http.route('/correct_booking_employee_fields', auth='public')
     def correct_booking_employee_fields(self, **kw):
