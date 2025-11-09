@@ -6,6 +6,8 @@ from odoo import http
 from odoo.http import request
 import logging
 from odoo.addons.real_estate_extension.models.sanitizer import sanitize_for_logging
+from odoo.addons.real_estate_extension.models.validators import DataValidator
+from odoo.addons.real_estate_extension.controllers.response_builder import APIResponseBuilder
 
 _logger = logging.getLogger(__name__)
 
@@ -827,79 +829,139 @@ class RealEstateExtension(http.Controller):
         else:
             vals = kwargs.get('record')
             if vals:
-                # if vals.get('name'):
-                # country_id = request.env['res.country'].search([('code', '=', vals.get('country_code'))])
-                # if vals.get('country_code') and country_id:
-                #     state_id = request.env['res.country.state'].search(
-                #         [('code', '=', vals.get('state_code')), ('country_id', '=', country_id.id)])
-                #     if vals.get('state_code') and state_id:
-                gender = vals.get('gender')
-                if gender:
-                    if gender.upper() == 'M':
-                        gender = 'male'
-                    elif gender.upper() == 'F':
-                        gender = 'female'
-                    elif gender.upper() == 'O':
-                        gender = 'other'
-                    else:
+                # Initialize validator
+                validator = DataValidator(env=request.env)
+
+                # VALIDATION: Email format (if provided)
+                if vals.get('email'):
+                    is_valid, error_msg = validator.validate_email(vals.get('email'))
+                    if not is_valid:
                         exec_time = (time.time() - start_time) * 1000
-                        error_response = {
-                            'data': 'Invalid input for gender '
-                                    '(Valid inputs: F or f for Female, M or m for Male, O or o for Other)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                        self.add_api_log('', 201, str('Invalid input for gender'), 'customer',
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'customer',
                                          'failed', '', 'in', kwargs,
                                          request_data=kwargs, response_data=error_response,
                                          execution_time=exec_time, request_obj=request)
                         return error_response
-                dob = vals.get('date_of_birth')
-                if dob:
-                    dob = is_valid_date_format(dob)
-                    if not dob:
+
+                # VALIDATION: Phone format (if provided)
+                if vals.get('phone'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('phone'))
+                    if not is_valid:
                         exec_time = (time.time() - start_time) * 1000
-                        error_response = {
-                            'data': 'Invalid input for Date of Birth'
-                                    '(Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                        self.add_api_log('', 201, str('Invalid input for Date of Birth (Valid input formats: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD)'), 'customer',
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'customer',
                                          'failed', '', 'in', kwargs,
                                          request_data=kwargs, response_data=error_response,
                                          execution_time=exec_time, request_obj=request)
                         return error_response
-                else:
-                    dob = False
+
+                # VALIDATION: Mobile format (if provided)
+                if vals.get('mobile'):
+                    is_valid, error_msg = validator.validate_phone(vals.get('mobile'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+
+                # VALIDATION: State and Country codes (FIXED - uncommented and enhanced)
+                state_id = None
+                country_id = None
+                if vals.get('state_code') or vals.get('country_code'):
+                    is_valid, error_msg, country_rec, state_rec = validator.validate_state_country(
+                        vals.get('state_code'),
+                        vals.get('country_code')
+                    )
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    country_id = country_rec
+                    state_id = state_rec
+
+                # VALIDATION: Gender (using validator)
+                gender = None
+                if vals.get('gender'):
+                    is_valid, error_msg, normalized_gender = validator.validate_gender(vals.get('gender'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    gender = normalized_gender
+
+                # VALIDATION: Date of Birth format (using validator)
+                dob = False
+                if vals.get('date_of_birth'):
+                    is_valid, error_msg, iso_date = validator.validate_date_format(vals.get('date_of_birth'))
+                    if not is_valid:
+                        exec_time = (time.time() - start_time) * 1000
+                        error_response = APIResponseBuilder.bad_request(
+                            message=error_msg,
+                            errors=[error_msg]
+                        )
+                        self.add_api_log('', 400, str(error_msg), 'customer',
+                                         'failed', '', 'in', kwargs,
+                                         request_data=kwargs, response_data=error_response,
+                                         execution_time=exec_time, request_obj=request)
+                        return error_response
+                    dob = iso_date
+
+                # VALIDATION: Credit days (must be integer)
                 credit_days = vals.get('credit_days')
                 if credit_days:
                     try:
                         credit_days = int(credit_days)
-                    except:
+                    except (ValueError, TypeError):
                         exec_time = (time.time() - start_time) * 1000
-                        error_response = {
-                            'data': 'Invalid input for credit_days',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                        self.add_api_log('', 201, str('Invalid input for credit_days'), 'customer',
+                        error_response = APIResponseBuilder.bad_request(
+                            message="Invalid input for credit_days. Must be a valid integer.",
+                            errors=[f"credit_days: Invalid value '{credit_days}'. Expected integer."]
+                        )
+                        self.add_api_log('', 400, str(error_response['message']), 'customer',
                                          'failed', '', 'in', kwargs,
                                          request_data=kwargs, response_data=error_response,
                                          execution_time=exec_time, request_obj=request)
                         return error_response
+
+                # VALIDATION: Income (must be numeric)
                 income = vals.get('income')
                 if income:
                     try:
                         income = float(income)
-                    except:
+                    except (ValueError, TypeError):
                         exec_time = (time.time() - start_time) * 1000
-                        error_response = {
-                            'data': 'Invalid input for income',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                        self.add_api_log('', 201, str('Invalid input for income'), 'customer',
+                        error_response = APIResponseBuilder.bad_request(
+                            message="Invalid input for income. Must be a valid number.",
+                            errors=[f"income: Invalid value '{income}'. Expected numeric value."]
+                        )
+                        self.add_api_log('', 400, str(error_response['message']), 'customer',
                                          'failed', '', 'in', kwargs,
                                          request_data=kwargs, response_data=error_response,
                                          execution_time=exec_time, request_obj=request)
@@ -907,15 +969,17 @@ class RealEstateExtension(http.Controller):
                 try:
                     if vals.get('customer_id'):
                         cp = request.env['res.partner'].sudo().search([('jv_cid', '=', vals.get('customer_id'))], limit=1)
+                        is_update = False  # Track if this is an update or create
 
                         if cp:
+                            is_update = True  # Existing customer found - UPDATE operation
                             cp.write({
                                 'name': vals.get('name') if vals.get('name') else cp.name,
                                 'street': vals.get('street') if vals.get('street') else cp.street,
                                 'street2': vals.get('street2') if vals.get('street2') else cp.street2,
                                 'city': vals.get('city') if vals.get('city') else cp.city,
-                                # 'state_id': state_id.id if state_id else cp.state_id,
-                                # 'country_id': country_id.id if country_id else cp.country_id,
+                                'state_id': state_id.id if state_id else cp.state_id,
+                                'country_id': country_id.id if country_id else cp.country_id,
                                 'zip': vals.get('zip') if vals.get('zip') else cp.zip,
                                 'vat': vals.get('gstin') if vals.get('gstin') else cp.vat,
                                 'pan_number': vals.get('pan') if vals.get('pan') else cp.pan_number,
@@ -935,19 +999,22 @@ class RealEstateExtension(http.Controller):
                             })
 
                         else:
+                            # VALIDATION: Required field - Name (for new customer creation)
                             if not vals.get('name'):
                                 exec_time = (time.time() - start_time) * 1000
-                                error_response = {
-                                    'data': 'Name not provided',
-                                    'status': 'Failed',
-                                    'code': 201
-                                }
-                                self.add_api_log('', 201, str('Name not provided'), 'customer', 'failed', '', 'in', kwargs,
+                                error_response = APIResponseBuilder.bad_request(
+                                    message="Name is required for new customer creation",
+                                    errors=["name: Field is required"]
+                                )
+                                self.add_api_log('', 400, str(error_response['message']), 'customer', 'failed', '', 'in', kwargs,
                                                  request_data=kwargs, response_data=error_response,
                                                  execution_time=exec_time, request_obj=request)
                                 return error_response
-                            state_id = request.env.company.state_id
-                            country_id = request.env.company.country_id
+                            # Use validated state/country or fall back to company defaults
+                            if not state_id:
+                                state_id = request.env.company.state_id
+                            if not country_id:
+                                country_id = request.env.company.country_id
                             cp = request.env['res.partner'].sudo().create({
                                 'is_tenant': True,
                                 'customer_rank': 1,
@@ -976,37 +1043,48 @@ class RealEstateExtension(http.Controller):
                                 'income': income,
                                 'jv_cid': vals.get('customer_id')
                             })
-                        success_response = {
-                            'data': {
-                                'customer_id': cp.jv_cid,
-                            },
-                            'status': 'Success',
-                            'code': 200
-                        }
+
+                        # Build success response with proper HTTP code (200 for update, 201 for create)
                         exec_time = (time.time() - start_time) * 1000
-                        self.add_api_log(cp.id, 200, str(success_response), 'customer', 'success', cp.name, 'in', kwargs,
+                        if is_update:
+                            success_response = APIResponseBuilder.success(
+                                data={'customer_id': cp.jv_cid},
+                                message="Customer updated successfully",
+                                code=200
+                            )
+                            http_code = 200
+                        else:
+                            success_response = APIResponseBuilder.created(
+                                data={'customer_id': cp.jv_cid},
+                                message="Customer created successfully",
+                                resource_id=cp.jv_cid
+                            )
+                            http_code = 201
+
+                        self.add_api_log(cp.id, http_code, str(success_response), 'customer', 'success', cp.name, 'in', kwargs,
                                          request_data=kwargs, response_data=success_response,
                                          execution_time=exec_time, request_obj=request)
                     else:
+                        # VALIDATION: Required field - customer_id
                         exec_time = (time.time() - start_time) * 1000
-                        error_response = {
-                            'data': 'customer_id is required!',
-                            'status': 'Failed',
-                            'code': 201
-                        }
-                        self.add_api_log('', 201, str('customer_id is required!'), 'customer',
+                        error_response = APIResponseBuilder.bad_request(
+                            message="customer_id is required",
+                            errors=["customer_id: Field is required"]
+                        )
+                        self.add_api_log('', 400, str(error_response['message']), 'customer',
                                          'failed', '', 'in', kwargs,
                                          request_data=kwargs, response_data=error_response,
                                          execution_time=exec_time, request_obj=request)
                         return error_response
                 except Exception as e:
+                    # Handle unexpected server errors
                     exec_time = (time.time() - start_time) * 1000
-                    error_response = {
-                        'data': str(e),
-                        'status': 'Failed',
-                        'code': 201
-                    }
-                    self.add_api_log('', 201, str(e), 'customer', 'failed', '', 'in', kwargs,
+                    error_response = APIResponseBuilder.server_error(
+                        message="An error occurred while processing the customer data",
+                        exception=e
+                    )
+                    # Log the actual exception for debugging (sanitized by add_api_log)
+                    self.add_api_log('', 500, str(e), 'customer', 'failed', '', 'in', kwargs,
                                      request_data=kwargs, response_data=error_response,
                                      execution_time=exec_time, request_obj=request)
                     return error_response
