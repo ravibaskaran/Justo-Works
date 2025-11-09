@@ -33,49 +33,64 @@ class BetaRegistrationReport(models.TransientModel):  # change this
         })
 
     def _get_report_data(self):
+        # ----------------------------
+        # CHANGE 1 — from_clause definition (unchanged from original, kept as is)
+        # ----------------------------
         from_clause = """
             FROM project_registration pr
             LEFT JOIN product_template pt ON pt.id = pr.flat_id
             LEFT JOIN unit_reservation ur ON ur.building_unit = pt.id AND ur.state = 'confirmed'
             LEFT JOIN res_partner rp ON rp.id = pr.customer_id
             LEFT JOIN building b ON b.id = pr.project_id
-            WHERE pr.state = 'confirmed' and pr.registration_date >= '%s' and pr.registration_date <= '%s'
+            WHERE pr.state = 'confirmed'
+              AND pr.registration_date >= '%s'
+              AND pr.registration_date <= '%s'
         """ % (self.date_from.strftime('%Y-%m-%d'), self.date_to.strftime('%Y-%m-%d'))
+
         if self.project_filter == 'selected':
             from_clause += " and b.id in " + str(tuple(self.project_ids.ids) or '(0)').replace(',)', ')')
+
+        # ----------------------------
+        # CHANGE 2 — Removed Project Totals block entirely
+        # We removed the section that added:
+        # UNION ALL
+        # SELECT 'Total' as customer, b.name as project_name, ...
+        # This was producing the "Project Total" row in output.
+        # Now only Detailed rows + Grand Total remain.
+        # ----------------------------
         qry = """
             WITH grand_total AS (
-                SELECT 0 as project_id, 'Grand Total' as customer, null as project_name, null as registration, null as inventory, max(pr.registration_date) as registration_date, 
-                    max(ur.date) as booking_date, sum(ur.flat_cost) as agreement_value, 4000 as sequence
-                    %s
+                SELECT 'Grand Total' as customer,
+                       NULL as project_name,
+                       NULL as registration,
+                       NULL as inventory,
+                       max(pr.registration_date) as registration_date,
+                       max(ur.date) as booking_date,
+                       sum(ur.flat_cost) as agreement_value,
+                       4000 as sequence
+                %s
             )
             SELECT * FROM (
-                SELECT pr.project_id, rp.name as customer, b.name as project_name, pr.name as registration, pt.name as inventory, pr.registration_date, 
-                ur.date as booking_date, ur.flat_cost as agreement_value, 2000 as sequence
+                -- Detailed rows only
+                SELECT rp.name as customer,
+                       b.name as project_name,
+                       pr.name as registration,
+                       pt.name as inventory,
+                       pr.registration_date,
+                       ur.date as booking_date,
+                       ur.flat_cost as agreement_value,
+                       2000 as sequence
                 %s
-                
-                UNION ALL
-                
-                SELECT b.id, 'Total' as customer, b.name as project_name, null as registration, null as inventory, null as registration_date, 
-                null as booking_date, sum(ur.flat_cost) as agreement_value, 3000 as sequence
-                %s
-                GROUP BY b.id
-            
-                UNION ALL
-            
-                SELECT b.id as project_id, null as customer, b.name as project_name, null as registration, null as inventory, null as registration_date,
-                null as booking_date, null as agreement_value, 1000 as sequence
-                FROM building b
-                WHERE b.id IN (
-                    SELECT pr.project_id
-                    %s
-                )
-                ORDER BY project_name, project_id, sequence, registration
-            ) AS result 
-            
+            ) AS result
+
             UNION ALL
-            
             SELECT * FROM grand_total
-        """ % (from_clause, from_clause, from_clause, from_clause)
+
+            ORDER BY registration_date NULLS LAST, sequence
+        """ % (from_clause, from_clause)
+
+        # ----------------------------
+        # CHANGE 3 — Execute query and return results (unchanged)
+        # ----------------------------
         self.env.cr.execute(qry)
         return self.env.cr.dictfetchall()

@@ -127,8 +127,9 @@
                 <style>.table td{ padding: .8px !important;}</style>
                 <thead>
                     <th class="text-center" t-att-width="line_wise and '8%'">Reg.No</th>
+                    <!--   <t t-if="line_wise"><th class="text-center" t-att-width="line_wise and '15%'">Project</th></t>-->
                     <th class="text-center" width="25%">Customer</th>
-                    <t t-if="line_wise"><th class="text-center" t-att-width="line_wise and '15%'">Project</th></t>
+                    <th class="text-center" width="15%">Project</th>
                     <th class="text-center" t-att-width="line_wise and '10%'">Inventory</th>
                     <th class="text-center" t-att-width="line_wise and '10%'">Registration Date</th>
                     <th class="text-center" t-att-width="line_wise and '10%'">Booking Date</th>
@@ -143,8 +144,9 @@
                         </t>
                         <t t-elif="line['sequence'] == 2000">
                             <td class="text-center"><t t-esc="line['registration']"/></td>
+                        <!--     <t t-if="line_wise"><td><t t-esc="line['project_name']"/></td></t> -->
                             <td><t t-esc="line['customer']"/></td>
-                            <t t-if="line_wise"><td><t t-esc="line['project_name']"/></td></t>
+                            <td><t t-esc="line['project_name']"/></td>
                             <td class="text-center"><t t-esc="line['inventory']"/></td>
                             <td class="text-center"><t t-esc="line['registration_date'].strftime('%d/%m/%Y') if line['registration_date'] else ''"/></td>
                             <td class="text-center"><t t-esc="line['booking_date'].strftime('%d/%m/%Y') if line['booking_date'] else ''"/></td>
