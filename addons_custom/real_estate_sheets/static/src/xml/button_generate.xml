@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="real_estate_sheets.ButtonGenerateWidget" owl="1">
+        <button type="button"
+                class="btn btn-sm btn-secondary o_button_generate_toggle px-3 py-2"
+                t-on-click="onClick">
+            Generate Month
+        </button>
+    </t>
+</templates>

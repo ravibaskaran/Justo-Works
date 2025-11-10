@@ -1,74 +1,86 @@
-odoo.define('real_estate_sheets.button_generate', function(require) {
-"use strict";
+/** @odoo-module **/
+/**
+ * Migrated from Odoo 15 to Odoo 18 OWL - 2025-11-10
+ * Changes:
+ * - Converted odoo.define to @odoo-module
+ * - Converted AbstractField.extend to OWL Component class
+ * - Updated Dialog to use dialog service
+ * - Converted events to OWL event handlers
+ * - Updated to use standardFieldProps
+ * - Converted _setValue to props.record.update
+ * - Registered with registry.category("fields")
+ */
 
-    var AbstractField = require('web.AbstractField');
-    var core = require('web.core');
-    var registry = require('web.field_registry');
-    var rpc = require('web.rpc');
-    var _t = core._t;
-    var Dialog = require('web.Dialog');
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { _t } from "@web/core/l10n/translation";
 
-    var ButtonGenerateWidget = AbstractField.extend({
-        events: _.extend({}, AbstractField.prototype.events, {
-            'click': '_onClicked',
-        }),
-        description: "",
+export class ButtonGenerateWidget extends Component {
+    static template = "real_estate_sheets.ButtonGenerateWidget";
+    static props = {
+        ...standardFieldProps,
+    };
 
-        isSet: function () {
-            return true;
-        },
+    setup() {
+        this.dialog = useService("dialog");
+    }
 
-        _render: function () {
-            var $button = $('<button>Generate Month</button>', {
-                type: 'button',
-            }).addClass('btn btn-sm btn-secondary o_button_generate_toggle px-3 py-2');
-            this.$el.html($button);
-        },
+    get isCommissionButton() {
+        return this.props.name === "commission_generate_button";
+    }
 
-        _onClicked: function (event) {
-            var self = this;
-            if(this.name == "commission_generate_button"){
-                if($('select[name="retainer_month"]').val() == 'false' || $('select[name="forecast_month"]').val() == 'false'){
-                    var message = _t("Please select No. of Months and No. of Months(Forecast)");
-                    var def;
-                    def = new Promise(function (resolve, reject) {
-                        var dialog = Dialog.alert(self, message, {
-                            title: _t("Warning"),
-                            cancel_callback: reject,
-                        });
-                        dialog.on('closed', def, reject);
-                    });
-                    return def;
-                }
-                if(this.recordData.sales_forecast_lines.count > 0){
-                    var message = _t("Already generated, your changes will be discarded. Do you want to proceed?");
-                    var def;
-                    def = new Promise(function (resolve, reject) {
-                        var dialog = Dialog.confirm(self, message, {
+    async onClick(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        if (this.isCommissionButton) {
+            // Validate required fields
+            const retainerMonth = document.querySelector('select[name="retainer_month"]');
+            const forecastMonth = document.querySelector('select[name="forecast_month"]');
+
+            if (retainerMonth?.value === 'false' || forecastMonth?.value === 'false') {
+                await this.dialog.add(
+                    {
+                        title: _t("Warning"),
+                        body: _t("Please select No. of Months and No. of Months(Forecast)"),
+                    }
+                );
+                return;
+            }
+
+            // Check if already generated
+            const recordData = this.props.record.data;
+            if (recordData.sales_forecast_lines && recordData.sales_forecast_lines.count > 0) {
+                const confirmed = await new Promise((resolve) => {
+                    this.dialog.add(
+                        {
                             title: _t("Confirmation"),
-                            confirm_callback: function () {
-                                if(self.value){
-                                    self._setValue(false)
-                                }
-                                else{
-                                    self._setValue(true)
-                                }
-                            },
-                            cancel_callback: reject,
-                        });
-                        dialog.on('closed', def, reject);
-                    });
-                    return def;
+                            body: _t("Already generated, your changes will be discarded. Do you want to proceed?"),
+                            confirm: () => resolve(true),
+                            cancel: () => resolve(false),
+                        },
+                        {
+                            confirmLabel: _t("Yes"),
+                            cancelLabel: _t("No"),
+                        }
+                    );
+                });
+
+                if (!confirmed) {
+                    return;
                 }
             }
-            if(this.value){
-                this._setValue(false)
-            }
-            else{
-                this._setValue(true)
-            }
-        },
-    });
+        }
 
-    registry.add("generate_button_toggle", ButtonGenerateWidget);
-});
+        // Toggle the value
+        const newValue = !this.props.record.data[this.props.name];
+        await this.props.record.update({ [this.props.name]: newValue });
+    }
+}
+
+ButtonGenerateWidget.template = "real_estate_sheets.ButtonGenerateWidget";
+
+// Register the component in the fields registry
+registry.category("fields").add("generate_button_toggle", ButtonGenerateWidget);

@@ -1,30 +1,45 @@
-/** @odoo-module alias=real_estate_sheets.ListController **/
+/** @odoo-module **/
+/**
+ * Migrated from Odoo 15 to Odoo 18 OWL - 2025-11-10
+ * Changes:
+ * - Updated from include() to patch()
+ * - Changed imports to Odoo 18 paths
+ * - Updated do_action to use action service
+ * - Converted to proper OWL Component patterns
+ */
 
-import ListController from 'web.ListController';
+import { ListController } from "@web/views/list/list_controller";
+import { patch } from "@web/core/utils/patch";
 
-ListController.include({
-    events: _.extend({}, ListController.prototype.events, {
-        'click .import_competition_sheet': 'onClickCompetitionSheetImport',
-    }),
+patch(ListController.prototype, {
 
-    onClickCompetitionSheetImport: function(ev) {
-        this.do_action({
+    setup() {
+        super.setup(...arguments);
+        this.actionService = this.env.services.action;
+    },
+
+    onClickCompetitionSheetImport(ev) {
+        this.actionService.doAction({
             name: 'Import',
             type: 'ir.actions.act_window',
             res_model: 'competition.sheet.import',
             target: 'new',
             views: [[false, 'form']],
-        })
+        });
     },
 
-    renderButtons: function ($node) {
-        this._super.apply(this, arguments);
-        if(this.modelName && this.modelName == 'competition.sheet'){
-            this.$buttons.append($(`
-                <button type="object" class="btn btn-primary import_competition_sheet">
-                    Import
-                </button>
-            `))
+    getStaticButton() {
+        const buttons = super.getStaticButton ? super.getStaticButton() : [];
+
+        if (this.props.resModel === 'competition.sheet') {
+            buttons.push({
+                type: 'button',
+                className: 'btn btn-primary import_competition_sheet',
+                text: 'Import',
+                onClick: () => this.onClickCompetitionSheetImport(),
+            });
         }
+
+        return buttons;
     },
-})
+});
