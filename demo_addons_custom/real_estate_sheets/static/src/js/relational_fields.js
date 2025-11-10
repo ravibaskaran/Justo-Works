@@ -1,66 +1,86 @@
-odoo.define('real_estate_sheets.relational_fields', function(require) {
-"use strict";
+/** @odoo-module **/
 
-    var AbstractField = require('web.AbstractField');
-    var core = require('web.core');
-    var registry = require('web.field_registry');
-    var rpc = require('web.rpc');
-    var _t = core._t;
-    var Dialog = require('web.Dialog');
-    var relational_fields = require('web.relational_fields');
+/**
+ * Relational Fields Extension for Real Estate Sheets
+ * Adds evaluation sheet update dialog for budget.sheet project changes
+ */
 
-    relational_fields.FieldMany2One.include({
-        _onFieldChanged: function (event) {
-            var res = this._super();
-            var self = this;
-            if(this.model == "budget.sheet" && this.name == "project_id"){
-                rpc.query({
-                    model: "budget.sheet",
-                    method: "get_evaluation_id",
-                    args: [event.data.changes.project_id.id],
-                }).then(function(result) {
-                    if(result){
-                        var message = _t("Do you want to update data from evaluation sheet?");
-                        var def;
-                        def = new Promise(function (resolve, reject) {
-                            var dialog = Dialog.confirm(self, message, {
-                                title: _t("Confirmation"),
-                                buttons: [{
-                                    text: _t('Update Project Info Only'),
-                                    close: true,
-                                    click: () => {
-                                        $('input[name="evaluation_sheet"]').val('')
-                                        $('input[name="evaluation_sheet"]').change()
-                                        $('input[name="evaluation_sheet"]').val(result)
-                                        $('input[name="evaluation_sheet"]').change()
-                                    },
-                                },
-                                {
-                                    text: _t('Update All Data'),
-                                    close: true,
-                                    click: () => {
-                                        $('input[name="evaluation_sheet"]').val('')
-                                        $('input[name="evaluation_sheet"]').change()
-                                        $('input[name="evaluation_sheet"]').val('update_all_from_evaluation')
-                                        $('input[name="evaluation_sheet"]').change()
-                                    },
-                                },
-                                {
-                                    text: _t('No'),
-                                    classes: 'btn-primary',
-                                    close: true,
-                                    click: reject,
-                                }],
-                                cancel_callback: reject,
-                            });
-                            dialog.on('closed', def, reject);
-                        });
-                        return def;
+import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { patch } from "@web/core/utils/patch";
+import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+
+patch(Many2OneField.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.rpc = useService("rpc");
+        this.dialog = useService("dialog");
+    },
+
+    /**
+     * Handle field value changes
+     */
+    async onChange(value) {
+        const result = await super.onChange(value);
+
+        // Handle project_id changes on budget.sheet
+        if (this.props.record.resModel === "budget.sheet" && this.props.name === "project_id") {
+            if (value && value[0]) {
+                const projectId = value[0];
+
+                try {
+                    const evalId = await this.rpc("/web/dataset/call_kw", {
+                        model: "budget.sheet",
+                        method: "get_evaluation_id",
+                        args: [projectId],
+                        kwargs: {},
+                    });
+
+                    if (evalId) {
+                        this.showEvaluationUpdateDialog(evalId);
                     }
-                });
+                } catch (error) {
+                    console.error("Error fetching evaluation ID:", error);
+                }
             }
-            return res;
+        }
 
-        },
-    });
+        return result;
+    },
+
+    /**
+     * Show confirmation dialog for evaluation sheet update
+     */
+    showEvaluationUpdateDialog(evalId) {
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Confirmation"),
+            body: _t("Do you want to update data from evaluation sheet?"),
+            confirm: () => this.updateEvaluationSheet(evalId, false),
+            confirmLabel: _t("Update Project Info Only"),
+            cancel: () => {}, // Do nothing on cancel
+            cancelLabel: _t("No"),
+            // Add custom button for "Update All Data"
+            extraButtons: [{
+                text: _t("Update All Data"),
+                classes: "btn-secondary",
+                close: true,
+                click: () => this.updateEvaluationSheet('update_all_from_evaluation', true),
+            }],
+        });
+    },
+
+    /**
+     * Update evaluation sheet field
+     */
+    updateEvaluationSheet(value, isUpdateAll) {
+        const record = this.props.record;
+
+        // Trigger evaluation_sheet field update
+        if (record.fields.evaluation_sheet) {
+            record.update({
+                evaluation_sheet: isUpdateAll ? 'update_all_from_evaluation' : value
+            });
+        }
+    }
 });

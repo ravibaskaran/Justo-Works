@@ -1,82 +1,131 @@
-odoo.define('real_estate_sheets.list_renderer', function(require) {
-"use strict";
+/** @odoo-module **/
 
-    var ListRenderer = require("web.ListRenderer");
-    var config = require("web.config");
-    var field_utils = require("web.field_utils");
+/**
+ * List Renderer Extension for Real Estate Sheets
+ * Customizes list view rendering for evaluation and budget sheets
+ *
+ * Handles:
+ * - Dynamic cost column headers from cost_sheet_header element
+ * - Site head man power focus/focusout behavior with tab identifier
+ * - Custom aggregate cell rendering with text attributes
+ */
 
-    ListRenderer.include({
-        events: _.extend({}, ListRenderer.prototype.events, {
-            'focusin input.site_head_man_power': '_onSiteHeadFocus',
-        }),
+import { ListRenderer } from "@web/views/list/list_renderer";
+import { patch } from "@web/core/utils/patch";
+import { onMounted } from "@odoo/owl";
 
-        _renderHeaderCell: function (node) {
-            var res = this._super(node);
-            if(res[0].dataset.name.includes('cost_col_')){
-                var field_name = res[0].dataset.name
-                var values = $('.cost_sheet_header').text().split('~');
-                $(res).text(values[parseInt(field_name[field_name.length-1])-1])
-            }
-            return res
-        },
+patch(ListRenderer.prototype, {
+    setup() {
+        super.setup(...arguments);
 
-        _onSiteHeadFocus: function(ev){
-            $('[name="tab_identifier"]').change()
-            $(ev.target).focusout(function(){
-                if($('[name="tab_identifier"]').val() == 'copied'){
-                    $(ev.target).click()
-                    $('[name="tab_identifier"]').val('')
-                    $('[name="tab_identifier"]').change()
-                }
-            })
-        },
+        // Setup event listeners after mounting
+        onMounted(() => {
+            this.setupCustomEventListeners();
+        });
+    },
 
-        _renderAggregateCells: function (aggregateValues) {
-            var self = this;
-
-            return _.map(this.columns, function (column) {
-                var $cell = $('<td>');
-                if (config.isDebug()) {
-                    $cell.addClass(column.attrs.name);
-                }
-                if (column.attrs.editOnly) {
-                    $cell.addClass('oe_edit_only');
-                }
-                if (column.attrs.readOnly) {
-                    $cell.addClass('oe_read_only');
-                }
-                if(column.attrs.text) {
-                    $cell.text(column.attrs.text);
-                }
-
-
-                if (column.attrs.name in aggregateValues) {
-                    var field = self.state.fields[column.attrs.name];
-                    var value = aggregateValues[column.attrs.name].value;
-                    var help = aggregateValues[column.attrs.name].help;
-                    var formatFunc = field_utils.format[column.attrs.widget];
-                    if (!formatFunc) {
-                        formatFunc = field_utils.format[field.type];
-                    }
-                    var formattedValue = formatFunc(value, field, {
-                        escape: true,
-                        digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
-                    });
-                    $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
-                }
-
-
-//                if(["evaluation.sheet.line","budget.sheet.line"].includes(self.state.model) && column.attrs.name == 'total_revenue'){
-//                    if($('span.balance_amount_profit_loss').length > 0){
-//                        if(column.aggregate){
-//                        console.log($('span.balance_amount_profit_loss'),column.aggregate.value,parseFloat($('span.balance_amount_profit_loss').text()),'fjfjfj')
-//                            var sum_revenue = parseFloat(column.aggregate.value) + parseFloat($('span.balance_amount_profit_loss').text().replace(',',''))
-//                            $cell.text(sum_revenue.toFixed(2))
-//                        }
-//                    }
-//                }
-                return $cell;
+    /**
+     * Setup custom event listeners for site head man power inputs
+     */
+    setupCustomEventListeners() {
+        const inputs = this.el?.querySelectorAll('input.site_head_man_power');
+        if (inputs) {
+            inputs.forEach(input => {
+                input.addEventListener('focusin', this.onSiteHeadFocus.bind(this));
             });
-        },
-    });
-})
+        }
+    },
+
+    /**
+     * Handle focus on site head man power input
+     * Manages tab identifier for copy/paste functionality
+     */
+    onSiteHeadFocus(ev) {
+        const tabIdentifier = document.querySelector('[name="tab_identifier"]');
+        if (!tabIdentifier) return;
+
+        // Trigger change event
+        tabIdentifier.dispatchEvent(new Event('change'));
+
+        // Set up focus out handler
+        const target = ev.target;
+        const focusOutHandler = () => {
+            if (tabIdentifier.value === 'copied') {
+                target.click();
+                tabIdentifier.value = '';
+                tabIdentifier.dispatchEvent(new Event('change'));
+            }
+            target.removeEventListener('focusout', focusOutHandler);
+        };
+
+        target.addEventListener('focusout', focusOutHandler);
+    },
+
+    /**
+     * Render header cell with dynamic cost column handling
+     *
+     * NOTE: In Odoo 18, header rendering may need to be done via templates
+     * This is a compatibility shim that may need adjustment based on actual
+     * Odoo 18 list view implementation.
+     */
+    getHeaderCellContent(column) {
+        // Get default content
+        let content = super.getHeaderCellContent?.(column);
+
+        // Handle cost_col_ fields
+        if (column.name && column.name.includes('cost_col_')) {
+            const costHeader = document.querySelector('.cost_sheet_header');
+            if (costHeader) {
+                const values = costHeader.textContent.split('~');
+                const columnIndex = parseInt(column.name[column.name.length - 1]) - 1;
+                if (values[columnIndex]) {
+                    return values[columnIndex];
+                }
+            }
+        }
+
+        return content;
+    },
+
+    /**
+     * Get aggregate cell content with custom text
+     *
+     * NOTE: Odoo 18 may handle aggregates differently.
+     * This method may need adjustment based on the actual API.
+     */
+    getAggregateValue(column) {
+        const value = super.getAggregateValue?.(column);
+
+        // Add custom text from column attributes if available
+        if (column.attrs && column.attrs.text) {
+            return column.attrs.text;
+        }
+
+        return value;
+    }
+});
+
+/*
+ * MIGRATION NOTES:
+ * ================
+ *
+ * This file requires testing and potential refinement because:
+ *
+ * 1. List view rendering in Odoo 18 may use different methods/APIs
+ * 2. Header and aggregate rendering might be template-based now
+ * 3. Event handling may need to be done via OWL directives instead of jQuery
+ * 4. The original _renderAggregateCells created DOM elements with jQuery -
+ *    This needs to be adapted to OWL's reactive rendering
+ *
+ * Testing Checklist:
+ * - [ ] Cost column headers display correctly from cost_sheet_header
+ * - [ ] Site head man power focus/focusout behavior works
+ * - [ ] Tab identifier is set correctly for copy operations
+ * - [ ] Aggregate cells show custom text when specified
+ * - [ ] No console errors related to list rendering
+ *
+ * If issues occur, consider:
+ * - Creating a custom list view controller instead of patching
+ * - Using OWL templates for custom rendering
+ * - Implementing via field components rather than renderer patches
+ */

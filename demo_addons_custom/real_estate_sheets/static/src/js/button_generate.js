@@ -1,74 +1,88 @@
-odoo.define('real_estate_sheets.button_generate', function(require) {
-"use strict";
+/** @odoo-module **/
 
-    var AbstractField = require('web.AbstractField');
-    var core = require('web.core');
-    var registry = require('web.field_registry');
-    var rpc = require('web.rpc');
-    var _t = core._t;
-    var Dialog = require('web.Dialog');
+/**
+ * Generate Button Widget for Real Estate Sheets
+ * Toggle button for generating monthly data with validation
+ */
 
-    var ButtonGenerateWidget = AbstractField.extend({
-        events: _.extend({}, AbstractField.prototype.events, {
-            'click': '_onClicked',
-        }),
-        description: "",
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-        isSet: function () {
-            return true;
-        },
+export class ButtonGenerateWidget extends Component {
+    static template = "real_estate_sheets.ButtonGenerateWidget";
+    static props = {
+        ...standardFieldProps,
+    };
 
-        _render: function () {
-            var $button = $('<button>Generate Month</button>', {
-                type: 'button',
-            }).addClass('btn btn-sm btn-secondary o_button_generate_toggle px-3 py-2');
-            this.$el.html($button);
-        },
+    setup() {
+        this.dialog = useService("dialog");
+    }
 
-        _onClicked: function (event) {
-            var self = this;
-            if(this.name == "commission_generate_button"){
-                if($('select[name="retainer_month"]').val() == 'false' || $('select[name="forecast_month"]').val() == 'false'){
-                    var message = _t("Please select No. of Months and No. of Months(Forecast)");
-                    var def;
-                    def = new Promise(function (resolve, reject) {
-                        var dialog = Dialog.alert(self, message, {
-                            title: _t("Warning"),
-                            cancel_callback: reject,
-                        });
-                        dialog.on('closed', def, reject);
-                    });
-                    return def;
-                }
-                if(this.recordData.sales_forecast_lines.count > 0){
-                    var message = _t("Already generated, your changes will be discarded. Do you want to proceed?");
-                    var def;
-                    def = new Promise(function (resolve, reject) {
-                        var dialog = Dialog.confirm(self, message, {
-                            title: _t("Confirmation"),
-                            confirm_callback: function () {
-                                if(self.value){
-                                    self._setValue(false)
-                                }
-                                else{
-                                    self._setValue(true)
-                                }
-                            },
-                            cancel_callback: reject,
-                        });
-                        dialog.on('closed', def, reject);
-                    });
-                    return def;
-                }
+    /**
+     * Handle button click event
+     */
+    async onClicked(event) {
+        event.stopPropagation();
+
+        const record = this.props.record.data;
+        const fieldName = this.props.name;
+
+        // Special validation for commission generation
+        if (fieldName === "commission_generate_button") {
+            const retainerMonth = record.retainer_month;
+            const forecastMonth = record.forecast_month;
+
+            // Check if months are selected
+            if (!retainerMonth || retainerMonth === 'false' ||
+                !forecastMonth || forecastMonth === 'false') {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Warning"),
+                    body: _t("Please select No. of Months and No. of Months(Forecast)"),
+                });
+                return;
             }
-            if(this.value){
-                this._setValue(false)
-            }
-            else{
-                this._setValue(true)
-            }
-        },
-    });
 
-    registry.add("generate_button_toggle", ButtonGenerateWidget);
-});
+            // Check if already generated
+            if (record.sales_forecast_lines && record.sales_forecast_lines.count > 0) {
+                this.dialog.add(ConfirmationDialog, {
+                    title: _t("Confirmation"),
+                    body: _t("Already generated, your changes will be discarded. Do you want to proceed?"),
+                    confirm: () => this.toggleValue(),
+                    confirmLabel: _t("Yes"),
+                    cancel: () => {},
+                    cancelLabel: _t("No"),
+                });
+                return;
+            }
+        }
+
+        // Toggle the field value
+        this.toggleValue();
+    }
+
+    /**
+     * Toggle the boolean field value
+     */
+    toggleValue() {
+        const currentValue = this.props.record.data[this.props.name];
+        this.props.record.update({
+            [this.props.name]: !currentValue
+        });
+    }
+
+    /**
+     * Get button label
+     */
+    get buttonLabel() {
+        return _t("Generate Month");
+    }
+}
+
+ButtonGenerateWidget.displayName = "Generate Button Toggle";
+
+registry.category("fields").add("generate_button_toggle", ButtonGenerateWidget);

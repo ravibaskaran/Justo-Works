@@ -1,30 +1,54 @@
-/** @odoo-module alias=real_estate_sheets.ListController **/
+/** @odoo-module **/
 
-import ListController from 'web.ListController';
+/**
+ * Competition Sheet List Controller Extension
+ * Adds Import button for competition.sheet model
+ */
 
-ListController.include({
-    events: _.extend({}, ListController.prototype.events, {
-        'click .import_competition_sheet': 'onClickCompetitionSheetImport',
-    }),
+import { ListController } from "@web/views/list/list_controller";
+import { patch } from "@web/core/utils/patch";
+import { useService } from "@web/core/utils/hooks";
 
-    onClickCompetitionSheetImport: function(ev) {
-        this.do_action({
+patch(ListController.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.action = useService("action");
+    },
+
+    /**
+     * Handle Import button click
+     */
+    onClickCompetitionSheetImport(ev) {
+        this.action.doAction({
             name: 'Import',
             type: 'ir.actions.act_window',
             res_model: 'competition.sheet.import',
             target: 'new',
             views: [[false, 'form']],
-        })
+        });
     },
 
-    renderButtons: function ($node) {
-        this._super.apply(this, arguments);
-        if(this.modelName && this.modelName == 'competition.sheet'){
-            this.$buttons.append($(`
-                <button type="object" class="btn btn-primary import_competition_sheet">
-                    Import
-                </button>
-            `))
+    /**
+     * Get action menu items with custom Import button
+     */
+    get actionMenuItems() {
+        const menuItems = super.actionMenuItems;
+
+        // Add Import button for competition.sheet model
+        if (this.props.resModel === 'competition.sheet') {
+            return {
+                ...menuItems,
+                other: [
+                    ...(menuItems.other || []),
+                    {
+                        key: 'import_competition_sheet',
+                        description: 'Import',
+                        callback: () => this.onClickCompetitionSheetImport(),
+                    }
+                ]
+            };
         }
-    },
-})
+
+        return menuItems;
+    }
+});

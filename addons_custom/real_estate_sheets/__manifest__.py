@@ -3,7 +3,7 @@
     'name': "Project Evaluation Sheet",
 
     'summary': """
-            Project Evaluation Sheet,
+            Project Evaluation Sheet (Migrated to Odoo 18),
             Competition Sheet,
             Retention Sheet,
             Term Sheet,
@@ -12,7 +12,7 @@
         """,
 
     'category': 'Real Estate',
-    'version': '15.0',
+    'version': '18.0.1.0.0',
 
     'depends': [
         'base',
