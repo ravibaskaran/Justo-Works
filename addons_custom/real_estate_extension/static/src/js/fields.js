@@ -1,62 +1,119 @@
-odoo.define('security_update.fields', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    var basic_fields = require('web.basic_fields').AbstractFieldBinary;
-    var core = require('web.core');
-    console.log("security_update.fields");
-    var _t = core._t;
-    var utils = require('web.utils');
-    var rpc = require('web.rpc');
-    var security_update_max_upload_fsize = 1 * 1024 * 1024; // 1Mb
+/*
+* File Upload Security Validation
+* Migrated to Odoo 18 OWL - 2025-11-10
+*
+* Validates file uploads for:
+* - File size (max 1MB configurable)
+* - File type (jpg, jpeg, png, xlsx, xls, csv, pdf, txt)
+* - Filename length (max 40 characters)
+*/
 
-    rpc.query({
-        model: 'ir.attachment',
-        method: 'get_max_upload_fsize',
-        args: ['security_update.max_upload_fsize'],
-    }).then(function (result) {
-    if (result){
-        security_update_max_upload_fsize = result
-        }
-    });
+import { patch } from "@web/core/utils/patch";
+import { FileUploader } from "@web/views/fields/file_handler";
+import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
-    basic_fields.include({
-        on_file_change: function (e) {
-            var self = this;
-            var file_node = e.target;
-            var allowedExtensionsRegx = /(\.jpg|\.jpeg|\.png|\.xlsx|\.xls|\.csv|\.pdf|\.txt)$/i;
-            if ((this.useFileAPI && file_node.files.length) || (!this.useFileAPI && $(file_node).val() !== '')) {
-                if (this.useFileAPI) {
-                    var file = file_node.files[0];
-                    var filename = file.name;
-                    var filename_limit = 40;
-                    var extension = filename.substr(filename.lastIndexOf("."));
-                    var isAllowed = allowedExtensionsRegx.test(extension);
-                    if (file.size > security_update_max_upload_fsize) {
-                        var msg = _t("The selected file exceed the maximum file size of %s.");
-                        this.displayNotification({ title: _t("File upload"), message: _.str.sprintf(msg, utils.human_size(security_update_max_upload_fsize)), type: 'danger' });
-                        return false;
-                    }
-                    if (!isAllowed) {
-                        var msg = _t("Allowed file extensions are:\n.jpg\n.jpeg\n.png\n.xlsx\n.xls\n.csv\n.pdf\n.txt");
-                        this.displayNotification({ title: _t("Invalid File Type"), message: msg, type: 'danger' });
-                        return false;
-                    }
+// Default maximum file size: 1MB
+let securityUpdateMaxUploadSize = 1 * 1024 * 1024;
 
-                    if (file.name.length > filename_limit) {
-                        var msg = _t("Exceed the maximum character limit of %s.");
-                        this.displayNotification({ title: _t("Invalid File Name"), message: _.str.sprintf(msg,filename_limit), type: 'danger' });
-                        return false;
-                    }
-                    utils.getDataURLFromFile(file).then(function (data) {
-                        data = data.split(',')[1];
-                        self.on_file_uploaded(file.size, file.name, file.type, data);
-                    });
-                } else {
-                    this.$('form.o_form_binary_form').submit();
-                }
-                this.$('.o_form_binary_progress').show();
-                this.$('button').hide();
+// Allowed file extensions regex
+const allowedExtensionsRegex = /(\.jpg|\.jpeg|\.png|\.xlsx|\.xls|\.csv|\.pdf|\.txt)$/i;
+
+// Filename character limit
+const FILENAME_LIMIT = 40;
+
+// Patch FileUploader to add security validation
+patch(FileUploader.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.orm = useService("orm");
+        this.notification = useService("notification");
+
+        // Load max file size from configuration
+        this.loadMaxFileSize();
+    },
+
+    async loadMaxFileSize() {
+        try {
+            const result = await this.orm.call(
+                'ir.attachment',
+                'get_max_upload_fsize',
+                ['security_update.max_upload_fsize']
+            );
+            if (result) {
+                securityUpdateMaxUploadSize = result;
             }
-        },
-    });
-})
+        } catch (error) {
+            console.warn('Could not load max file size config, using default:', error);
+        }
+    },
+
+    async uploadFiles(files) {
+        // Validate each file before upload
+        for (const file of files) {
+            const validation = this.validateFile(file);
+            if (!validation.valid) {
+                this.notification.add(validation.message, {
+                    title: validation.title,
+                    type: "danger",
+                });
+                return; // Stop upload if any file is invalid
+            }
+        }
+
+        // All files valid, proceed with upload
+        return super.uploadFiles(...arguments);
+    },
+
+    validateFile(file) {
+        // Check file size
+        if (file.size > securityUpdateMaxUploadSize) {
+            return {
+                valid: false,
+                title: _t("File upload"),
+                message: _t(
+                    "The selected file exceeds the maximum file size of %s.",
+                    this.humanFileSize(securityUpdateMaxUploadSize)
+                ),
+            };
+        }
+
+        // Check file extension
+        const filename = file.name;
+        const extension = filename.substr(filename.lastIndexOf("."));
+        const isAllowed = allowedExtensionsRegex.test(extension);
+
+        if (!isAllowed) {
+            return {
+                valid: false,
+                title: _t("Invalid File Type"),
+                message: _t(
+                    "Allowed file extensions are:\n.jpg\n.jpeg\n.png\n.xlsx\n.xls\n.csv\n.pdf\n.txt"
+                ),
+            };
+        }
+
+        // Check filename length
+        if (filename.length > FILENAME_LIMIT) {
+            return {
+                valid: false,
+                title: _t("Invalid File Name"),
+                message: _t(
+                    "Filename exceeds the maximum character limit of %s.",
+                    FILENAME_LIMIT
+                ),
+            };
+        }
+
+        return { valid: true };
+    },
+
+    humanFileSize(bytes) {
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        if (bytes === 0) return '0 Byte';
+        const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    },
+});

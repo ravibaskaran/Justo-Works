@@ -68,8 +68,9 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'real_estate_extension/static/src/js/fields.js',
-            'real_estate_extension/static/src/js/one2manySearch.js',
+            # OWL Components (Odoo 18) - Migrated 2025-11-10
+            'real_estate_extension/static/src/js/fields.js',         # File upload security validation (patch)
+            'real_estate_extension/static/src/js/one2manySearch.js', # One2many search widget (patch)
         ]
     },
 }
