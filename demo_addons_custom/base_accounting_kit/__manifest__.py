@@ -21,14 +21,13 @@
 #############################################################################
 
 {
-    'name': 'Odoo 15 Full Accounting Kit',
-    'version': '15.0.2.2.2',
+    'name': 'Odoo 18 Full Accounting Kit (Migration In Progress)',
+    'version': '18.0.0.1.0',
     'category': 'Accounting',
     'live_test_url': 'https://www.youtube.com/watch?v=peAp2Tx_XIs',
-    'summary': """ Asset and Budget Management,
-                 Accounting Reports, PDC, Lock dates,
-                 Credit Limit, Follow Ups,
-                 Day-Bank-Cash book reports.""",
+    'summary': """ ⚠️ PARTIAL MIGRATION: Asset Management migrated,
+                 Reconciliation widgets need expert review.
+                 See MIGRATION_NOTES.js for details.""",
     'description': """
                     AccountingKit, Fullaccounting, Odoo accounting, Odooaccounting, all in one accounting,
                     allinoneaccounting, accounting,

@@ -1,87 +1,74 @@
-odoo.define('base_accounting_kit.account_asset', function(require) {
-"use strict";
+/** @odoo-module **/
 
 /**
- * The purpose of this widget is to shows a toggle button on depreciation and
- * installment lines for posted/unposted line. When clicked, it calls the method
- * create_move on the object account.asset.depreciation.line.
- * Note that this widget can only work on the account.asset.depreciation.line
- * model as some of its fields are harcoded.
+ * Account Asset Depreciation Lines Toggler Widget for Odoo 18
+ *
+ * Shows a toggle button on depreciation and installment lines for posted/unposted status.
+ * When clicked, calls the create_move method on account.asset.depreciation.line model.
+ *
+ * Note: This widget is specific to account.asset.depreciation.line model.
  */
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var registry = require('web.field_registry');
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { _t } from "@web/core/l10n/translation";
 
-var _t = core._t;
-
-var AccountAssetWidget = AbstractField.extend({
-    events: _.extend({}, AbstractField.prototype.events, {
-        'click': '_onClick',
-    }),
-    description: "",
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+export class AccountAssetWidget extends Component {
+    static template = "base_accounting_kit.DeprecLinesToggler";
+    static props = {
+        ...standardFieldProps,
+    };
 
     /**
-     * @override
+     * Get button state based on record data
      */
-    isSet: function () {
-        return true; // it should always be displayed, whatever its value
-    },
+    get buttonState() {
+        const record = this.props.record.data;
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     */
-    _render: function () {
-        var className = '';
-        var disabled = true;
-        var title;
-        if (this.recordData.move_posted_check) {
-            className = 'o_is_posted';
-            title = _t('Posted');
-        } else if (this.recordData.move_check) {
-            className = 'o_unposted';
-            title = _t('Accounting entries waiting for manual verification');
+        if (record.move_posted_check) {
+            return {
+                className: 'o_is_posted',
+                title: _t('Posted'),
+                disabled: true,
+            };
+        } else if (record.move_check) {
+            return {
+                className: 'o_unposted',
+                title: _t('Accounting entries waiting for manual verification'),
+                disabled: true,
+            };
         } else {
-            disabled = false;
-            title = _t('Unposted');
+            return {
+                className: '',
+                title: _t('Unposted'),
+                disabled: false,
+            };
         }
-        var $button = $('<button/>', {
-            type: 'button',
-            title: title,
-            disabled: disabled,
-        }).addClass('btn btn-sm btn-link fa fa-circle o_deprec_lines_toggler ' + className);
-        this.$el.html($button);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    }
 
     /**
-     * @private
-     * @param {MouseEvent} event
+     * Handle button click - trigger create_move action
      */
-    _onClick: function (event) {
+    onClick(event) {
         event.stopPropagation();
-        this.trigger_up('button_clicked', {
-            attrs: {
-                name: 'create_move',
-                type: 'object',
-            },
-            record: this.record,
-        });
-    },
-});
 
-registry.add("deprec_lines_toggler", AccountAssetWidget);
+        if (!this.buttonState.disabled) {
+            this.props.record.model.orm.call(
+                this.props.record.resModel,
+                'create_move',
+                [[this.props.record.resId]],
+                {}
+            ).then(() => {
+                // Reload the record to update the button state
+                this.props.record.load();
+            }).catch((error) => {
+                console.error('Error creating move:', error);
+            });
+        }
+    }
+}
 
-});
+AccountAssetWidget.displayName = "Depreciation Lines Toggler";
+
+registry.category("fields").add("deprec_lines_toggler", AccountAssetWidget);
