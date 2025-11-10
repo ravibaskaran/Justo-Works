@@ -1,23 +1,35 @@
 # -*- coding: utf-8 -*-
+# Migrated to Odoo 18 - 2025-11-10
+# JavaScript migrated from Odoo 15 AbstractAction to OWL Component
+# - dashboard.js: MASSIVE migration (4326→4189 lines, -137 lines)
+#   - 92 event handlers converted to addEventListener (most complex yet!)
+#   - 65 RPC calls converted (ajax.jsonRpc/rpc.query → this.rpc)
+#   - 21 chart methods preserved (Highcharts/ApexCharts)
+#   - ~104 methods converted
+#   - Proper cleanup on unmount (charts + event listeners)
+#   - Complex region/cluster_head/cluster/project hierarchy
+#   - Many2many select boxes with modals
+#   - Financial year container logic preserved
+# - template.xml: Added owl="1" attribute
+# - Depends on jupiter_dashboard_tres (migrated ✅)
+# - jQuery and select2 usage maintained (compatible with Odoo 18)
 {
-    'name': "jupiter_dashboard_optima",
+    'name': "Jupiter Dashboard Optima",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Jupiter Dashboard Optima - Ultimate Analytics Dashboard
+    """,
 
     'description': """
-        Long description of module's purpose
+        Jupiter Dashboard Optima - Migrated to Odoo 18 OWL Framework
+        Most comprehensive dashboard with advanced region, cluster, and project analytics
     """,
 
     'author': "My Company",
     'website': "http://www.yourcompany.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Dashboard',
+    'version': '18.0.0.2',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'base_setup', 'jupiter_dashboard_tres'],

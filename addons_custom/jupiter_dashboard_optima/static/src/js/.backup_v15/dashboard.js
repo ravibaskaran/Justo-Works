@@ -1,130 +1,115 @@
-/** @odoo-module **/
+odoo.define('jupiter_dashboard_optima.JupiterDashboardOptima', function (require) {
+    'use strict';
+    var AbstractAction = require('web.AbstractAction');
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+    var rpc = require('web.rpc');
+    var web_client = require('web.web_client');
+    var _t = core._t;
+    var QWeb = core.qweb;
+    var closeclick = false
+//    console.log("dashboard gdsgdsfg");
+    var JupiterDashboardOptima = AbstractAction.extend({
+        template: 'JupiterDashboardOptima',
+        events: {
+            'click .region-blocks': 'changeRegion',
+            'click .region-blocks2': 'changeRegion2',
+            'change .o_region_many2many': '_changecloseclick',
+            'change .o_cluster_many2many': '_changecloseclick',
+            'change .o_project_many2many': '_changecloseclick',
+            'change .o_cluster_head_data_many2many': '_changecloseclick',
+            'focus .o_region_many2many': 'changeregionselectionbox',
+            'focus .o_cluster_many2many': 'changeclusterselectionbox',
+            'focus .o_project_many2many': 'changeprojectselectionbox',
+            'focus .o_cluster_head_data_many2many': 'changeclusterheadselectionbox',
+            'change #region-select': 'changeRegion2',
+            'click .cluster-blocks': 'changeCluster',
+            'click .cluster-head-blocks2': 'changeRegion2',
+            'change #clusterhead-select': 'changeRegion2',
+            'click .cluster-blocks2': 'changeRegion2',
+            'change #cluster-select': 'changeRegion2',
+            'click .project-blocks': 'changeProject',
+//            'click .project-blocks2': 'changeProject2',
+            'click .project-blocks2': 'changeRegion2',
+            'change #project-select': 'changeRegion2',
+            'click .data_column': 'clickDataColumn',
+            'click #region_select_all2': 'changeRadioRegionWiseMany2many',
+            'click #cluster_select_all2': 'changeClusterWiseSelectMany2many',
+            'click #project_select_all2': 'changeProjectWiseSelectMany2many',
+            'click #cluster_head_select_all2': 'changeClusterHeadWiseSelectMany2many',
+            'change .region_wise_radio': 'changeRadioRegionWise',
+            'change .region_wise_radio2': 'changeRadioRegionWise2',
+            'change .cluster_wise_radio': 'changeRadioClusterWise',
+            'change .cluster_wise_radio2': 'changeRadioClusterWise2',
+            'change .project_wise_radio': 'changeRadioProjectWise',
+            'change .project_wise_radio2': 'changeRadioProjectWise2',
+            'change #region_wise_booking_select': 'changeRegionWiseSelect',
+            'change #cluster_wise_booking_select': 'changeClusterWiseSelect',
+            'change #project_wise_booking_select': 'changeProjectWiseSelect',
+            'change .region-radio-input': 'changeRadioRegionWise',
+            'change .region-radio-input2': 'changeRadioRegionWise2',
+            'change .month-quarter-wise-radio-input2': 'changeRadioRegionWise3',
+            'change .booking-cancel-net-reg-input': 'changeRadioRegionWise4',
+            'change #financial-years-container': 'FinancialYearContainer',
+            'change .cluster-radio-input': 'changeRadioClusterWise',
+            'change .cluster-radio-input2': 'changeRadioClusterWise2',
+            'change .project-radio-input': 'changeRadioProjectWise',
+            'change .project-radio-input2': 'changeRadioProjectWise2',
+            'change [name="comparison-value-radio"]': 'changeRadioActualBudget',
+            'change .region_select': 'changeRegionSelect',
+            'change .cluster_checkbox': 'changeClusterCheckbox',
+            'change [name="region-wise-radio"]': 'changeRegionWiseRadio',
+            'change [name="cluster-wise-radio"]': 'changeClusterWiseRadio',
+            'change [name="project-wise-radio"]': 'changeProjectWiseRadio',
+            'change [name="cp-active-dormant"]': 'changeCpActiveDormantRadio',
+            'click #region_selection .dropdown-item': 'onChangeRegion',
+            'change .configuration_select': 'onChangeConfiguration',
+            'change .cluster_select': 'onChangeConfiguration',
+            'change #region_select_all': 'onChangeRegionSelectAll',
+            'change #region_select_all2': 'onChangeRegionSelectAll2',
+            'change #cluster_select_all': 'onChangeClusterSelectAll',
+            'change #cluster_select_all2': 'onChangeClusterSelectAll2',
+            'change #cluster_head_select_all2': 'onChangeClusterHeadSelectAll2',
+            'change #project_select_all': 'onChangeProjectSelectAll',
+            'change #project_select_all2': 'onChangeProjectSelectAll2',
+            'change [name="cp_20_radio"]': 'onChangeCP20Radio',
+            'change [name="walk_in_conversion_radio"]': 'onChangeWalkInRadio',
+            'change [name="walk_in_select"]': 'onChangeWalkInRegionClusterRadio',
+            'click #walk_in_region_selection .dropdown-item': 'onChangeWalkInRegion',
+            'change .walk_in_cluster_select': 'onChangeWalkInCluster',
+            'change [name="cp_units_region_wise_radio"]': 'onChangeCpUnitRegionWiseRadio',
+            'change [name="cp_units_region_wise_select"]': 'onChangeCpUnitRegionWiseRadio',
+            'change [name="manpower_radio"]': 'manPowerRadioRadio',
+            'change [name="manpower_count_or_value"]': 'manPowerRadioRadio',
+            'click .report_link': 'linkToReport',
+            'click .list_view_link': 'linkToList',
+            'change #custom_date_range': 'onChangeCustomDateRange',
+            'change #manpower_date_from': 'onChangeManPowerDate',
+            'change #manpower_date_to': 'onChangeManPowerDate',
+            'change #custom_date_range_booking_registration': 'onChangeCustomDateRangeBookingRegistration',
+            'change #custom_date_range_booking_registration2': 'onChangeCustomDateRangeBookingRegistration2',
+            'change #booking_registrations_date_from': 'changeRadioRegionWise',
+            'change #booking_registrations_date_from2': 'changeRadioRegionWise2',
+            'change #booking_registrations_date_to': 'changeRadioRegionWise',
+            'change #booking_registrations_date_to2': 'changeRadioRegionWise2',
+            'change #custom_date_range_cluster_booking_registration': 'onChangeCustomDateRangeClusterBookingRegistration',
+            'change #cluster_booking_registrations_date_from': 'changeRadioClusterWise',
+            'change #cluster_booking_registrations_date_to': 'changeRadioClusterWise',
+            'change #custom_date_range_project_booking_registration': 'onChangeCustomDateRangeProjectBookingRegistration',
+            'change #project_booking_registrations_date_from': 'changeRadioProjectWise',
+            'change #project_booking_registrations_date_to': 'changeRadioProjectWise',
+            'change #custom_date_range_cp_booking': 'onChangeCustomDateRangeCpBooking',
+            'change #cp_booking_date_from': 'onChangeCpUnitRegionWiseRadio',
+            'change #cp_booking_date_to': 'onChangeCpUnitRegionWiseRadio',
+            'change #custom_date_range_top_20_cp': 'onChangeCustomDateRangeTop20Cp',
+            'change #top_20_cp_date_from': 'onChangeCP20Radio',
+            'change #top_20_cp_date_to': 'onChangeCP20Radio',
+            'change .custom-radio input[type="radio"]': 'onRadioChange2', // New event for radio buttons
 
-import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+        },
 
-var closeclick = false;
-
-export class JupiterDashboardOptima extends Component {
-    static template = "JupiterDashboardOptima";
-
-    setup() {
-        this.rpc = useService("rpc");
-        this.action = useService("action");
-        this.charts = {};
-        this.eventListeners = [];
-        this.$modal = null;
-        onMounted(() => this.onMounted());
-        onWillUnmount(() => this.onWillUnmount());
-    }
-
-    setupEventListeners() {
-        const eventMappings = [
-            { selector: '.region-blocks', event: 'click', handler: this.changeRegion.bind(this) },
-            { selector: '.region-blocks2', event: 'click', handler: this.changeRegion2.bind(this) },
-            { selector: '.o_region_many2many', event: 'change', handler: this._changecloseclick.bind(this) },
-            { selector: '.o_cluster_many2many', event: 'change', handler: this._changecloseclick.bind(this) },
-            { selector: '.o_project_many2many', event: 'change', handler: this._changecloseclick.bind(this) },
-            { selector: '.o_cluster_head_data_many2many', event: 'change', handler: this._changecloseclick.bind(this) },
-            { selector: '.o_region_many2many', event: 'focus', handler: this.changeregionselectionbox.bind(this) },
-            { selector: '.o_cluster_many2many', event: 'focus', handler: this.changeclusterselectionbox.bind(this) },
-            { selector: '.o_project_many2many', event: 'focus', handler: this.changeprojectselectionbox.bind(this) },
-            { selector: '.o_cluster_head_data_many2many', event: 'focus', handler: this.changeclusterheadselectionbox.bind(this) },
-            { selector: '#region-select', event: 'change', handler: this.changeRegion2.bind(this) },
-            { selector: '.cluster-blocks', event: 'click', handler: this.changeCluster.bind(this) },
-            { selector: '.cluster-head-blocks2', event: 'click', handler: this.changeRegion2.bind(this) },
-            { selector: '#clusterhead-select', event: 'change', handler: this.changeRegion2.bind(this) },
-            { selector: '.cluster-blocks2', event: 'click', handler: this.changeRegion2.bind(this) },
-            { selector: '#cluster-select', event: 'change', handler: this.changeRegion2.bind(this) },
-            { selector: '.project-blocks', event: 'click', handler: this.changeProject.bind(this) },
-            { selector: '.project-blocks2', event: 'click', handler: this.changeRegion2.bind(this) },
-            { selector: '#project-select', event: 'change', handler: this.changeRegion2.bind(this) },
-            { selector: '.data_column', event: 'click', handler: this.clickDataColumn.bind(this) },
-            { selector: '#region_select_all2', event: 'click', handler: this.changeRadioRegionWiseMany2many.bind(this) },
-            { selector: '#cluster_select_all2', event: 'click', handler: this.changeClusterWiseSelectMany2many.bind(this) },
-            { selector: '#project_select_all2', event: 'click', handler: this.changeProjectWiseSelectMany2many.bind(this) },
-            { selector: '#cluster_head_select_all2', event: 'click', handler: this.changeClusterHeadWiseSelectMany2many.bind(this) },
-            { selector: '.region_wise_radio', event: 'change', handler: this.changeRadioRegionWise.bind(this) },
-            { selector: '.region_wise_radio2', event: 'change', handler: this.changeRadioRegionWise2.bind(this) },
-            { selector: '.cluster_wise_radio', event: 'change', handler: this.changeRadioClusterWise.bind(this) },
-            { selector: '.cluster_wise_radio2', event: 'change', handler: this.changeRadioClusterWise2.bind(this) },
-            { selector: '.project_wise_radio', event: 'change', handler: this.changeRadioProjectWise.bind(this) },
-            { selector: '.project_wise_radio2', event: 'change', handler: this.changeRadioProjectWise2.bind(this) },
-            { selector: '#region_wise_booking_select', event: 'change', handler: this.changeRegionWiseSelect.bind(this) },
-            { selector: '#cluster_wise_booking_select', event: 'change', handler: this.changeClusterWiseSelect.bind(this) },
-            { selector: '#project_wise_booking_select', event: 'change', handler: this.changeProjectWiseSelect.bind(this) },
-            { selector: '.region-radio-input', event: 'change', handler: this.changeRadioRegionWise.bind(this) },
-            { selector: '.region-radio-input2', event: 'change', handler: this.changeRadioRegionWise2.bind(this) },
-            { selector: '.month-quarter-wise-radio-input2', event: 'change', handler: this.changeRadioRegionWise3.bind(this) },
-            { selector: '.booking-cancel-net-reg-input', event: 'change', handler: this.changeRadioRegionWise4.bind(this) },
-            { selector: '#financial-years-container', event: 'change', handler: this.FinancialYearContainer.bind(this) },
-            { selector: '.cluster-radio-input', event: 'change', handler: this.changeRadioClusterWise.bind(this) },
-            { selector: '.cluster-radio-input2', event: 'change', handler: this.changeRadioClusterWise2.bind(this) },
-            { selector: '.project-radio-input', event: 'change', handler: this.changeRadioProjectWise.bind(this) },
-            { selector: '.project-radio-input2', event: 'change', handler: this.changeRadioProjectWise2.bind(this) },
-            { selector: '[name="comparison-value-radio"]', event: 'change', handler: this.changeRadioActualBudget.bind(this) },
-            { selector: '.region_select', event: 'change', handler: this.changeRegionSelect.bind(this) },
-            { selector: '.cluster_checkbox', event: 'change', handler: this.changeClusterCheckbox.bind(this) },
-            { selector: '[name="region-wise-radio"]', event: 'change', handler: this.changeRegionWiseRadio.bind(this) },
-            { selector: '[name="cluster-wise-radio"]', event: 'change', handler: this.changeClusterWiseRadio.bind(this) },
-            { selector: '[name="project-wise-radio"]', event: 'change', handler: this.changeProjectWiseRadio.bind(this) },
-            { selector: '[name="cp-active-dormant"]', event: 'change', handler: this.changeCpActiveDormantRadio.bind(this) },
-            { selector: '#region_selection .dropdown-item', event: 'click', handler: this.onChangeRegion.bind(this) },
-            { selector: '.configuration_select', event: 'change', handler: this.onChangeConfiguration.bind(this) },
-            { selector: '.cluster_select', event: 'change', handler: this.onChangeConfiguration.bind(this) },
-            { selector: '#region_select_all', event: 'change', handler: this.onChangeRegionSelectAll.bind(this) },
-            { selector: '#region_select_all2', event: 'change', handler: this.onChangeRegionSelectAll2.bind(this) },
-            { selector: '#cluster_select_all', event: 'change', handler: this.onChangeClusterSelectAll.bind(this) },
-            { selector: '#cluster_select_all2', event: 'change', handler: this.onChangeClusterSelectAll2.bind(this) },
-            { selector: '#cluster_head_select_all2', event: 'change', handler: this.onChangeClusterHeadSelectAll2.bind(this) },
-            { selector: '#project_select_all', event: 'change', handler: this.onChangeProjectSelectAll.bind(this) },
-            { selector: '#project_select_all2', event: 'change', handler: this.onChangeProjectSelectAll2.bind(this) },
-            { selector: '[name="cp_20_radio"]', event: 'change', handler: this.onChangeCP20Radio.bind(this) },
-            { selector: '[name="walk_in_conversion_radio"]', event: 'change', handler: this.onChangeWalkInRadio.bind(this) },
-            { selector: '[name="walk_in_select"]', event: 'change', handler: this.onChangeWalkInRegionClusterRadio.bind(this) },
-            { selector: '#walk_in_region_selection .dropdown-item', event: 'click', handler: this.onChangeWalkInRegion.bind(this) },
-            { selector: '.walk_in_cluster_select', event: 'change', handler: this.onChangeWalkInCluster.bind(this) },
-            { selector: '[name="cp_units_region_wise_radio"]', event: 'change', handler: this.onChangeCpUnitRegionWiseRadio.bind(this) },
-            { selector: '[name="cp_units_region_wise_select"]', event: 'change', handler: this.onChangeCpUnitRegionWiseRadio.bind(this) },
-            { selector: '[name="manpower_radio"]', event: 'change', handler: this.manPowerRadioRadio.bind(this) },
-            { selector: '[name="manpower_count_or_value"]', event: 'change', handler: this.manPowerRadioRadio.bind(this) },
-            { selector: '.report_link', event: 'click', handler: this.linkToReport.bind(this) },
-            { selector: '.list_view_link', event: 'click', handler: this.linkToList.bind(this) },
-            { selector: '#custom_date_range', event: 'change', handler: this.onChangeCustomDateRange.bind(this) },
-            { selector: '#manpower_date_from', event: 'change', handler: this.onChangeManPowerDate.bind(this) },
-            { selector: '#manpower_date_to', event: 'change', handler: this.onChangeManPowerDate.bind(this) },
-            { selector: '#custom_date_range_booking_registration', event: 'change', handler: this.onChangeCustomDateRangeBookingRegistration.bind(this) },
-            { selector: '#custom_date_range_booking_registration2', event: 'change', handler: this.onChangeCustomDateRangeBookingRegistration2.bind(this) },
-            { selector: '#booking_registrations_date_from', event: 'change', handler: this.changeRadioRegionWise.bind(this) },
-            { selector: '#booking_registrations_date_from2', event: 'change', handler: this.changeRadioRegionWise2.bind(this) },
-            { selector: '#booking_registrations_date_to', event: 'change', handler: this.changeRadioRegionWise.bind(this) },
-            { selector: '#booking_registrations_date_to2', event: 'change', handler: this.changeRadioRegionWise2.bind(this) },
-            { selector: '#custom_date_range_cluster_booking_registration', event: 'change', handler: this.onChangeCustomDateRangeClusterBookingRegistration.bind(this) },
-            { selector: '#cluster_booking_registrations_date_from', event: 'change', handler: this.changeRadioClusterWise.bind(this) },
-            { selector: '#cluster_booking_registrations_date_to', event: 'change', handler: this.changeRadioClusterWise.bind(this) },
-            { selector: '#custom_date_range_project_booking_registration', event: 'change', handler: this.onChangeCustomDateRangeProjectBookingRegistration.bind(this) },
-            { selector: '#project_booking_registrations_date_from', event: 'change', handler: this.changeRadioProjectWise.bind(this) },
-            { selector: '#project_booking_registrations_date_to', event: 'change', handler: this.changeRadioProjectWise.bind(this) },
-            { selector: '#custom_date_range_cp_booking', event: 'change', handler: this.onChangeCustomDateRangeCpBooking.bind(this) },
-            { selector: '#cp_booking_date_from', event: 'change', handler: this.onChangeCpUnitRegionWiseRadio.bind(this) },
-            { selector: '#cp_booking_date_to', event: 'change', handler: this.onChangeCpUnitRegionWiseRadio.bind(this) },
-            { selector: '#custom_date_range_top_20_cp', event: 'change', handler: this.onChangeCustomDateRangeTop20Cp.bind(this) },
-            { selector: '#top_20_cp_date_from', event: 'change', handler: this.onChangeCP20Radio.bind(this) },
-            { selector: '#top_20_cp_date_to', event: 'change', handler: this.onChangeCP20Radio.bind(this) },
-            { selector: '.custom-radio input[type="radio"]', event: 'change', handler: this.onRadioChange2.bind(this) },
-        ];
-
-        eventMappings.forEach(({ selector, event, handler }) => {
-            const elements = this.el.querySelectorAll(selector);
-            elements.forEach(element => {
-                element.addEventListener(event, handler);
-                this.eventListeners.push({ element, event, handler });
-            });
-        });
-    }
-
-        _onOpenRegionModal(ev) {
+        /*** 2) Method called when “Search more” button is clicked.*/
+        _onOpenRegionModal: function (ev) {
 //            console.log("Clicked open-region-modal-btn")
             ev.preventDefault();
             ev.stopPropagation();
@@ -190,7 +175,7 @@ export class JupiterDashboardOptima extends Component {
          *
          * @param {String} searchTerm   The current value of the search input
          */
-        _fetchRegions(searchTerm) {
+        _fetchRegions: function (searchTerm) {
             var self = this;
             // 2) Gather currently selected IDs from the main <select id="region-select">
             var excludedIds = [];
@@ -201,10 +186,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_region_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_region_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                var htmlData = result['data2']
               // 4B) Insert the returned HTML into the modal’s container
               self.$('#region-tree-container').empty().html(htmlData);
@@ -223,12 +211,12 @@ export class JupiterDashboardOptima extends Component {
               });
               $selectAll.prop('checked', false);
 
-            }).catch((err) => {
+            }).catch(function (err) {
 //              console.error("Error fetching regions:", err);
             });
         },
 
-        _onOpenClusterModal(ev) {
+        _onOpenClusterModal: function (ev) {
 //            console.log("Clicked open-cluster-modal-btn")
             ev.preventDefault();
             ev.stopPropagation();
@@ -297,7 +285,7 @@ export class JupiterDashboardOptima extends Component {
          *
          * @param {String} searchTerm   The current value of the search input
          */
-        _fetchClusters(searchTerm) {
+        _fetchClusters: function (searchTerm) {
             var self = this;
             // 2) Gather currently selected IDs from the main <select id="cluster-select">
             var excludedIds = [];
@@ -308,10 +296,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_cluster_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_cluster_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                 var htmlData = result['data2']
             // 4B) Insert the returned HTML into the modal’s container
               self.$('#cluster-tree-container').empty().html(htmlData);
@@ -330,14 +321,14 @@ export class JupiterDashboardOptima extends Component {
               });
               $selectAll.prop('checked', false);
 
-            }).catch((err) => {
+            }).catch(function (err) {
 //              console.error("Error fetching clusters:", err);
             });
         },
 
 
         /*** 2) Method called when “Search more” button is clicked.*/
-        _onOpenProjectModal(ev) {
+        _onOpenProjectModal: function (ev) {
 //            console.log("Clicked open-project-modal-btn")
             ev.preventDefault();
             ev.stopPropagation();
@@ -405,7 +396,7 @@ export class JupiterDashboardOptima extends Component {
          *
          * @param {String} searchTerm   The current value of the search input
          */
-        _fetchProjects(searchTerm) {
+        _fetchProjects: function (searchTerm) {
             var self = this;
             // 2) Gather currently selected IDs from the main <select id="project-select">
             var excludedIds = [];
@@ -416,10 +407,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_project_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_project_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
               var htmlData = result['data2']
               // 4B) Insert the returned HTML into the modal’s container
               self.$('#project-tree-container').empty().html(htmlData);
@@ -438,12 +432,12 @@ export class JupiterDashboardOptima extends Component {
               });
               $selectAll.prop('checked', false);
 
-            }).catch((err) => {
+            }).catch(function (err) {
 //              console.error("Error fetching projects:", err);
             });
         },
 
-        _onOpenClusterHeadModal(ev) {
+        _onOpenClusterHeadModal: function (ev) {
 //            console.log("Clicked open-clusterhead-modal-btn")
             ev.preventDefault();
             ev.stopPropagation();
@@ -510,7 +504,7 @@ export class JupiterDashboardOptima extends Component {
          *
          * @param {String} searchTerm   The current value of the search input
          */
-        _fetchClusterHeads(searchTerm) {
+        _fetchClusterHeads: function (searchTerm) {
             var self = this;
             // 2) Gather currently selected IDs from the main <select id="clusterhead-select">
             var excludedIds = [];
@@ -521,10 +515,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_clusterhead_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_clusterhead_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                 var htmlData = result['data2']
               // 4B) Insert the returned HTML into the modal’s container
               self.$('#clusterhead-tree-container').empty().html(htmlData);
@@ -543,12 +540,12 @@ export class JupiterDashboardOptima extends Component {
               });
               $selectAll.prop('checked', false);
 
-            }).catch((err) => {
+            }).catch(function (err) {
 //              console.error("Error fetching clusterheads:", err);
             });
         },
 
-        onChangeCustomDateRangeTop20Cp(ev){
+        onChangeCustomDateRangeTop20Cp: function(ev){
             var custom_range = $('#custom_date_range_top_20_cp').prop('checked')
             if (custom_range){
                 $('#top_20_cp_date_fields').show()
@@ -561,7 +558,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeCustomDateRangeCpBooking(ev){
+        onChangeCustomDateRangeCpBooking: function(ev){
             var custom_range = $('#custom_date_range_cp_booking').prop('checked')
             if (custom_range){
                 $('#cp_booking_date_fields').show()
@@ -574,7 +571,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeCustomDateRangeProjectBookingRegistration(ev){
+        onChangeCustomDateRangeProjectBookingRegistration: function(ev){
             var custom_range = $('#custom_date_range_project_booking_registration').prop('checked')
             if (custom_range){
                 $('#project_booking_registrations_date_fields').show()
@@ -587,7 +584,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeCustomDateRangeClusterBookingRegistration(ev){
+        onChangeCustomDateRangeClusterBookingRegistration: function(ev){
             var custom_range = $('#custom_date_range_cluster_booking_registration').prop('checked')
             if (custom_range){
                 $('#cluster_booking_registrations_date_fields').show()
@@ -600,7 +597,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeCustomDateRangeBookingRegistration(ev){
+        onChangeCustomDateRangeBookingRegistration: function(ev){
             var custom_range = $('#custom_date_range_booking_registration').prop('checked')
             if (custom_range){
                 $('#booking_registrations_date_fields').show()
@@ -613,7 +610,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 //        Graph 2
-        onChangeCustomDateRangeBookingRegistration2(ev){
+        onChangeCustomDateRangeBookingRegistration2: function(ev){
             var custom_range = $('#custom_date_range_booking_registration2').prop('checked')
             if (custom_range){
                 $('#booking_registrations_date_fields').show()
@@ -626,13 +623,13 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeManPowerDate(ev){
+        onChangeManPowerDate: function(ev){
             var self = this;
             var date_from = $('#manpower_date_from').val()
             var date_to = $('#manpower_date_to').val()
             var count_or_value = $('[name="manpower_count_or_value"]:checked').val()
             $('.manpower_loader').removeClass('invisible')
-            this.rpc('/jupiter_dashboard_optima/manpower_productivity', {frequency: false, count_or_value: count_or_value, date_from, date_to}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/manpower_productivity', 'call', {frequency: false, count_or_value: count_or_value, date_from, date_to}, {shadow:true}).then(function (result){
 //                self.ManPowerProductivityRadialChart(result[0])
                 $('#man_power_radial_chart').empty().append(result[0])
                 self.ManPowerProductivityRegionChart(result[1])
@@ -642,7 +639,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        onChangeCustomDateRange(ev){
+        onChangeCustomDateRange: function(ev){
             var custom_range = $('#custom_date_range').prop('checked')
             if (custom_range){
                 $('#manpower_date_fields').show()
@@ -655,7 +652,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        linkToList(ev){
+        linkToList: function(ev){
             var self = this;
             var domain = $(ev.currentTarget).attr('domain')
             if ($(ev.currentTarget).closest('.active-dormant').length > 0){
@@ -665,13 +662,14 @@ export class JupiterDashboardOptima extends Component {
                     domain = $(ev.currentTarget).attr('dormant_domain')
                 }
             }
-            this.rpc('/jupiter_dashboard_optima/call_list_view',                 {domain: domain, model: $(ev.currentTarget).attr('model'), 'name': $(ev.currentTarget).attr('name')},
-                {shadow:true}).then((result) => {
-                self.action.doAction(result)
+            ajax.jsonRpc('/jupiter_dashboard_optima/call_list_view', 'call',
+                {domain: domain, model: $(ev.currentTarget).attr('model'), 'name': $(ev.currentTarget).attr('name')},
+                {shadow:true}).then(function (result) {
+                self.do_action(result)
             })
         },
 
-        linkToReport(ev){
+        linkToReport: function(ev){
             var self = this;
             var report_attr = JSON.parse($(ev.currentTarget).attr('report_attr').replace(/'/g, '"'))
             if ('consolidate' in report_attr){
@@ -707,13 +705,14 @@ export class JupiterDashboardOptima extends Component {
                     }
                 })
             }
-            this.rpc('/jupiter_dashboard_optima/call_report',                 {report_attr: report_attr, model: $(ev.currentTarget).attr('model'), region_ids: region_ids, cluster_ids: cluster_ids, project_ids: project_ids},
-                {shadow:true}).then((result) => {
-                self.action.doAction(result)
+            ajax.jsonRpc('/jupiter_dashboard_optima/call_report', 'call',
+                {report_attr: report_attr, model: $(ev.currentTarget).attr('model'), region_ids: region_ids, cluster_ids: cluster_ids, project_ids: project_ids},
+                {shadow:true}).then(function (result) {
+                self.do_action(result)
             })
         },
 
-        manPowerRadioRadio(ev){
+        manPowerRadioRadio: function(ev){
             var self = this;
             var custom_range = $('#custom_date_range').prop('checked')
             if (custom_range){
@@ -727,7 +726,7 @@ export class JupiterDashboardOptima extends Component {
                     $('#manpower_in_lack').show()
                 }
                 $('.manpower_loader').removeClass('invisible')
-                this.rpc('/jupiter_dashboard_optima/manpower_productivity', {frequency: frequency, count_or_value: count_or_value}).then((result) => {
+                ajax.jsonRpc('/jupiter_dashboard_optima/manpower_productivity', 'call', {frequency: frequency, count_or_value: count_or_value}, {shadow:true}).then(function (result){
         //                self.ManPowerProductivityRadialChart(result[0])
                     $('#man_power_radial_chart').empty().append(result[0])
                     self.ManPowerProductivityRegionChart(result[1])
@@ -738,7 +737,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeCpUnitRegionWiseRadio(ev){
+        onChangeCpUnitRegionWiseRadio: function(ev){
             var self = this;
             var frequency = $('[name="cp_units_region_wise_radio"]:checked').val()
             var model = $('[name="cp_units_region_wise_select"]:checked').val()
@@ -754,12 +753,12 @@ export class JupiterDashboardOptima extends Component {
                 custom_start = $('#cp_booking_date_from').val()
                 custom_end = $('#cp_booking_date_to').val()
             }
-            this.rpc('/jupiter_dashboard_optima/cp_booking_units_region_wise', {'model': model, 'frequency': frequency, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/cp_booking_units_region_wise', 'call', {'model': model, 'frequency': frequency, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function(result){
                 self.CpBookingUnitsRegionWise(result, label)
             })
         },
 
-        onChangeWalkInCluster(ev){
+        onChangeWalkInCluster: function(ev){
             var self = this;
             var frequency = $('[name="walk_in_conversion_radio"]:checked').val()
             var model = $('[name="walk_in_select"]:checked').val()
@@ -773,14 +772,14 @@ export class JupiterDashboardOptima extends Component {
             }
             $('#walk_in_project_loader').show()
             $('.walk_in_project_div table').css({'filter': 'blur(4px)'})
-            this.rpc('/jupiter_dashboard_optima/walk_in_data', {'model': 'project', 'frequency': frequency, 'region': region, 'cluster': cluster_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {'model': 'project', 'frequency': frequency, 'region': region, 'cluster': cluster_ids}, {shadow:true}).then(function(result){
                 $('#walk_in_project_tbody').empty().append(result)
                 $('#walk_in_project_loader').hide()
                 $('.walk_in_project_div table').css({'filter': 'unset'})
             })
         },
 
-        onChangeWalkInRegion(ev){
+        onChangeWalkInRegion: function(ev){
             var self = this;
             var frequency = $('[name="walk_in_conversion_radio"]:checked').val()
             var region = $(ev.target).attr('value') || false
@@ -795,18 +794,18 @@ export class JupiterDashboardOptima extends Component {
             }
             $('#walk_in_project_loader').show()
             $('.walk_in_project_div table').css({'filter': 'blur(4px)'})
-            this.rpc('/jupiter_dashboard_optima/walk_in_data', {'model': 'project', 'frequency': frequency, 'region': region, 'cluster': cluster_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {'model': 'project', 'frequency': frequency, 'region': region, 'cluster': cluster_ids}, {shadow:true}).then(function(result){
                 $('#walk_in_project_tbody').empty().append(result)
                 $('#walk_in_project_loader').hide()
                 $('.walk_in_project_div table').css({'filter': 'unset'})
             })
-            this.rpc('/jupiter_dashboard_optima/walk_in_get_cluster', {region: region}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_get_cluster', 'call', {region: region}, {shadow:true}).then(function (result) {
                 $('#walk_in_cluster_select_div').empty().append(result)
                 $('#walk_in_cluster_select').select2()
             })
         },
 
-        onChangeWalkInRegionClusterRadio(ev){
+        onChangeWalkInRegionClusterRadio: function(ev){
             var self = this;
             var frequency = $('[name="walk_in_conversion_radio"]:checked').val()
             var model = $('[name="walk_in_select"]:checked').val()
@@ -817,20 +816,20 @@ export class JupiterDashboardOptima extends Component {
             }
             $('#walk_in_region_loader').show()
             $('#walk_in_region_wise').css({'filter': 'blur(4px)'})
-            this.rpc('/jupiter_dashboard_optima/walk_in_data', {'model': model, 'frequency': frequency}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {'model': model, 'frequency': frequency}, {shadow:true}).then(function(result){
                 self.WalkInRegionWise(result)
                 $('#walk_in_region_loader').hide()
                 $('#walk_in_region_wise').css({'filter': 'unset'})
             })
         },
 
-        onChangeWalkInRadio(ev){
+        onChangeWalkInRadio: function(ev){
             var self = this;
             var frequency = $('[name="walk_in_conversion_radio"]:checked').val()
             var model = $('[name="walk_in_select"]:checked').val()
             $('#walk_in_region_loader').show()
             $('#walk_in_region_wise').css({'filter': 'blur(4px)'})
-            this.rpc('/jupiter_dashboard_optima/walk_in_data', {'model': model, 'frequency': frequency}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {'model': model, 'frequency': frequency}, {shadow:true}).then(function(result){
                 self.WalkInRegionWise(result)
                 $('#walk_in_region_loader').hide()
                 $('#walk_in_region_wise').css({'filter': 'unset'})
@@ -845,14 +844,14 @@ export class JupiterDashboardOptima extends Component {
             }
             $('#walk_in_project_loader').show()
             $('.walk_in_project_div table').css({'filter': 'blur(4px)'})
-            this.rpc('/jupiter_dashboard_optima/walk_in_data', {'model': 'project', 'frequency': frequency, 'region': region, 'cluster': cluster_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {'model': 'project', 'frequency': frequency, 'region': region, 'cluster': cluster_ids}, {shadow:true}).then(function(result){
                 $('#walk_in_project_tbody').empty().append(result)
                 $('#walk_in_project_loader').hide()
                 $('.walk_in_project_div table').css({'filter': 'unset'})
             })
         },
 
-        onChangeCP20Radio(ev){
+        onChangeCP20Radio: function(ev){
             var frequency = $('[name="cp_20_radio"]:checked').val()
             var custom_range = $('#custom_date_range_top_20_cp').prop('checked')
             var custom_start = false
@@ -861,12 +860,12 @@ export class JupiterDashboardOptima extends Component {
                 custom_start = $('#top_20_cp_date_from').val()
                 custom_end = $('#top_20_cp_date_to').val()
             }
-            this.rpc('/jupiter_dashboard_optima/get_top_20_cp', {'frequency': frequency, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/get_top_20_cp', 'call', {'frequency': frequency, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result){
                 $('#cp_tbody').empty().append(result)
             })
         },
 
-        onChangeProjectSelectAll(ev){
+        onChangeProjectSelectAll: function(ev){
             if($('#project_select_all').prop('checked')){
                 $('.project-blocks').addClass('active')
                 this.changeProject()
@@ -875,7 +874,7 @@ export class JupiterDashboardOptima extends Component {
                 this.changeProject()
             }
         },
-        clickDataColumn(ev){
+        clickDataColumn: function(ev){
             var selectedValue = $('.region-cluster-projects-radio-input:checked').val();  // Get clicked button value
 //            console.log("Clicked Button clickDataColumn", selectedValue);
 //            // Show the selected section and its checkbox
@@ -897,17 +896,17 @@ export class JupiterDashboardOptima extends Component {
             var month = $(ev.currentTarget).attr('month')
 //            console.log('Clicked',month,type);
             var self = this;
-            this.rpc('/jupiter_dashboard_optima/generate_report_optima', {
+            ajax.jsonRpc('/jupiter_dashboard_optima/generate_report_optima', 'call', {
                 type: type,
                 month: month,
                 region_ids:region_ids,
                 project_ids:project_ids
-            }).then((result) => {
+            }).then(function(result) {
 //                console.log('Response from Backend:', result);
                 // Handle the result (e.g., open a report view)
                 if (result.report_id) {
 //                    var model = type === 'Registration' ? 'beta.registration.report' : 'beta.booking.report';
-                    self.action.doAction({
+                    self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: result.report_model,
                         res_id: result.report_id,
@@ -923,7 +922,7 @@ export class JupiterDashboardOptima extends Component {
         },
 
         //Region, Cluster, projects
-        onRadioChange2(ev) {
+        onRadioChange2: function (ev) {
             var selectedValue = $(ev.currentTarget).val();  // Get clicked button value
 //            console.log("Clicked Button onRadioChange2", selectedValue);
 
@@ -952,7 +951,7 @@ export class JupiterDashboardOptima extends Component {
            this.changeRegion2();
         },
 
-        onChangeClusterSelectAll(ev){
+        onChangeClusterSelectAll: function(ev){
             if($('#cluster_select_all').prop('checked')){
                 $('.cluster-blocks').addClass('active')
                 $('#project_select_all').prop('checked', true)
@@ -964,7 +963,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeRegionSelectAll(ev){
+        onChangeRegionSelectAll: function(ev){
             if($('#region_select_all').prop('checked')){
                 $('.region-blocks').addClass('active')
                 $('#cluster_select_all').prop('checked', true)
@@ -978,7 +977,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeClusterSelectAll2(ev){
+        onChangeClusterSelectAll2: function(ev){
             if($('#cluster_select_all2').prop('checked')){
                 $('.cluster-blocks2').addClass('active')
 //                $('#project_select_all2').prop('checked', true)
@@ -990,7 +989,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeRegionSelectAll2(ev){
+        onChangeRegionSelectAll2: function(ev){
             if($('#region_select_all2').prop('checked')){
                 $('.region-blocks2').addClass('active')
 //                $('#cluster_select_all2').prop('checked', true)
@@ -1004,7 +1003,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeProjectSelectAll2(ev){
+        onChangeProjectSelectAll2: function(ev){
             if($('#project_select_all2').prop('checked')){
                 $('.project-blocks2').addClass('active')
                 this.changeRegion2()
@@ -1014,7 +1013,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        onChangeClusterHeadSelectAll2(ev){
+        onChangeClusterHeadSelectAll2: function(ev){
             if($('#cluster_head_select_all2').prop('checked')){
                 $('.cluster-head-blocks2').addClass('active')
                 this.changeRegion2()
@@ -1025,7 +1024,7 @@ export class JupiterDashboardOptima extends Component {
         },
 
 
-        onChangeConfiguration(ev){
+        onChangeConfiguration: function(ev){
             var self = this;
             var configuration_ids = []
             for(var option of document.getElementById('configuration_select').options){
@@ -1040,12 +1039,12 @@ export class JupiterDashboardOptima extends Component {
                 }
             }
             var region = $('#region_selection button').attr('region_id') || false
-            this.rpc('/jupiter_dashboard_optima/sales_inventory', {'region_wise': false, 'project_wise': true, 'project_region': region, 'configuration_ids': configuration_ids, 'cluster_ids': cluster_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/sales_inventory', 'call', {'region_wise': false, 'project_wise': true, 'project_region': region, 'configuration_ids': configuration_ids, 'cluster_ids': cluster_ids}, {shadow:true}).then(function (result) {
                 self.projectOrRegionFlatStatus(result, true, false)
             })
         },
 
-        onChangeRegion(ev){
+        onChangeRegion: function(ev){
             var self = this;
             var region = $(ev.target).attr('value') || false
             $('#region_selection button').empty().append($(ev.target).text())
@@ -1062,20 +1061,20 @@ export class JupiterDashboardOptima extends Component {
                     cluster_ids.push(parseInt(option.getAttribute('cluster_id')))
                 }
             }
-            this.rpc('/jupiter_dashboard_optima/sales_inventory', {'region_wise': false, 'project_wise': true, 'project_region': region, 'configuration_ids': configuration_ids, 'cluster_ids': cluster_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/sales_inventory', 'call', {'region_wise': false, 'project_wise': true, 'project_region': region, 'configuration_ids': configuration_ids, 'cluster_ids': cluster_ids}, {shadow:true}).then(function (result) {
                 self.projectOrRegionFlatStatus(result, true, false)
             })
-            this.rpc('/jupiter_dashboard_optima/get_cluster', {region: region}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster', 'call', {region: region}, {shadow:true}).then(function (result) {
                 $('#cluster_select_div').empty().append(result)
                 $('#cluster_select').select2()
             })
         },
-        FinancialCountChart(result) {
+        FinancialCountChart: function (result) {
         $("#financial_count_chart").html(result[2])
     },
 
 
-        projectOrRegionFlatStatus(result){
+        projectOrRegionFlatStatus: function (result){
             var options = {
                 series: [
                     {
@@ -1151,7 +1150,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        changeCpActiveDormantRadio(ev){
+        changeCpActiveDormantRadio: function(ev){
             if($('[name="cp-active-dormant"]:checked').val() == 'active'){
                 $('#month_cps_active').removeClass('d-none')
                 $('#quarter_cps_active').removeClass('d-none')
@@ -1175,7 +1174,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        changeProjectWiseRadio(ev){
+        changeProjectWiseRadio: function(ev){
             if($('[name="project-wise-radio"]:checked').val() == 'booking'){
                 $('.project_wise_booking_div').removeClass('d-none')
                 $('.project_wise_registration_div').addClass('d-none')
@@ -1187,7 +1186,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        changeClusterWiseRadio(ev){
+        changeClusterWiseRadio: function(ev){
             if($('[name="cluster-wise-radio"]:checked').val() == 'booking'){
                 $('.cluster_wise_booking_div').removeClass('d-none')
                 $('.cluster_wise_registration_div').addClass('d-none')
@@ -1199,7 +1198,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        changeRegionWiseRadio(ev){
+        changeRegionWiseRadio: function(ev){
             if($('[name="region-wise-radio"]:checked').val() == 'booking'){
                 $('.region_wise_booking_div').removeClass('d-none')
                 $('.region_wise_registration_div').addClass('d-none')
@@ -1211,18 +1210,18 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        changeClusterCheckbox(ev){
+        changeClusterCheckbox: function(ev){
             var self = this;
             var cluster_ids = []
             for(var cluster of $('.cluster_checkbox:checked')){
                 cluster_ids.push(parseInt($(cluster).attr('cluster_id')))
             }
-            this.rpc('/jupiter_dashboard_optima/get_last_6_month_cp_booking', {cluster_ids: cluster_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/get_last_6_month_cp_booking', 'call', {cluster_ids: cluster_ids}, {shadow:true}).then(function (result) {
                 self.applyCpBookingChart(result)
             })
         },
 
-        changeRegionSelect(ev){
+        changeRegionSelect: function(ev){
             var self = this;
             var region_ids = []
             for(var option of document.getElementById('region_select').options){
@@ -1230,7 +1229,7 @@ export class JupiterDashboardOptima extends Component {
                     region_ids.push(parseInt(option.getAttribute('region_id')))
                 }
             }
-            this.rpc('/jupiter_dashboard_optima/get_cluster_select_data', {region_ids: region_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster_select_data', 'call', {region_ids: region_ids}, {shadow:true}).then(function (result) {
                 $('.cluster-select-div').empty().append(result)
                 var $select = $('#cluster-select');
                     $select.empty();  // Clear previous options
@@ -1259,12 +1258,12 @@ export class JupiterDashboardOptima extends Component {
                      changeRadioRegionWise2();
             })
 
-            this.rpc('/jupiter_dashboard_optima/get_last_6_month_cp_booking', {region_ids: region_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/get_last_6_month_cp_booking', 'call', {region_ids: region_ids}, {shadow:true}).then(function (result) {
                 self.applyCpBookingChart(result)
             })
         },
 
-        changeRadioActualBudget(ev){
+        changeRadioActualBudget: function(ev){
             var self = this;
             if($('[name="comparison-value-radio"]:checked').val() == 'booking'){
                 var booking_type = 'number'
@@ -1275,12 +1274,12 @@ export class JupiterDashboardOptima extends Component {
                 var registration_type = 'number'
                 var type = 'registration'
             }
-            this.rpc('/jupiter_dashboard_optima/budget_actual_comparison', {'booking_type': booking_type, 'registration_type': registration_type}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/budget_actual_comparison', 'call', {'booking_type': booking_type, 'registration_type': registration_type}, {shadow:true}).then(function (result) {
                 self.ActualBudgetComparison(result, type)
             })
         },
 
-        changeProjectWiseSelect(ev){
+        changeProjectWiseSelect: function(ev){
             var self = this;
             var type = $('#project_wise_booking_select').val()
             var frequency = $('.project_wise_radio:checked').val()
@@ -1310,7 +1309,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_end = $('#project_booking_registrations_date_to').val()
             }
             var count_or_value = $('.project-radio-input:checked').val()
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'project', 'parent_region': parent_region, 'project_ids': project_ids, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'project', 'parent_region': parent_region, 'project_ids': project_ids, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
                 }else if (type == 'cancelled'){
@@ -1322,7 +1321,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeProjectWiseSelect2(ev){
+        changeProjectWiseSelect2: function(ev){
             var self = this;
             var type = $('#project_wise_booking_select').val()
             var frequency = $('.project_wise_radio:checked').val()
@@ -1353,7 +1352,7 @@ export class JupiterDashboardOptima extends Component {
             }
             var count_or_value = $('.project-radio-input:checked').val()
 //            changeProjectWiseSelect2
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'project', 'parent_region': parent_region, 'project_ids': project_ids, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'project', 'parent_region': parent_region, 'project_ids': project_ids, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
                 }else if (type == 'cancelled'){
@@ -1365,7 +1364,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeClusterWiseSelect(ev){
+        changeClusterWiseSelect: function(ev){
             var self = this;
             var type = $('#cluster_wise_booking_select').val()
             var frequency = $('.cluster_wise_radio:checked').val()
@@ -1389,7 +1388,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_end = $('#cluster_booking_registrations_date_to').val()
             }
             var count_or_value = $('.cluster-radio-input:checked').val()
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'cluster', 'parent_region': parent_region, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'cluster', 'parent_region': parent_region, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
                 }else if (type == 'cancelled'){
@@ -1401,7 +1400,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeRegionWiseSelect(ev){
+        changeRegionWiseSelect: function(ev){
             var self = this;
             var type = $('#region_wise_booking_select').val()
             var frequency = $('.region_wise_radio:checked').val()
@@ -1418,7 +1417,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_from = $('#booking_registrations_date_from').val()
                 custom_to = $('#booking_registrations_date_to').val()
             }
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_from': custom_from, 'custom_to': custom_to}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_from': custom_from, 'custom_to': custom_to}, {shadow:true}).then(function (result) {
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
                 }else if (type == 'cancelled'){
@@ -1430,7 +1429,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeRadioProjectWise2(ev){
+        changeRadioProjectWise2: function(ev){
             var self = this;
             var frequency = $('.project_wise_radio:checked').val()
             var type = $('#project_wise_booking_select').val()
@@ -1460,7 +1459,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_start = $('#project_booking_registrations_date_from').val()
                 custom_end = $('#project_booking_registrations_date_to').val()
             }
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'project', 'parent_region': parent_region, 'project_ids': project_ids, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'project', 'parent_region': parent_region, 'project_ids': project_ids, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 self.applyProjectWiseChart(result)
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
@@ -1474,7 +1473,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeRadioClusterWise(ev){
+        changeRadioClusterWise: function(ev){
             var self = this;
             var frequency = $('.cluster_wise_radio:checked').val()
             var type = $('#cluster_wise_booking_select').val()
@@ -1498,7 +1497,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_start = $('#cluster_booking_registrations_date_from').val()
                 custom_end = $('#cluster_booking_registrations_date_to').val()
             }
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'cluster', 'parent_region': parent_region, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'cluster', 'parent_region': parent_region, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 self.applyClusterWiseChart(result)
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
@@ -1512,7 +1511,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeRadioClusterWise2(ev){
+        changeRadioClusterWise2: function(ev){
             var self = this;
             var frequency = $('.cluster_wise_radio:checked').val()
             var type = $('#cluster_wise_booking_select').val()
@@ -1537,7 +1536,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_end = $('#cluster_booking_registrations_date_to').val()
             }
 //            changeRadioClusterWise2
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'cluster', 'parent_region': parent_region, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'region_or_cluster': 'cluster', 'parent_region': parent_region, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 self.applyClusterWiseChart(result)
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
@@ -1551,7 +1550,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeRadioRegionWise(ev){
+        changeRadioRegionWise: function(ev){
             var self = this;
             var frequency = $('.region_wise_radio:checked').val()
             var type = $('#region_wise_booking_select').val()
@@ -1568,7 +1567,7 @@ export class JupiterDashboardOptima extends Component {
                 custom_start = $('#booking_registrations_date_from').val()
                 custom_end = $('#booking_registrations_date_to').val()
             }
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start, 'custom_end': custom_end}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start, 'custom_end': custom_end}, {shadow:true}).then(function (result) {
                 self.applyRegionWiseChart(result)
                 if (type == 'gross'){
                     var data =  result[0][0]['data']
@@ -1583,7 +1582,7 @@ export class JupiterDashboardOptima extends Component {
         },
 
 //        Graph 2 - AJAX request to the server to fetch data  processes chart
-        changeRadioRegionWiseMany2many(ev){
+        changeRadioRegionWiseMany2many: function(ev){
 //            console.log('🔔 changeRadioRegionWiseMany2many');
             // ev.target is the #region_select_all2 checkbox
             var checked = ev.target.checked;
@@ -1596,7 +1595,7 @@ export class JupiterDashboardOptima extends Component {
             $select.trigger('change');
         },
 
-        changeClusterWiseSelectMany2many(ev){
+        changeClusterWiseSelectMany2many: function(ev){
 //            console.log('🔔 changeClusterWiseSelectMany2many');
             // ev.target is the #region_select_all2 checkbox
             var checked = ev.target.checked;
@@ -1609,7 +1608,7 @@ export class JupiterDashboardOptima extends Component {
             $select.trigger('change');
         },
 
-        changeProjectWiseSelectMany2many(ev){
+        changeProjectWiseSelectMany2many: function(ev){
 //            console.log('🔔 changeProjectWiseSelectMany2many');
             // ev.target is the #region_select_all2 checkbox
             var checked = ev.target.checked;
@@ -1622,7 +1621,7 @@ export class JupiterDashboardOptima extends Component {
             $select.trigger('change');
         },
 
-        changeClusterHeadWiseSelectMany2many(ev){
+        changeClusterHeadWiseSelectMany2many: function(ev){
 //            console.log('🔔 changeClusterHeadWiseSelectMany2many');
             // ev.target is the #region_select_all2 checkbox
             var checked = ev.target.checked;
@@ -1636,13 +1635,13 @@ export class JupiterDashboardOptima extends Component {
 
          },
 
-         _changecloseclick(ev) {
+         _changecloseclick: function(ev) {
             console.log('🔔 func changecloseclick');
             closeclick = true
 
         },
 
-        changeregionselectionbox(ev) {
+        changeregionselectionbox: function(ev) {
 //            console.log('🔔 changeregionselectionbox - Pop up Box Clicked');
             if (!closeclick){
 
@@ -1657,10 +1656,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_region_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_region_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenRegionModal(ev); // Calling the modal opening function
@@ -1673,7 +1675,7 @@ export class JupiterDashboardOptima extends Component {
         }
         },
 
-        changeclusterselectionbox(ev) {
+        changeclusterselectionbox: function(ev) {
 //            console.log('🔔 changeclusterselectionbox - Select Box Clicked');
             if (!closeclick){
             var self = this;
@@ -1687,10 +1689,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_cluster_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_cluster_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenClusterModal(ev); // Calling the modal opening function
@@ -1701,7 +1706,7 @@ export class JupiterDashboardOptima extends Component {
         }
         },
 
-        changeprojectselectionbox(ev) {
+        changeprojectselectionbox: function(ev) {
 //            console.log('🔔 changeprojectselectionbox - Select Box Clicked');
             if (!closeclick){
             var self = this;
@@ -1715,10 +1720,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_project_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_project_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenProjectModal(ev); // Calling the modal opening function
@@ -1729,7 +1737,7 @@ export class JupiterDashboardOptima extends Component {
         }
         },
 
-        changeclusterheadselectionbox(ev) {
+        changeclusterheadselectionbox: function(ev) {
 //            console.log('🔔 changeclusterhead2 - Select Box Clicked');
             if (!closeclick){
             var self = this;
@@ -1743,10 +1751,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_clusterhead_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_clusterhead_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then(function (result) {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenClusterHeadModal(ev); // Calling the modal opening function
@@ -1758,7 +1769,7 @@ export class JupiterDashboardOptima extends Component {
         },
 
 
-        changeRadioRegionWise2(ev){
+        changeRadioRegionWise2: function(ev){
             var self = this;
             var frequency = $('.region_wise_radio2:checked').val()
             var month_or_quarter = $('.month-quarter-wise-radio-input2:checked').val();  // Get the selected frequency
@@ -1859,7 +1870,7 @@ export class JupiterDashboardOptima extends Component {
             }
         //      ` ! region_ids2, cluster2, projects2 and region_ids,cluster, projects are there..? ! `
             // count value btn
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start, 'custom_end': custom_end, 'month_or_quarter':month_or_quarter,'financial_year':financial_year,'show_booking':show_booking,'show_cancel':show_cancel,'show_net':show_net,'show_reg':show_reg,'cluster_ids':cluster_ids, 'cluster_ids': cluster_ids2, 'project_ids': project_ids2, 'cluster_head_ids': cluster_head_ids2}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {'frequency': frequency, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start, 'custom_end': custom_end, 'month_or_quarter':month_or_quarter,'financial_year':financial_year,'show_booking':show_booking,'show_cancel':show_cancel,'show_net':show_net,'show_reg':show_reg,'cluster_ids':cluster_ids, 'cluster_ids': cluster_ids2, 'project_ids': project_ids2, 'cluster_head_ids': cluster_head_ids2}, {shadow:true}).then(function (result) {
 //                console.log('🔄 Button count/value:', result);
                 self.applyRegionWiseChart2(result)
                 self.FinancialCountChart(result)
@@ -1872,7 +1883,7 @@ export class JupiterDashboardOptima extends Component {
                 }
             })
         },
-        changeRadioRegionWise3(ev){
+        changeRadioRegionWise3: function(ev){
         var self = this;
         var frequency = $('.region_wise_radio2:checked').val();  // Get the selected frequency
         var month_or_quarter = $('.month-quarter-wise-radio-input2:checked').val();  // Get the selected frequency
@@ -1961,7 +1972,7 @@ export class JupiterDashboardOptima extends Component {
 //      ` ! region_ids2 and region_ids are there..? ! `
         // month and quarter
         // Make the RPC call to fetch data based on the selected frequency, region_ids, and count_or_value
-        this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
+        ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {
             'frequency': frequency,
             'region_ids': region_ids2,
             'count_or_value': count_or_value,
@@ -1976,7 +1987,7 @@ export class JupiterDashboardOptima extends Component {
             'cluster_ids': cluster_ids2,
             'project_ids': project_ids2,
             'cluster_head_ids': cluster_head_ids2
-        }, {shadow: true}).then((result) => {
+        }, {shadow: true}).then(function(result) {
             // Apply the result to the chart
             self.applyRegionWiseChart2(result);
             self.FinancialCountChart(result);
@@ -2081,7 +2092,7 @@ export class JupiterDashboardOptima extends Component {
         }
         //booking , cancel, net,.. filter method
         // Make the RPC call to fetch data based on the selected frequency, region_ids, and count_or_value
-        this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
+        ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {
             'frequency': frequency,
             'region_ids': region_ids2,
             'count_or_value': count_or_value,
@@ -2096,7 +2107,7 @@ export class JupiterDashboardOptima extends Component {
             'cluster_ids': cluster_ids2,
             'project_ids': project_ids2,
             'cluster_head_ids': cluster_head_ids2
-        }, {shadow: true}).then((result) => {
+        }, {shadow: true}).then(function(result) {
             // Apply the result to the chart
             self.applyRegionWiseChart2(result);
             self.FinancialCountChart(result);
@@ -2113,7 +2124,7 @@ export class JupiterDashboardOptima extends Component {
             // You can further process the data or use it to update the chart or UI here
         });
     },
-    FinancialYearContainer(ev){
+    FinancialYearContainer: function(ev){
 //        console.log("LOOOOOOOOOOOOOggggggggggggggggggg")
         var self = this;
         var frequency = $('.region_wise_radio2:checked').val();  // Get the selected frequency
@@ -2202,7 +2213,7 @@ export class JupiterDashboardOptima extends Component {
         }
         //Financial Year Container
         // Make the RPC call to fetch data based on the selected frequency, region_ids, and count_or_value
-        this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
+        ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {
             'frequency': frequency,
             'region_ids': region_ids2,
             'count_or_value': count_or_value,
@@ -2217,7 +2228,7 @@ export class JupiterDashboardOptima extends Component {
             'cluster_ids': cluster_ids2,
             'project_ids': project_ids2,
             'cluster_head_ids': cluster_head_ids2
-        }, {shadow: true}).then((result) => {
+        }, {shadow: true}).then(function(result) {
             // Apply the result to the chart
             self.applyRegionWiseChart2(result);
             self.FinancialCountChart(result);
@@ -2236,7 +2247,7 @@ export class JupiterDashboardOptima extends Component {
     },
 
 
-        applyProjectWiseBookingChart(data, labels){
+        applyProjectWiseBookingChart: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2262,7 +2273,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyClusterWiseBookingChart(data, labels){
+        applyClusterWiseBookingChart: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2288,7 +2299,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyRegionWiseBookingChart(data, labels){
+        applyRegionWiseBookingChart: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2315,7 +2326,7 @@ export class JupiterDashboardOptima extends Component {
         },
 
 //        Graph 2
-        applyRegionWiseBookingChart2(data, labels){
+        applyRegionWiseBookingChart2: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2341,7 +2352,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyProjectWiseRegistrationChart(data, labels){
+        applyProjectWiseRegistrationChart: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2367,7 +2378,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyClusterWiseRegistrationChart(data, labels){
+        applyClusterWiseRegistrationChart: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2393,7 +2404,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyRegionWiseRegistrationChart(data, labels){
+        applyRegionWiseRegistrationChart: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2418,7 +2429,7 @@ export class JupiterDashboardOptima extends Component {
                 chart.render();
             }
         },
-        applyRegionWiseRegistrationChart2(data, labels){
+        applyRegionWiseRegistrationChart2: function(data, labels){
             var options = {
                 series: data,
                 chart: {
@@ -2444,7 +2455,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyProjectWiseChart(result){
+        applyProjectWiseChart: function(result){
             var table = `
                 <table class="table table-sm cp_booking_unit_table">
                     <thead>
@@ -2475,7 +2486,7 @@ export class JupiterDashboardOptima extends Component {
             $("#project_wise_booking_registration").empty().append(table)
         },
 
-        applyClusterWiseChart(result){
+        applyClusterWiseChart: function(result){
             var series = [
             {
                 'name': 'Gross',
@@ -2560,7 +2571,7 @@ export class JupiterDashboardOptima extends Component {
             tooltip: {
                 shared: true,
                 intersect: false,
-                custom({ series, seriesIndex, dataPointIndex, w }) {
+                custom: function({ series, seriesIndex, dataPointIndex, w }) {
                     const category = w.config.xaxis.categories[dataPointIndex];
                     let tooltipHtml = `<div class="custom-tooltip">
                         <div class="category">${category}</div>`;
@@ -2610,7 +2621,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyRegionWiseChart(result){
+        applyRegionWiseChart: function(result){
             var options = {
                 series: result[0],
                 chart: {
@@ -2685,7 +2696,7 @@ export class JupiterDashboardOptima extends Component {
         },
 
 //        Graph 2 finance chart configuration (Booking, Cancelled, and Registration) - ApexCharts
-        applyRegionWiseChart2(result){
+        applyRegionWiseChart2: function(result){
             var self = this;
             var count_or_value = $('.region-radio-input2:checked').val();  // Get count or value from selected radio button
             var yAxisLabel = (count_or_value === 'count') ? 'Count' : 'Value';
@@ -2746,7 +2757,7 @@ export class JupiterDashboardOptima extends Component {
                     enabled: true,
                     shared: false, // Individual tooltips for each bar
                     intersect: true, // Only show tooltip when hovering over a bar
-                    custom({ series, seriesIndex, dataPointIndex, w }) {
+                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
                         const value = series[seriesIndex][dataPointIndex];
                         const category = w.globals.labels[dataPointIndex];
                         const seriesName = w.globals.seriesNames[seriesIndex];
@@ -2780,7 +2791,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        changeProject(ev){
+        changeProject: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -2795,13 +2806,13 @@ export class JupiterDashboardOptima extends Component {
                     project_ids.push(parseInt($(obj).attr('project_id')))
                 }
             })
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations', {'project': project_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations', 'call', {'project': project_ids}, {shadow:true}).then(function (result) {
                 self.applyProjectBookingRegistration(result)
             })
             self.changeRadioProjectWise()
         },
 
-        changeProject2(ev){
+        changeProject2: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -2817,13 +2828,13 @@ export class JupiterDashboardOptima extends Component {
 //                    project_ids.push(parseInt($(obj).attr('project_id')))
 //                }
 //            })
-//            this.rpc('/jupiter_dashboard_optima/bookings_registrations', {'project': project_ids}).then((result) => {
+//            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations', 'call', {'project': project_ids}, {shadow:true}).then(function (result) {
 //                self.applyProjectBookingRegistration(result)
 //            })
 //            self.changeRadioProjectWise2()
         },
 
-        changeCluster(ev){
+        changeCluster: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -2843,9 +2854,9 @@ export class JupiterDashboardOptima extends Component {
               var type = $(this).val();
               region_ids.push(parseInt(type));
             });
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations', {'cluster': cluster_ids, 'region': region_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations', 'call', {'cluster': cluster_ids, 'region': region_ids}, {shadow:true}).then(function (result) {
                 self.applyClusterBookingRegistration(result)
-                this.rpc('/jupiter_dashboard_optima/get_project_data', {'cluster': cluster_ids, 'region': region_ids}).then((result1) => {
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_project_data', 'call', {'cluster': cluster_ids, 'region': region_ids}, {shadow:true}).then(function (result1) {
                     $('#project-container').empty().append(result1)
                     self.applyProjectBookingRegistration(result)
                     self.changeRadioProjectWise()
@@ -2854,7 +2865,7 @@ export class JupiterDashboardOptima extends Component {
             self.changeRadioClusterWise()
         },
 
-        changeRegion(ev){
+        changeRegion: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -2868,15 +2879,15 @@ export class JupiterDashboardOptima extends Component {
               var type = $(this).val();
               region_ids.push(parseInt(type));
             });
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations', {'region': region_ids}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations', 'call', {'region': region_ids}, {shadow:true}).then(function (result) {
                 self.applyRegionBookingRegistration(result)
                 self.changeRadioRegionWise()
-                this.rpc('/jupiter_dashboard_optima/get_cluster_data', {'region': region_ids}).then((result1) => {
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster_data', 'call', {'region': region_ids}, {shadow:true}).then(function (result1) {
                     $('#cluster-container').empty().append(result1)
                     self.applyClusterBookingRegistration(result)
                     self.changeRadioClusterWise()
                 })
-                this.rpc('/jupiter_dashboard_optima/get_project_data', {'region': region_ids}).then((result2) => {
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_project_data', 'call', {'region': region_ids}, {shadow:true}).then(function (result2) {
                     $('#project-container').empty().append(result2)
                     self.applyProjectBookingRegistration(result)
                     self.changeRadioProjectWise()
@@ -2884,7 +2895,7 @@ export class JupiterDashboardOptima extends Component {
             })
         },
 
-        changeCluster2(ev){
+        changeCluster2: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -2906,7 +2917,7 @@ export class JupiterDashboardOptima extends Component {
             });
         },
 
-        changeClusterHead2(ev){
+        changeClusterHead2: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -2919,7 +2930,7 @@ export class JupiterDashboardOptima extends Component {
 
 
 //        Graph 2 dashboard iii Process of selecting one or more Regions from the UI
-        changeRegion2(ev){
+        changeRegion2: function(ev){
             var self = this;
             if(ev){
                 if ($(ev.target).hasClass('active')){
@@ -3005,7 +3016,7 @@ export class JupiterDashboardOptima extends Component {
                 project_ids2 = false
             }
             // region filter
-            this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {'frequency': frequency2, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start2, 'custom_end': custom_end2,'month_or_quarter':month_or_quarter,'financial_year':financial_year,'show_booking':show_booking,'show_cancel':show_cancel,'show_net':show_net,'show_reg':show_reg, 'cluster_ids': cluster_ids2, 'project_ids': project_ids2, 'cluster_head_ids': cluster_head_ids2}).then((result) => {
+            ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {'frequency': frequency2, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start2, 'custom_end': custom_end2,'month_or_quarter':month_or_quarter,'financial_year':financial_year,'show_booking':show_booking,'show_cancel':show_cancel,'show_net':show_net,'show_reg':show_reg, 'cluster_ids': cluster_ids2, 'project_ids': project_ids2, 'cluster_head_ids': cluster_head_ids2}, {shadow:true}).then(function (result) {
                     self.applyRegionWiseChart2(result)
                     self.FinancialCountChart(result)
                     self.applyRegionWiseBookingChart2(result[0][0]['data'], result[1])
@@ -3013,7 +3024,7 @@ export class JupiterDashboardOptima extends Component {
                 })
         },
 
-        applyRegionBookingRegistration(result){
+        applyRegionBookingRegistration: function(result){
             $('#today_booking_gross_count').empty().append(result['today_booking_gross_count'])
             $('#week_booking_gross_count').empty().append(result['week_booking_gross_count'])
             $('#month_booking_gross_count').empty().append(result['month_booking_gross_count'])
@@ -3078,7 +3089,7 @@ export class JupiterDashboardOptima extends Component {
             $('#year_average_av').empty().append(result['year_average_av'])
         },
 
-        applyClusterBookingRegistration(result){
+        applyClusterBookingRegistration: function(result){
             $('#cluster_today_booking_gross_count').empty().append(result['today_booking_gross_count'])
             $('#cluster_week_booking_gross_count').empty().append(result['week_booking_gross_count'])
             $('#cluster_month_booking_gross_count').empty().append(result['month_booking_gross_count'])
@@ -3143,7 +3154,7 @@ export class JupiterDashboardOptima extends Component {
             $('#cluster_year_average_av').empty().append(result['year_average_av'])
         },
 
-        applyProjectBookingRegistration(result){
+        applyProjectBookingRegistration: function(result){
             $('#project_today_booking_gross_count').empty().append(result['today_booking_gross_count'])
             $('#project_week_booking_gross_count').empty().append(result['week_booking_gross_count'])
             $('#project_month_booking_gross_count').empty().append(result['month_booking_gross_count'])
@@ -3208,7 +3219,7 @@ export class JupiterDashboardOptima extends Component {
             $('#project_year_average_av').empty().append(result['year_average_av'])
         },
 
-        ActualBudgetComparison(result, type){
+        ActualBudgetComparison: function(result, type){
             if (type == 'booking'){
                 var colors = ['#ff742e', '#2ec4b6']
                 var budget_data = result['booking_budgets']
@@ -3312,7 +3323,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyCpCountChart(result){
+        applyCpCountChart: function(result){
             var options = {
                 series: [{
                     name: 'New CPs Added',
@@ -3366,7 +3377,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        applyCpBookingChart(result){
+        applyCpBookingChart: function(result){
             var options = {
                 series: [
                     {
@@ -3457,7 +3468,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        ManPowerProductivityRadialChart(result){
+        ManPowerProductivityRadialChart: function(result){
             var options = {
                 series: [result],
                 chart: {
@@ -3492,7 +3503,7 @@ export class JupiterDashboardOptima extends Component {
                             value: {
                                 offsetY: -40,
                                 fontSize: '20px',
-                                formatter(val){return val}
+                                formatter: function(val){return val}
                             }
                         }
                     }
@@ -3522,7 +3533,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        ManPowerProductivityRegionChart(result){
+        ManPowerProductivityRegionChart: function(result){
             var options = {
                 series: [
                     {
@@ -3593,7 +3604,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        ManPowerProductivityClusterChart(result){
+        ManPowerProductivityClusterChart: function(result){
             var options = {
                 series: [
                     {
@@ -3664,7 +3675,7 @@ export class JupiterDashboardOptima extends Component {
                         text: 'Cluster'
                     },
                     labels: {
-                        formatter(value, index) {
+                        formatter: function(value, index) {
                             if (typeof value === 'string') {
                                 return value.length > 6 ? value.substring(0, 6) + '...' : value;
                             }
@@ -3674,12 +3685,12 @@ export class JupiterDashboardOptima extends Component {
                 },
                 tooltip: {
                     y: {
-                        formatter(val, opts) {
+                        formatter: function(val, opts) {
                             return `${val}`;
                         }
                     },
                     x: {
-                        formatter(value, opts) {
+                        formatter: function(value, opts) {
                             // Return the full category name for the tooltip
                             const categoryIndex = opts.dataPointIndex;
                             const categories = result['categories'];
@@ -3707,7 +3718,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        WalkInRegionWise(result){
+        WalkInRegionWise: function(result){
             if ($("#walk_in_region_wise").length > 0){
                 $("#walk_in_region_wise").empty()
                 Highcharts.chart('walk_in_region_wise', {
@@ -3725,7 +3736,7 @@ export class JupiterDashboardOptima extends Component {
                     xAxis: {
                         categories: result['categories'],
                         labels: {
-                            formatter() {
+                            formatter: function () {
                                 // Truncate the label to 6 characters and append "..." if needed
                                 return this.value.length > 6 ? this.value.substring(0, 6) + '...' : this.value;
                             }
@@ -3747,7 +3758,7 @@ export class JupiterDashboardOptima extends Component {
                     },
                     tooltip: {
                         shared: true,
-                        formatter() {
+                        formatter: function () {
                             var tooltip = '<b>' + this.x + '</b><br/>'; // Display the category
 
                             // Variables to hold the series values and conversion percentages
@@ -3805,7 +3816,7 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
-        CpBookingUnitsRegionWise(result, label){
+        CpBookingUnitsRegionWise: function(result, label){
             var options = {
                 series: [
                     {
@@ -3896,294 +3907,421 @@ export class JupiterDashboardOptima extends Component {
             }
         },
 
+        renderElement: function (ev){
+            var self = this;
+            $.when(this._super()).then(function (ev) {
+            ajax.jsonRpc('/jupiter_dashboard_optima/get_financial_year', 'call', {}, {shadow: true})
+                .then(function (result) {
+                $('#financial-years-container').empty().append(result);
 
-    async onMounted() {
-        this.setupEventListeners();
-        const self = this;
-        
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_financial_year', {});
-            $('#financial-years-container').empty().append(result);
-        } catch (error) {
-            console.error("Error fetching financial year:", error);
-        }
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_region_data', {});
-            $('#region-container').empty().append(result);
-            
-            const today = new Date();
-            const firstDayPrevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            const lastDayPrevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-            const formatDate = (date) => {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            };
-            $('#manpower_date_from').val(formatDate(firstDayPrevMonth));
-            $('#manpower_date_to').val(formatDate(lastDayPrevMonth));
-            $('#booking_registrations_date_from').val(formatDate(firstDayPrevMonth));
-            $('#booking_registrations_date_to').val(formatDate(lastDayPrevMonth));
-            $('#cluster_booking_registrations_date_from').val(formatDate(firstDayPrevMonth));
-            $('#cluster_booking_registrations_date_to').val(formatDate(lastDayPrevMonth));
-            $('#project_booking_registrations_date_from').val(formatDate(firstDayPrevMonth));
-            $('#project_booking_registrations_date_to').val(formatDate(lastDayPrevMonth));
-            $('#cp_booking_date_from').val(formatDate(firstDayPrevMonth));
-            $('#cp_booking_date_to').val(formatDate(lastDayPrevMonth));
-            $('#top_20_cp_date_from').val(formatDate(firstDayPrevMonth));
-            $('#top_20_cp_date_to').val(formatDate(lastDayPrevMonth));
-        } catch (error) {
-            console.error("Error fetching region data:", error);
-        }
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_region_data2', {});
-            $('#region-container2').empty().append(result);
-            const $select = $('#region-select');
-            $select.empty();
-            const $fragment = $(result);
-            $fragment.find('.region-blocks2').each(function () {
-                const id = $(this).attr('region_id');
-                const name = $(this).text().trim();
-                $select.append($('<option>', { value: id, text: name }));
-            });
-            $select.select2({ placeholder: 'Select Regions', width: '100%' });
-            $select.find('option').prop('selected', true);
-            $('#region_select_all2').prop('checked', true);
-            $select.select2();
-            
-            const frequency2 = $('.region_wise_radio2:checked').val();
-            const month_or_quarter = $('.month-quarter-wise-radio-input2:checked').val();
-            const financial_year = $('#financial-years-container').val();
-            const count_or_value = $('.region-radio-input2:checked').val();
-            let region_ids2 = [.01];
-            
+            })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_region_data', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#region-container').empty().append(result)
+
+                    const today = new Date();
+                    const firstDayPrevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    const lastDayPrevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    const formatDate = (date) => {
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                        const day = String(date.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    };
+                    $('#manpower_date_from').val(formatDate(firstDayPrevMonth));
+                    $('#manpower_date_to').val(formatDate(lastDayPrevMonth));
+                    $('#booking_registrations_date_from').val(formatDate(firstDayPrevMonth));
+                    $('#booking_registrations_date_to').val(formatDate(lastDayPrevMonth));
+                    $('#cluster_booking_registrations_date_from').val(formatDate(firstDayPrevMonth));
+                    $('#cluster_booking_registrations_date_to').val(formatDate(lastDayPrevMonth));
+                    $('#project_booking_registrations_date_from').val(formatDate(firstDayPrevMonth));
+                    $('#project_booking_registrations_date_to').val(formatDate(lastDayPrevMonth));
+                    $('#cp_booking_date_from').val(formatDate(firstDayPrevMonth));
+                    $('#cp_booking_date_to').val(formatDate(lastDayPrevMonth));
+                    $('#top_20_cp_date_from').val(formatDate(firstDayPrevMonth));
+                    $('#top_20_cp_date_to').val(formatDate(lastDayPrevMonth));
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_region_data2', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#region-container2').empty().append(result)
+                      var $select = $('#region-select');
+                      $select.empty();
+                      // 3) Parse the returned HTML and build real <option> entries
+                        var $fragment = $(result);    // turn returned HTML into jQuery object
+                        $fragment.find('.region-blocks2').each(function () {
+                            var id   = $(this).attr('region_id');
+                            var name = $(this).text().trim();
+                            // Append each real region
+                            $select.append(
+                              $('<option>', {
+                                value: id,
+                                text:  name
+                              })
+                            );
+                        });
+
+                        // 4) Re-initialize (or refresh) your Select2 widget
+                        $select.select2({ placeholder: 'Select Regions', width: '100%' });
+                         // 4) *** Immediately select all options on load ***
+                        $select.find('option').prop('selected', true);
+//                        $select.trigger('change');
+
+                        // Sync your "Select All" checkbox
+                        $('#region_select_all2').prop('checked', true);
+                        $select.select2();
+//                        console.log("✅ Regions loaded into select2:", $select.find('option').length);
+//                        console.log("All regions selected by default");
+
+//                   console.log("REEEEEEEEEEEEEEEEEEEEEgionNNNNNNNNNNN", result)
+                    const today = new Date();
+                    const firstDayPrevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    const lastDayPrevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    const formatDate = (date) => {
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                        const day = String(date.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    };
+
+
+            var frequency2 = $('.region_wise_radio2:checked').val();
+            var month_or_quarter = $('.month-quarter-wise-radio-input2:checked').val();  // Get the selected frequency
+            var financial_year = $('#financial-years-container').val();
+
+            var type2 = '';
+            var count_or_value = $('.region-radio-input2:checked').val();
+            var region_ids2 = [.01];
+
             $('#region-select option:selected').each(function() {
-                region_ids2.push(parseInt($(this).val()));
+              var type = $(this).val();
+              region_ids2.push(parseInt(type));
             });
-            
-            let project_ids2 = [.01];
+//            console.log('Selected region types:', region_ids2);
+
+            var project_ids2 = [.01]
             $('#project-select option:selected').each(function() {
-                project_ids2.push(parseInt($(this).val()));
+              var type = $(this).val();
+              project_ids2.push(parseInt(type));
             });
-            
-            let cluster_ids2 = [.01];
+
+            var cluster_ids2 = [.01]
             $('#cluster-select option:selected').each(function() {
-                cluster_ids2.push(parseInt($(this).val()));
+              var type = $(this).val();
+              cluster_ids2.push(parseInt(type));
             });
-            
-            let cluster_head_ids2 = [.01];
+
+            var cluster_head_ids2 = [.01]
             $('#clusterhead-select option:selected').each(function() {
-                cluster_head_ids2.push(parseInt($(this).val()));
+              var type = $(this).val();
+              cluster_head_ids2.push(parseInt(type));
             });
-            
-            const show_booking = !$("#booking").prop('checked');
-            const show_cancel = !$("#cancellation").prop('checked');
-            const show_net = !$("#net").prop('checked');
-            const show_reg = !$("#registration").prop('checked');
-            
-            const selectedValue = $('.custom-radio input[type="radio"]:checked').val();
+
+             var custom_range2 = false
+             var custom_start2 = false
+             var custom_end2 = false
+             var show_booking = false
+             if (!$("#booking").prop('checked')) {
+                show_booking = true;
+            } else {
+                show_booking = false;
+            }
+            var show_cancel = false
+                 if (!$("#cancellation").prop('checked')) {
+                    show_cancel = true;
+                } else {
+                    show_cancel = false;
+                }
+            var show_net = false
+                 if (!$("#net").prop('checked')) {
+                    show_net = true;
+                } else {
+                    show_net = false;
+                }
+            var show_reg = false
+                 if (!$("#registration").prop('checked')) {
+                    show_reg = true;
+                } else {
+                    show_reg = false;
+                }
+            var selectedValue = $('.custom-radio input[type="radio"]:checked').val();
+//            console.log('gadfs',selectedValue)
             if (selectedValue === "region") {
-                cluster_ids2 = false;
-                project_ids2 = false;
-                cluster_head_ids2 = false;
+                cluster_ids2 = false
+                project_ids2 = false
+                cluster_head_ids2 = false
             } else if (selectedValue === "cluster") {
-                region_ids2 = false;
-                project_ids2 = false;
-                cluster_head_ids2 = false;
+                region_ids2 = false
+                project_ids2 = false
+                cluster_head_ids2 = false
             } else if (selectedValue === "project") {
-                region_ids2 = false;
-                cluster_ids2 = false;
-                cluster_head_ids2 = false;
+                region_ids2 = false
+                cluster_ids2 = false
+                cluster_head_ids2 = false
             } else if (selectedValue === "cluster_head") {
-                region_ids2 = false;
-                cluster_ids2 = false;
-                project_ids2 = false;
+                region_ids2 = false
+                cluster_ids2 = false
+                project_ids2 = false
             }
-            
-            const bookingRegResult = await this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
-                frequency: frequency2,
-                region_ids: region_ids2,
-                count_or_value: count_or_value,
-                custom_start: false,
-                custom_end: false,
-                month_or_quarter: month_or_quarter,
-                financial_year: financial_year,
-                show_booking: show_booking,
-                show_cancel: show_cancel,
-                show_net: show_net,
-                show_reg: show_reg,
-                cluster_ids: cluster_ids2,
-                project_ids: project_ids2,
-                cluster_head_ids: cluster_head_ids2
-            });
-            self.applyRegionWiseChart2(bookingRegResult);
-            self.FinancialCountChart(bookingRegResult);
-            self.applyRegionWiseBookingChart2(bookingRegResult[0][0]['data'], bookingRegResult[1]);
-            self.applyRegionWiseRegistrationChart2(bookingRegResult[0][1]['data'], bookingRegResult[1]);
-        } catch (error) {
-            console.error("Error in region data2 processing:", error);
-        }
+//                renderElement
+                ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {'frequency': frequency2, 'region_ids': region_ids2, 'count_or_value': count_or_value, 'custom_start': custom_start2, 'custom_end': custom_end2,'month_or_quarter':month_or_quarter,'financial_year':financial_year,'show_booking':show_booking,'show_cancel':show_cancel,'show_net':show_net,'show_reg':show_reg, 'cluster_ids': cluster_ids2, 'project_ids': project_ids2, 'cluster_head_ids': cluster_head_ids2}, {shadow:true}).then(function (result) {
+                    self.applyRegionWiseChart2(result)
+                    self.FinancialCountChart(result)
+                    self.applyRegionWiseBookingChart2(result[0][0]['data'], result[1])
+                    self.applyRegionWiseRegistrationChart2(result[0][1]['data'], result[1])
+                })
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_cluster_data', {});
-            $('#cluster-container').empty().append(result);
-        } catch (error) {
-            console.error("Error fetching cluster data:", error);
-        }
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_cluster_data2', {});
-            $('#cluster-container2').empty().append(result);
-            const $select = $('#cluster-select');
-            $select.empty();
-            const $fragment = $(result);
-            $fragment.find('.cluster-blocks2').each(function () {
-                const id = $(this).attr('cluster_id');
-                const name = $(this).text().trim();
-                $select.append($('<option>', { value: id, text: name }));
-            });
-            $select.select2({ placeholder: 'Select Cluster', width: '100%' });
-            $select.find('option').prop('selected', true);
-            $('#cluster_select_all2').prop('checked', true);
-            $select.select2();
-        } catch (error) {
-            console.error("Error fetching cluster data2:", error);
-        }
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster_data', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#cluster-container').empty().append(result)
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster_data2', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#cluster-container2').empty().append(result)
+                    var $select = $('#cluster-select');
+                      $select.empty();
+                      // 3) Parse the returned HTML and build real <option> entries
+                        //    We wrap it in a jQuery object so we can .find()
+                        var $fragment = $(result);
+                        $fragment.find('.cluster-blocks2').each(function () {
+                            var id   = $(this).attr('cluster_id');
+                            var name = $(this).text().trim();
+                            // Append each real cluster
+                            $select.append(
+                              $('<option>', {
+                                value: id,
+                                text:  name
+                              })
+                            );
+                        });
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_clusterhead_data2', {});
-            $('#cluster-head-container2').empty().append(result);
-            const $select = $('#clusterhead-select');
-            $select.empty();
-            const $fragment = $(result);
-            $fragment.find('.cluster-head-blocks2').each(function () {
-                const id = $(this).attr('cluster_head_id');
-                const name = $(this).text().trim();
-                $select.append($('<option>', { value: id, text: name }));
-            });
-            $select.select2({ placeholder: 'Select Cluster Head', width: '100%' });
-            $select.find('option').prop('selected', true);
-            $('#cluster_head_select_all2').prop('checked', true);
-            $select.select2();
-        } catch (error) {
-            console.error("Error fetching cluster head data:", error);
-        }
+                        // 4) Re-initialize (or refresh) your Select2 widget
+                        $select.select2({ placeholder: 'Select Cluster', width: '100%' });
+                        $select.find('option').prop('selected', true);
+                        self.$('#cluster_select_all2').prop('checked', true);
+                        $select.select2();
+//                         console.log("Loaded clusters into select2:", $select.find('option').length, "items");
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_project_data2', {});
-            $('#project-container2').empty().append(result);
-            const $select = $('#project-select');
-            $select.empty();
-            const $fragment = $(result);
-            $fragment.find('.project-blocks2').each(function () {
-                const id = $(this).attr('project_id');
-                const name = $(this).text().trim();
-                $select.append($('<option>', { value: id, text: name }));
-            });
-            $select.select2({ placeholder: 'Select Projects', width: '100%' });
-            $select.find('option').prop('selected', true);
-            $('#project_select_all2').prop('checked', true);
-            $select.select2();
-        } catch (error) {
-            console.error("Error fetching project data:", error);
-        }
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/sales_inventory', {
-                region_wise: true,
-                project_wise: false
-            });
-            self.projectOrRegionFlatStatus(result, false, true);
-        } catch (error) {
-            console.error("Error fetching sales inventory:", error);
-        }
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_project_data', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#project-container').empty().append(result)
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_project_data2', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#project-container2').empty().append(result)
+                    var $select = $('#project-select');
+                      $select.empty();
+                      // 3) Parse the returned HTML and build real <option> entries
+                        //    We wrap it in a jQuery object so we can .find()
+                        var $fragment = $(result);
+                        $fragment.find('.project-blocks2').each(function () {
+                            var id   = $(this).attr('project_id');
+                            var name = $(this).text().trim();
+                            // Append each real project
+                            $select.append(
+                              $('<option>', {
+                                value: id,
+                                text:  name
+                              })
+                            );
+                        });
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_last_6_month_cp_booking', {});
-            self.applyCpBookingChart(result);
-        } catch (error) {
-            console.error("Error fetching CP booking:", error);
-        }
+                        // 4) Re-initialize (or refresh) your Select2 widget
+                        $select.select2({ placeholder: 'Select Project', width: '100%' });
+//                      $('.o_project_many2many').select2();
+                        $select.find('option').prop('selected', true);
+//                        $select.trigger('change');
+                        self.$('#project_select_all2').prop('checked', true);
+                        $select.select2();
+//                         console.log("Loaded projects into select2:", $select.find('option').length, "items");
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_top_20_cp', { frequency: 'month' });
-            $('#cp_tbody').empty().append(result);
-        } catch (error) {
-            console.error("Error fetching top 20 CP:", error);
-        }
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster_head_data2', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#cluster-head-container2').empty().append(result)
+                    var $select = $('#clusterhead-select');
+                      $select.empty();
+                      // 3) Parse the returned HTML and build real <option> entries
+                        //    We wrap it in a jQuery object so we can .find()
+                        var $fragment = $(result);
+                        $fragment.find('.cluster-head-blocks2').each(function () {
+                            var id   = $(this).attr('cluster_heads_id');
+                            var name = $(this).text().trim();
+                            // Append each real cluster_head
+                            $select.append(
+                              $('<option>', {
+                                value: id,
+                                text:  name
+                              })
+                            );
+                        });
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/budget_actual_comparison', {
-                booking_type: 'number',
-                registration_type: false
-            });
-            self.ActualBudgetComparison(result, 'booking');
-        } catch (error) {
-            console.error("Error fetching budget actual:", error);
-        }
+                        // 4) Re-initialize (or refresh) your Select2 widget
+                        $select.select2({ placeholder: 'Select Cluster Head', width: '100%' });
+                        // 4) *** Immediately select all options on load ***
+                        $select.find('option').prop('selected', true);
+                        // 5) Also sync the “Select All” checkbox UI
+                        self.$('#cluster_head_select_all2').prop('checked', true);
+                        $select.select2();
+//                         console.log("Loaded cluster Head into select2:", $select.find('option').length, "items");
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/active_dormant_cps', {});
-            $('#active_dormant_cps_div').empty().append(result);
-        } catch (error) {
-            console.error("Error fetching active dormant CPs:", error);
-        }
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations', 'call', {}, {shadow:true}).then(function (result) {
+                    $('.quarter_label').empty().append(result['quarter_label'])
+                    $('.half_label').empty().append(result['half_label'])
+                    $('.year_label').empty().append(result['year_label'])
+                    self.applyRegionBookingRegistration(result)
+                    self.applyClusterBookingRegistration(result)
+                    self.applyProjectBookingRegistration(result)
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/manpower_productivity', {
-                frequency: 'last_month',
-                count_or_value: 'count'
-            });
-            $('#man_power_radial_chart').empty().append(result[0]);
-            self.ManPowerProductivityRegionChart(result[1]);
-            self.ManPowerProductivityClusterChart(result[2]);
-            $('#manpower_project_tbody').empty().append(result[3]);
-        } catch (error) {
-            console.error("Error fetching manpower productivity:", error);
-        }
+                    $('.today_booking_link').attr('report_attr', result['today_booking_attrs']);
+                    $('.week_booking_link').attr('report_attr', result['week_booking_attrs']);
+                    $('.month_booking_link').attr('report_attr', result['month_booking_attrs']);
+                    $('.year_booking_link').attr('report_attr', result['year_booking_attrs']);
+                    $('.quarter_booking_link').attr('report_attr', result['quarter_booking_attrs']);
+                    $('.half_booking_link').attr('report_attr', result['half_booking_attrs']);
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/get_walk_in_region', {});
-            $('#walk_in_region_data').empty().append(result);
-            
-            const walkInData = await this.rpc('/jupiter_dashboard_optima/walk_in_data', {
-                model: 'region',
-                frequency: 'last_month'
-            });
-            self.WalkInRegionWise(walkInData);
-            $('#walk_in_conversion_row').removeClass('d-none');
-        } catch (error) {
-            console.error("Error fetching walk in data:", error);
-        }
+                    $('.today_registration_link').attr('report_attr', result['today_registration_attrs']);
+                    $('.week_registration_link').attr('report_attr', result['week_registration_attrs']);
+                    $('.month_registration_link').attr('report_attr', result['month_registration_attrs']);
+                    $('.year_registration_link').attr('report_attr', result['year_registration_attrs']);
+                    $('.quarter_registration_link').attr('report_attr', result['quarter_registration_attrs']);
+                    $('.half_registration_link').attr('report_attr', result['half_registration_attrs']);
 
-        try {
-            const result = await this.rpc('/jupiter_dashboard_optima/cp_booking_units_region_wise', {
-                model: 'region'
-            });
-            self.CpBookingUnitsRegionWise(result, 'Region');
-        } catch (error) {
-            console.error("Error fetching CP booking units:", error);
-        }
-    }
+                    $('#today_booking_cp_domain').attr('domain', result['today_booking_cp_domain']);
+                    $('#week_booking_cp_domain').attr('domain', result['week_booking_cp_domain']);
+                    $('#month_booking_cp_domain').attr('domain', result['month_booking_cp_domain']);
+                    $('#quarter_booking_cp_domain').attr('domain', result['quarter_booking_cp_domain']);
+                    $('#half_booking_cp_domain').attr('domain', result['half_booking_cp_domain']);
+                    $('#year_booking_cp_domain').attr('domain', result['year_booking_cp_domain']);
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': 'month'}, {shadow:true}).then(function (result) {
+                    self.applyRegionWiseChart(result)
+                    self.applyRegionWiseBookingChart(result[0][0]['data'], result[1])
+                    self.applyRegionWiseRegistrationChart(result[0][3]['data'], result[1])
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': 'month', 'region_or_cluster': 'cluster'}, {shadow:true}).then(function (result) {
+                    self.applyClusterWiseChart(result)
+                    self.applyClusterWiseBookingChart(result[0][0]['data'], result[1])
+                    self.applyClusterWiseRegistrationChart(result[0][3]['data'], result[1])
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise', 'call', {'frequency': 'month', 'region_or_cluster': 'project'}, {shadow:true}).then(function (result) {
+                    self.applyProjectWiseChart(result)
+                    self.applyProjectWiseBookingChart(result[2]['gross']['values'], result[2]['gross']['categories'])
+                    self.applyProjectWiseRegistrationChart(result[2]['registration']['values'], result[2]['registration']['categories'])
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/budget_actual_comparison', 'call', {'registration_type': false}, {shadow:true}).then(function (result) {
+                    self.ActualBudgetComparison(result, 'booking')
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/cp_booked_count', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#today_booking_cp_count').empty().append(result['today_booking_cp_count'])
+                    $('#week_booking_cp_count').empty().append(result['week_booking_cp_count'])
+                    $('#month_booking_cp_count').empty().append(result['month_booking_cp_count'])
+                    $('#year_booking_cp_count').empty().append(result['year_booking_cp_count'])
+                    $('#quarter_booking_cp_count').empty().append(result['quarter_booking_cp_count'])
+                    $('#half_booking_cp_count').empty().append(result['half_booking_cp_count'])
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cp_count', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#month_cps').empty().append(result['month_cps'])
+                    $('#quarter_cps').empty().append(result['quarter_cps'])
+                    $('#half_cps').empty().append(result['half_cps'])
+                    $('#year_cps').empty().append(result['year_cps'])
 
-    onWillUnmount() {
-        Object.values(this.charts).forEach(chart => {
-            if (chart && chart.destroy) {
-                chart.destroy();
-            }
-        });
-        
-        this.eventListeners.forEach(({ element, event, handler }) => {
-            if (element) {
-                element.removeEventListener(event, handler);
-            }
-        });
-        
-        this.charts = {};
-        this.eventListeners = [];
-    }
-}
+                    $('#month_cps_active').empty().append(result['month_cps_active'])
+                    $('#quarter_cps_active').empty().append(result['quarter_cps_active'])
+                    $('#half_cps_active').empty().append(result['half_cps_active'])
+                    $('#year_cps_active').empty().append(result['year_cps_active'])
 
-registry.category("actions").add("jupiter_dashboard_optima", JupiterDashboardOptima);
+                    $('#month_cps_dormant').empty().append(result['month_cps_dormant'])
+                    $('#quarter_cps_dormant').empty().append(result['quarter_cps_dormant'])
+                    $('#half_cps_dormant').empty().append(result['half_cps_dormant'])
+                    $('#year_cps_dormant').empty().append(result['year_cps_dormant'])
+
+                    $('#month_cp_domain').attr('domain', result['month_cp_domain']);
+                    $('#quarter_cp_domain').attr('domain', result['quarter_cp_domain']);
+                    $('#half_cp_domain').attr('domain', result['half_cp_domain']);
+                    $('#year_cp_domain').attr('domain', result['year_cp_domain']);
+
+                    $('#month_cp_active_domain').attr('active_domain', result['month_cp_active_domain']);
+                    $('#quarter_cp_active_domain').attr('active_domain', result['quarter_cp_active_domain']);
+                    $('#half_cp_active_domain').attr('active_domain', result['half_cp_active_domain']);
+                    $('#year_cp_active_domain').attr('active_domain', result['year_cp_active_domain']);
+
+                    $('#month_cp_active_domain').attr('dormant_domain', result['month_cps_dormant_domain']);
+                    $('#quarter_cp_active_domain').attr('dormant_domain', result['quarter_cps_dormant_domain']);
+                    $('#half_cp_active_domain').attr('dormant_domain', result['half_cps_dormant_domain']);
+                    $('#year_cp_active_domain').attr('dormant_domain', result['year_cps_dormant_domain']);
+
+                    self.applyCpCountChart(result)
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_last_6_month_cp_booking', 'call', {}, {shadow:true}).then(function (result) {
+                    self.applyCpBookingChart(result)
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_region_select_data', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#region_select').empty().append(result)
+                    $('#region_select').select2()
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster_select_data', 'call', {}, {shadow:true}).then(function (result) {
+                    $('.cluster-select-div').empty().append(result)
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/sales_inventory', 'call', {'region_wise': false, 'project_wise': true, 'project_region': false}, {shadow:true}).then(function (result) {
+                    self.projectOrRegionFlatStatus(result, true, true)
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_region', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#region_selection .dropdown-menu').empty().append(result[0])
+                    $('#walk_in_region_selection .dropdown-menu').empty().append(result[0])
+                    $('#configuration_select').empty().append(result[1])
+                    $('#configuration_select').select2()
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_cluster', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#cluster_select_div').empty().append(result)
+                    $('#cluster_select').select2()
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_get_cluster', 'call', {}, {shadow:true}).then(function (result) {
+                    $('#walk_in_cluster_select_div').empty().append(result)
+                    $('#walk_in_cluster_select').select2()
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/get_top_20_cp', 'call', {}, {shadow:true}).then(function (result){
+                    $('#cp_tbody').empty().append(result)
+                })
+                $('.manpower_loader').removeClass('invisible')
+                ajax.jsonRpc('/jupiter_dashboard_optima/manpower_productivity', 'call', {frequency: 'month'}, {shadow:true}).then(function (result){
+//                    self.ManPowerProductivityRadialChart(result[0])
+                    $('#man_power_radial_chart').empty().append(result[0])
+                    self.ManPowerProductivityRegionChart(result[1])
+                    self.ManPowerProductivityClusterChart(result[2])
+                    $('#manpower_project_tbody').empty().append(result[3])
+                    $('.manpower_loader').addClass('invisible')
+
+                })
+                $('#walk_in_region_loader').show()
+                $('.walk_in_region_div table').css({'filter': 'blur(4px)'})
+                ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {}, {shadow:true}).then(function(result){
+                    if(result == 'disable'){
+                        $('#walk_in_conversion_row').addClass('d-none')
+                    }else{
+                        self.WalkInRegionWise(result)
+                        $('#walk_in_region_loader').hide()
+                        $('.walk_in_region_div table').css({'filter': 'unset'})
+//                        $('#walk_in_conversion_row').removeClass('d-none')
+                    }
+                })
+                $('#walk_in_project_loader').show()
+                $('.walk_in_project_div table').css({'filter': 'blur(4px)'})
+                ajax.jsonRpc('/jupiter_dashboard_optima/walk_in_data', 'call', {'model': 'project'}, {shadow:true}).then(function(result){
+                    if(result == 'disable'){
+                        $('#walk_in_conversion_row').addClass('d-none')
+                    }else{
+                        $('#walk_in_project_tbody').empty().append(result)
+                        $('#walk_in_project_loader').hide()
+                        $('.walk_in_project_div table').css({'filter': 'unset'})
+//                        $('#walk_in_conversion_row').removeClass('d-none')
+                    }
+                })
+                ajax.jsonRpc('/jupiter_dashboard_optima/cp_booking_units_region_wise', 'call', {'model': 'region'}, {shadow:true}).then(function(result){
+                    self.CpBookingUnitsRegionWise(result, 'Region')
+                })
+            })
+        },
+    })
+    core.action_registry.add('jupiter_dashboard_optima', JupiterDashboardOptima);
+    return JupiterDashboardOptima;
+});

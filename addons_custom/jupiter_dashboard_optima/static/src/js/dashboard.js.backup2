@@ -201,10 +201,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_region_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_region_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                var htmlData = result['data2']
               // 4B) Insert the returned HTML into the modal’s container
               self.$('#region-tree-container').empty().html(htmlData);
@@ -308,10 +311,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_cluster_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_cluster_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                 var htmlData = result['data2']
             // 4B) Insert the returned HTML into the modal’s container
               self.$('#cluster-tree-container').empty().html(htmlData);
@@ -416,10 +422,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_project_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_project_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
               var htmlData = result['data2']
               // 4B) Insert the returned HTML into the modal’s container
               self.$('#project-tree-container').empty().html(htmlData);
@@ -521,10 +530,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_clusterhead_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_clusterhead_data2',
+              params: {
                 search_term: searchTerm || '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                 var htmlData = result['data2']
               // 4B) Insert the returned HTML into the modal’s container
               self.$('#clusterhead-tree-container').empty().html(htmlData);
@@ -665,7 +677,8 @@ export class JupiterDashboardOptima extends Component {
                     domain = $(ev.currentTarget).attr('dormant_domain')
                 }
             }
-            this.rpc('/jupiter_dashboard_optima/call_list_view',                 {domain: domain, model: $(ev.currentTarget).attr('model'), 'name': $(ev.currentTarget).attr('name')},
+            ajax.jsonRpc('/jupiter_dashboard_optima/call_list_view', 'call',
+                {domain: domain, model: $(ev.currentTarget).attr('model'), 'name': $(ev.currentTarget).attr('name')},
                 {shadow:true}).then((result) => {
                 self.action.doAction(result)
             })
@@ -707,7 +720,8 @@ export class JupiterDashboardOptima extends Component {
                     }
                 })
             }
-            this.rpc('/jupiter_dashboard_optima/call_report',                 {report_attr: report_attr, model: $(ev.currentTarget).attr('model'), region_ids: region_ids, cluster_ids: cluster_ids, project_ids: project_ids},
+            ajax.jsonRpc('/jupiter_dashboard_optima/call_report', 'call',
+                {report_attr: report_attr, model: $(ev.currentTarget).attr('model'), region_ids: region_ids, cluster_ids: cluster_ids, project_ids: project_ids},
                 {shadow:true}).then((result) => {
                 self.action.doAction(result)
             })
@@ -897,7 +911,7 @@ export class JupiterDashboardOptima extends Component {
             var month = $(ev.currentTarget).attr('month')
 //            console.log('Clicked',month,type);
             var self = this;
-            this.rpc('/jupiter_dashboard_optima/generate_report_optima', {
+            ajax.jsonRpc('/jupiter_dashboard_optima/generate_report_optima', 'call', {
                 type: type,
                 month: month,
                 region_ids:region_ids,
@@ -1657,10 +1671,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_region_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_region_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenRegionModal(ev); // Calling the modal opening function
@@ -1687,10 +1704,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_cluster_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_cluster_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenClusterModal(ev); // Calling the modal opening function
@@ -1715,10 +1735,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_project_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_project_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenProjectModal(ev); // Calling the modal opening function
@@ -1743,10 +1766,13 @@ export class JupiterDashboardOptima extends Component {
               }
             });
             // 3) Call the controller with both search_term and excluded_ids
-            this.rpc('/jupiter_dashboard_optima/get_search_clusterhead_data2', {
+            rpc.query({
+              route: '/jupiter_dashboard_optima/get_search_clusterhead_data2',
+              params: {
                 search_term: '',
                 excluded_ids: excludedIds,
-              }).then((result) => {
+              },
+            }).then((result) => {
                var htmlData = result['count']
                 if(htmlData > 0){
                     self._onOpenClusterHeadModal(ev); // Calling the modal opening function
@@ -1961,7 +1987,7 @@ export class JupiterDashboardOptima extends Component {
 //      ` ! region_ids2 and region_ids are there..? ! `
         // month and quarter
         // Make the RPC call to fetch data based on the selected frequency, region_ids, and count_or_value
-        this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
+        ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {
             'frequency': frequency,
             'region_ids': region_ids2,
             'count_or_value': count_or_value,
@@ -2081,7 +2107,7 @@ export class JupiterDashboardOptima extends Component {
         }
         //booking , cancel, net,.. filter method
         // Make the RPC call to fetch data based on the selected frequency, region_ids, and count_or_value
-        this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
+        ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {
             'frequency': frequency,
             'region_ids': region_ids2,
             'count_or_value': count_or_value,
@@ -2202,7 +2228,7 @@ export class JupiterDashboardOptima extends Component {
         }
         //Financial Year Container
         // Make the RPC call to fetch data based on the selected frequency, region_ids, and count_or_value
-        this.rpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', {
+        ajax.jsonRpc('/jupiter_dashboard_optima/bookings_registrations_region_wise2', 'call', {
             'frequency': frequency,
             'region_ids': region_ids2,
             'count_or_value': count_or_value,
