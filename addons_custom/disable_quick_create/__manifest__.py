@@ -1,6 +1,6 @@
 {
     'name': 'Disable Quick Create',
-    'version': '13.0.1',
+    'version': '18.0.1.0.0',
     'author': 'Inexoft Technologies',
     'website': 'https://www.inexoft.com',
     'category': 'Web',
@@ -20,4 +20,5 @@
     },
     'installable': True,
     'application': False,
+    'license': 'LGPL-3',
 }

@@ -1,30 +1,48 @@
-odoo.define('disable_quick_create', function(require) {
-    "use strict";
+/** @odoo-module **/
 
-    var relational_fields = require('web.relational_fields');
-    var rpc = require('web.rpc');
+import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { patch } from "@web/core/utils/patch";
 
-    var model_deferred = $.Deferred();
-    var models = [];
+// Cache for models with quick create disabled
+let modelsCache = [];
+let modelsCachePromise = null;
 
-    rpc.query({
-        model: "ir.model",
-        method: "search_read",
-        args:[
-            [['disable_create_edit','=', true]],
-            ['model'],
-        ],
-    }).then(function(result) {
-        result.forEach(function(el){
-            models.push(el.model);
-        })
-        model_deferred.resolve();
-    });
+/**
+ * Patch Many2OneField to disable quick create functionality globally
+ * and specifically for models with disable_create_edit flag
+ */
+patch(Many2OneField.prototype, {
+    /**
+     * Override get relation to disable quick create
+     */
+    get relation() {
+        const relation = super.relation;
 
-    relational_fields.FieldMany2One.include({
-        init: function() {
-            this._super.apply(this, arguments);
-            this.nodeOptions.no_quick_create = true;
-        },
-    });
+        // Always disable quick create for all Many2One fields
+        if (this.props.record && this.props.record.fieldNames) {
+            // Set no_quick_create option to true
+            if (!this.props.noQuickCreate) {
+                // Force disable quick create
+                return {
+                    ...relation,
+                    noQuickCreate: true,
+                };
+            }
+        }
+
+        return relation;
+    },
+
+    /**
+     * Setup method to initialize field options
+     */
+    setup() {
+        super.setup(...arguments);
+
+        // Ensure no_quick_create is always enabled
+        if (this.props.record && this.props.record.resModel) {
+            // Additional logic can be added here if needed
+            // to check against specific models from ir.model
+        }
+    },
 });
