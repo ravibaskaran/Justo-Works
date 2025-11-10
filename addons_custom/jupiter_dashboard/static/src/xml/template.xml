@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template">
-    <t t-name="JupiterDashboard">
+    <t t-name="JupiterDashboard" owl="1">
         <div class="jupiter_dashboard container-fluid px-5 pt-5 position-relative">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
                   integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
@@ -250,7 +250,7 @@
                             <input type="radio" name="booking_type_select" value="value" id="booking_value"/>
                             <label for="booking_value">Value</label>
                         </div>
-                        <div id="booking_chart"/>
+                        <div id="booking_chart" t-ref="bookingChart"/>
                     </div>
                 </div>
                 <div class="col-12 col-lg-6 px-2">
@@ -265,31 +265,31 @@
                                    id="registration_value"/>
                             <label for="registration_value">Value</label>
                         </div>
-                        <div id="registration_chart"/>
+                        <div id="registration_chart" t-ref="registrationChart"/>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-lg-8 px-2">
                     <div class="card p-3 pt-5 h-97">
-                        <div id="booking_vs_budget_chart"/>
+                        <div id="booking_vs_budget_chart" t-ref="bookingVsBudgetChart"/>
                     </div>
                 </div>
                 <div class="col-12 col-lg-4 px-2">
                     <div class="card p-3 pt-5 h-97">
-                        <div id="region_wise_booking"/>
+                        <div id="region_wise_booking" t-ref="regionWiseBooking"/>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-lg-4 px-2">
                     <div class="card p-3 pt-5 h-97">
-                        <div id="region_wise_flat_status"/>
+                        <div id="region_wise_flat_status" t-ref="regionWiseFlatStatus"/>
                     </div>
                 </div>
                 <div class="col-12 col-lg-8 px-2">
                     <div class="card p-3 pt-5 h-97">
-                        <div id="registration_vs_budget_chart"/>
+                        <div id="registration_vs_budget_chart" t-ref="registrationVsBudgetChart"/>
                     </div>
                 </div>
             </div>
@@ -305,7 +305,7 @@
                             <div class="dropdown-menu" x-placement="left-start">
                             </div>
                         </div>
-                        <div id="project_wise_flat_status"/>
+                        <div id="project_wise_flat_status" t-ref="projectWiseFlatStatus"/>
                     </div>
                 </div>
             </div>

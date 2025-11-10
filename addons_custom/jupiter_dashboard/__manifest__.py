@@ -22,11 +22,11 @@
 
     'assets': {
         'web.assets_qweb': [
-            'jupiter_dashboard/static/src/xml/template.xml',
+            'jupiter_dashboard/static/src/xml/template.xml',  # Migrated to OWL
         ],
         'web.assets_backend': [
-            'jupiter_dashboard/static/src/js/apexcharts.js',
-            'jupiter_dashboard/static/src/js/dashboard.js',
+            'jupiter_dashboard/static/src/js/apexcharts.js',  # Third-party library (no migration needed)
+            'jupiter_dashboard/static/src/js/dashboard.js',   # Migrated to OWL - Phase 3
         ],
     }
 }
