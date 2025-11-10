@@ -1,17 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<template>
-    <t t-name="google_map">
-		<button class="btn btn-default map-toggle" style="width: 32px; height: 26px; text-align: center; padding: 0; float: right;">
-			<img style="width: 16px;" src="/itsys_real_estate/static/src/img/marker.png"/>
-		</button>
-		<div class='gmap-container'
-			 style=" height: 250px; width: 100%; border-radius: 4px; position: fixed; z-index:999; display: none;"/>
-	</t>
-    <t t-name="google_map_multi">
-		<button class="btn btn-default map-toggle" style="width: 32px; height: 26px; text-align: center; padding: 0; float: right;">
-			<img style="width: 16px;" src="/itsys_real_estate/static/src/img/marker.png"/>
-		</button>
-		<div class='gmap-container-multi'
-			 style=" height: 500px; width: 100%; border-radius: 4px; position: fixed; z-index:999; display: none;"/>
-	</t>
-</template>
+<templates xml:space="preserve">
+    <!-- Migrated to Odoo 18 OWL - 2025-11-10 -->
+
+    <t t-name="itsys_real_estate.google_map" owl="1">
+        <button class="btn btn-default map-toggle"
+                style="width: 32px; height: 26px; text-align: center; padding: 0; float: right;"
+                t-on-click="toggleMap">
+            <img style="width: 16px;" src="/itsys_real_estate/static/src/img/marker.png"/>
+        </button>
+        <div class="gmap-container"
+             t-ref="mapContainer"
+             style="height: 250px; width: 100%; border-radius: 4px; position: fixed; z-index:999; display: none;"/>
+    </t>
+
+    <t t-name="itsys_real_estate.google_map_multi" owl="1">
+        <button class="btn btn-default map-toggle"
+                style="width: 32px; height: 26px; text-align: center; padding: 0; float: right;"
+                t-on-click="toggleMap">
+            <img style="width: 16px;" src="/itsys_real_estate/static/src/img/marker.png"/>
+        </button>
+        <div class="gmap-container-multi"
+             t-ref="mapContainer"
+             style="height: 500px; width: 100%; border-radius: 4px; position: fixed; z-index:999; display: none;"/>
+    </t>
+
+    <!-- View File Toggle Field Template -->
+    <t t-name="itsys_real_estate.ViewFileToggleField" owl="1">
+        <button t-if="state.hasAttachment"
+                class="btn fa fa-eye o_view_file_toggle p-0"
+                type="button"
+                t-on-click="onClickView">
+        </button>
+
+        <!-- Modal -->
+        <div t-if="state.showModal"
+             class="attachment_modal_file_toggle"
+             style="display: block; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);">
+            <span class="view_file_toggle_close"
+                  t-on-click="onClickClose"
+                  style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">
+                ×
+            </span>
+            <div class="attachment_content_file_toggle"
+                 style="margin: auto; display: block; width: 80%; max-width: 700px;">
+                <t t-out="state.fileContent"/>
+            </div>
+        </div>
+    </t>
+</templates>

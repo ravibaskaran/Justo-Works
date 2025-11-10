@@ -1,83 +1,134 @@
+/** @odoo-module **/
+
 /*
 * @Author: D.Jane
 * @Email: jane.odoo.sp@gmail.com
+* Migrated to Odoo 18 OWL - 2025-11-10
 */
-odoo.define('itsys_real_estate.map_widget', function (require) {
-    var Widget = require('web.Widget');
 
-    var MapWidget = Widget.extend({
-        template: 'google_map',
-        init: function (parent) {
-            this.parent = parent || {};
-            this._super(parent);
-            // default location
-            this.lat = parent.lat;
-            this.lng = parent.lng;
-        },
-        start: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                self.on_ready();
-            });
-        },
-        on_ready: function () {
-            var self = this;
+import { Component, useRef, onMounted, useState } from "@odoo/owl";
 
-            if(!this.$el){
-                return;
+export class MapWidget extends Component {
+    static template = "itsys_real_estate.google_map";
+
+    setup() {
+        this.mapContainerRef = useRef("mapContainer");
+        this.state = useState({
+            mapVisible: false
+        });
+
+        // Get parent data
+        this.lat = this.props.lat || 50.862117;
+        this.lng = this.props.lng || 4.416593;
+
+        // Store map and marker references
+        this.map = null;
+        this.marker = null;
+
+        onMounted(() => {
+            this.onReady();
+        });
+    }
+
+    toggleMap() {
+        this.state.mapVisible = !this.state.mapVisible;
+        const container = this.mapContainerRef.el;
+        if (container) {
+            container.style.display = this.state.mapVisible ? 'block' : 'none';
+            if (this.state.mapVisible && this.map) {
+                this.updateMarker(this.lat, this.lng);
             }
+        }
+    }
 
-            $(self.$el.filter('.map-toggle')[0]).click(function () {
-                $(self.$el.filter('.gmap-container')[0]).toggle();
-                self.update_marker(self.lat, self.lng);
-            });
+    onReady() {
+        // Wait for Google Maps API to be available
+        if (typeof google === 'undefined' || !google.maps) {
+            console.warn('Google Maps API not loaded yet, retrying...');
+            setTimeout(() => this.onReady(), 1000);
+            return;
+        }
 
-            // default latLng
-            var latLng = new google.maps.LatLng(self.lat, self.lng);
+        const container = this.mapContainerRef.el;
+        if (!container) {
+            console.error('Map container not found');
+            return;
+        }
 
-            var mapOptions = {
+        try {
+            // Default latLng
+            const latLng = new google.maps.LatLng(this.lat, this.lng);
+
+            const mapOptions = {
                 zoom: 12,
                 center: latLng
             };
 
-            this.map = new google.maps.Map(self.$el.filter('.gmap-container')[0], mapOptions);
+            // Create map
+            this.map = new google.maps.Map(container, mapOptions);
 
+            // Create marker
             this.marker = new google.maps.Marker({
                 position: latLng,
-                map: self.map,
+                map: this.map,
                 draggable: true
             });
-            // click event
-            this.map.addListener('click', function (event) {
-                var lat = event.latLng.lat();
-                var lng = event.latLng.lng();
-                // update marker
-                var latLng = new google.maps.LatLng(lat, lng);
-                self.marker.setPosition(latLng);
-                google.maps.event.trigger(self.map, 'resize');
-                // update place
-                self.parent.update_place(lat, lng);
-            });
-            this.map.addListener('rightclick', function(event) {
-                alert( 'Lat: ' + event.latLng.lat() + ' , Lng: ' + event.latLng.lng() );
-            });
-            // marker drag event
-            this.marker.addListener('dragend', function (event) {
-                var lat = event.latLng.lat();
-                var lng = event.latLng.lng();
-                self.parent.update_place(lat, lng);
+
+            // Map click event
+            this.map.addListener('click', (event) => {
+                const lat = event.latLng.lat();
+                const lng = event.latLng.lng();
+
+                // Update marker position
+                const newLatLng = new google.maps.LatLng(lat, lng);
+                this.marker.setPosition(newLatLng);
+                google.maps.event.trigger(this.map, 'resize');
+
+                // Notify parent to update place
+                if (this.props.onUpdatePlace) {
+                    this.props.onUpdatePlace(lat, lng);
+                }
             });
 
-        },
-        update_marker: function (lat, lng) {
-            this.lat = lat;
-            this.lng = lng;
-            var latLng = new google.maps.LatLng(lat, lng);
-            this.map.setCenter(latLng);
-            this.marker.setPosition(latLng);
-            google.maps.event.trigger(this.map, 'resize');
+            // Map right-click event
+            this.map.addListener('rightclick', (event) => {
+                alert('Lat: ' + event.latLng.lat() + ' , Lng: ' + event.latLng.lng());
+            });
+
+            // Marker drag event
+            this.marker.addListener('dragend', (event) => {
+                const lat = event.latLng.lat();
+                const lng = event.latLng.lng();
+
+                // Notify parent to update place
+                if (this.props.onUpdatePlace) {
+                    this.props.onUpdatePlace(lat, lng);
+                }
+            });
+
+        } catch (error) {
+            console.error('Error initializing Google Maps:', error);
         }
-    });
+    }
 
-    return MapWidget;
-});
+    updateMarker(lat, lng) {
+        if (!this.map || !this.marker) {
+            console.warn('Map or marker not initialized');
+            return;
+        }
+
+        this.lat = lat;
+        this.lng = lng;
+
+        const latLng = new google.maps.LatLng(lat, lng);
+        this.map.setCenter(latLng);
+        this.marker.setPosition(latLng);
+        google.maps.event.trigger(this.map, 'resize');
+    }
+}
+
+MapWidget.props = {
+    lat: { type: Number, optional: true },
+    lng: { type: Number, optional: true },
+    onUpdatePlace: { type: Function, optional: true },
+};

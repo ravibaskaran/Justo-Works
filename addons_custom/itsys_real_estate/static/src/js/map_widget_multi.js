@@ -1,82 +1,139 @@
+/** @odoo-module **/
+
 /*
 * @Author: D.Jane
 * @Email: jane.odoo.sp@gmail.com
+* Migrated to Odoo 18 OWL - 2025-11-10
 */
-odoo.define('itsys_real_estate.map_widget_multi', function (require) {
-    var Widget = require('web.Widget');
 
-    var MapWidget = Widget.extend({
-        template: 'google_map_multi',
-        init: function (parent) {
-            this.latlngList=parent.recordData.latlng_ids.data
-            this.parent = parent || {};
-            this._super(parent);
-            // default location
-            this.lat = parent.lat;
-            this.lng = parent.lng;
-        },
-        start: function () {
-            var self = this;
+import { Component, useRef, onMounted, useState } from "@odoo/owl";
 
-            return this._super.apply(this, arguments).then(function () {
-                self.on_ready();
-            });
-        },
-        on_ready: function () {
-            var self = this;
+export class MapWidgetMulti extends Component {
+    static template = "itsys_real_estate.google_map_multi";
 
-            if(!this.$el){
-                return;
+    setup() {
+        this.mapContainerRef = useRef("mapContainer");
+        this.state = useState({
+            mapVisible: false
+        });
+
+        // Get parent data
+        this.latlngList = this.props.latlngList || [];
+        this.lat = this.props.lat || 30.04300466950456;
+        this.lng = this.props.lng || 31.235621482518354;
+
+        // Store map and markers
+        this.map = null;
+        this.markers = [];
+
+        onMounted(() => {
+            this.onReady();
+        });
+    }
+
+    toggleMap() {
+        this.state.mapVisible = !this.state.mapVisible;
+        const container = this.mapContainerRef.el;
+        if (container) {
+            container.style.display = this.state.mapVisible ? 'block' : 'none';
+            if (this.state.mapVisible && this.map) {
+                this.updateMarker(this.lat, this.lng);
             }
+        }
+    }
 
-            $(self.$el.filter('.map-toggle')[0]).click(function () {
-                $(self.$el.filter('.gmap-container-multi')[0]).toggle();
-                self.update_marker(self.lat, self.lng);
-            });
+    onReady() {
+        // Wait for Google Maps API to be available
+        if (typeof google === 'undefined' || !google.maps) {
+            console.warn('Google Maps API not loaded yet, retrying...');
+            setTimeout(() => this.onReady(), 1000);
+            return;
+        }
 
-            // default latLng
-            var latLng = new google.maps.LatLng(self.lat, self.lng);
+        const container = this.mapContainerRef.el;
+        if (!container) {
+            console.error('Map container not found');
+            return;
+        }
 
-            var mapOptions = {
+        try {
+            // Default latLng
+            const latLng = new google.maps.LatLng(this.lat, this.lng);
+
+            const mapOptions = {
                 zoom: 16,
                 center: latLng
             };
 
-            this.map = new google.maps.Map(self.$el.filter('.gmap-container-multi')[0], mapOptions);
+            // Create map
+            this.map = new google.maps.Map(container, mapOptions);
 
-            latlngList= this.latlngList
-            for (var i=0;i<latlngList.length;i++){
-                    if (latlngList[i]['data']['url']) {
-                        icon_i= 'http://maps.google.com/mapfiles/ms/icons/'
-                        if (latlngList[i]['data']['state']=='free') icon_i+='green-dot.png'
-                        if (latlngList[i]['data']['state']=='reserved') icon_i+='blue-dot.png'
-                        if (latlngList[i]['data']['state']=='on_lease') icon_i+='blue-dot.png'
-                        if (latlngList[i]['data']['state']=='sold') icon_i+='red-dot.png'
-                        var url = latlngList[i]['data']['url']
+            // Create multiple markers based on latlngList
+            const latlngList = this.latlngList;
+            for (let i = 0; i < latlngList.length; i++) {
+                const item = latlngList[i];
 
-                        var latLng = new google.maps.LatLng(latlngList[i]['data']['lat'], latlngList[i]['data']['lng']);
-                        this.marker = new google.maps.Marker({
-                            'url': latlngList[i]['data']['url'],
-                            'map': self.map,
-                            'position': latLng,
-                            'draggable': false,
-                            'animation': google.maps.Animation.DROP,
-                            'icon': icon_i
-                        });
-                        google.maps.event.addListener(this.marker, 'click', function () {
-                          window.location.href = this.url;
-                        });
+                // Check if item has data and url
+                if (item && item.data && item.data.url) {
+                    // Determine marker icon based on state
+                    let iconUrl = 'http://maps.google.com/mapfiles/ms/icons/';
+                    const state = item.data.state;
+
+                    if (state === 'free') {
+                        iconUrl += 'green-dot.png';
+                    } else if (state === 'reserved' || state === 'on_lease') {
+                        iconUrl += 'blue-dot.png';
+                    } else if (state === 'sold') {
+                        iconUrl += 'red-dot.png';
+                    } else {
+                        iconUrl += 'red-dot.png'; // default
+                    }
+
+                    const url = item.data.url;
+                    const markerLatLng = new google.maps.LatLng(item.data.lat, item.data.lng);
+
+                    // Create marker
+                    const marker = new google.maps.Marker({
+                        url: url,
+                        map: this.map,
+                        position: markerLatLng,
+                        draggable: false,
+                        animation: google.maps.Animation.DROP,
+                        icon: iconUrl
+                    });
+
+                    // Add click listener to navigate to URL
+                    google.maps.event.addListener(marker, 'click', function () {
+                        window.location.href = this.url;
+                    });
+
+                    this.markers.push(marker);
                 }
             }
 
-            this.map.addListener('click', function(event) {
-                alert( 'Lat: ' + event.latLng.lat() + ' , Lng: ' + event.latLng.lng() );
+            // Map click event - show coordinates
+            this.map.addListener('click', (event) => {
+                alert('Lat: ' + event.latLng.lat() + ' , Lng: ' + event.latLng.lng());
             });
-        },
-        update_marker: function (lat, lng) {
-            this.on_ready();
-        }
-    });
 
-    return MapWidget;
-});
+        } catch (error) {
+            console.error('Error initializing Google Maps:', error);
+        }
+    }
+
+    updateMarker(lat, lng) {
+        if (!this.map) {
+            console.warn('Map not initialized');
+            return;
+        }
+
+        // For multi-marker map, just re-initialize
+        this.onReady();
+    }
+}
+
+MapWidgetMulti.props = {
+    latlngList: { type: Array, optional: true },
+    lat: { type: Number, optional: true },
+    lng: { type: Number, optional: true },
+};

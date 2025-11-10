@@ -96,17 +96,21 @@
         'web.assets_qweb': [
             'itsys_real_estate/static/src/xml/*.xml',
         ],
-        'web.assets_common': [
+        'web.assets_backend': [
+            # OWL Components and Services (Odoo 18)
             'itsys_real_estate/static/src/js/init.js',
             'itsys_real_estate/static/src/js/map_widget.js',
             'itsys_real_estate/static/src/js/map_widget_multi.js',
             'itsys_real_estate/static/src/js/place_autocomplete.js',
             'itsys_real_estate/static/src/js/place_autocomplete_multi.js',
             'itsys_real_estate/static/src/js/view_file_toggle.js',
-            'itsys_real_estate/static/src/js/pyeval.js',
-        ],
-        'web.assets_backend': [
+
+            # CSS
             'itsys_real_estate/static/src/css/view_file_toggle.css',
+        ],
+        # Keep pyeval.js for now - may be needed for domain evaluation
+        'web.assets_common': [
+            'itsys_real_estate/static/src/js/pyeval.js',
         ],
     }
 }

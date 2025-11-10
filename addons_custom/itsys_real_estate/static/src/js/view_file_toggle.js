@@ -1,59 +1,73 @@
-odoo.define('real_estate_sheets.view_file_toggle', function(require) {
-"use strict";
+/** @odoo-module **/
 
-    var AbstractField = require('web.AbstractField');
-    var core = require('web.core');
-    var registry = require('web.field_registry');
-    var rpc = require('web.rpc');
-    var _t = core._t;
-    var Dialog = require('web.Dialog');
-    const ajax = require('web.ajax');
-    let modal_window = `
-        <div id="viewFileToggleModal" class="attachment_modal_file_toggle">
-          <span class="view_file_toggle_close" onclick="$('#viewFileToggleModal').remove()">&times;</span>
-          <div class="attachment_content_file_toggle" id="img_area_file_toggle"/>
-        </div>
-    `
+/*
+* Migrated to Odoo 18 OWL - 2025-11-10
+*/
 
-    var ViewFileToggle = AbstractField.extend({
-        events: _.extend({}, AbstractField.prototype.events, {
-            'click': '_onClickView',
-            'click .view_file_toggle_close': '_onClickClose',
-        }),
-        description: "",
+import { Component, useState } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useService } from "@web/core/utils/hooks";
 
-        isSet: function () {
-            return true;
-        },
+export class ViewFileToggleField extends Component {
+    static template = "itsys_real_estate.ViewFileToggleField";
+    static props = {
+        ...standardFieldProps,
+    };
 
-        _render: function () {
-            var $button = $('<button/>', {
-                type: 'button',
-            }).addClass('btn fa fa-eye o_view_file_toggle p-0 p-0');
-            ajax.jsonRpc('/get_attachment_file_url', 'call', {'line_id': this.recordData.id, 'model': this.model}).then((result) => {
-                if(result){
-                    this.$el.html($button);
-                }
-            })
-        },
+    setup() {
+        this.rpc = useService("rpc");
+        this.state = useState({
+            hasAttachment: false,
+            showModal: false,
+            fileContent: ""
+        });
 
-        _onClickClose: function(ev) {
-            $('#viewFileToggleModal').css('display', 'none')
-        },
+        // Check if file exists
+        this.checkAttachment();
+    }
 
-        _onClickView: function (event) {
-            ajax.jsonRpc('/get_attachment_file_url', 'call', {'line_id': this.recordData.id, 'model': this.model}).then((result) => {
-                if(result && $('.o_cp_action_menus').length == 0){
-                    $(".o_form_view").append(modal_window);
-                    $("#viewFileToggleModal").modal({
-                        keyboard: false,
-                    });
-                    $('#img_area_file_toggle').empty()
-                    $('#img_area_file_toggle').append(result)
-                }
+    async checkAttachment() {
+        try {
+            const result = await this.rpc("/get_attachment_file_url", {
+                line_id: this.props.record.resId,
+                model: this.props.record.resModel
             });
-        },
-    });
 
-    registry.add("view_file_toggle", ViewFileToggle);
-});
+            if (result) {
+                this.state.hasAttachment = true;
+            }
+        } catch (error) {
+            console.error("Error checking attachment:", error);
+        }
+    }
+
+    async onClickView(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        try {
+            const result = await this.rpc("/get_attachment_file_url", {
+                line_id: this.props.record.resId,
+                model: this.props.record.resModel
+            });
+
+            if (result) {
+                this.state.fileContent = result;
+                this.state.showModal = true;
+            }
+        } catch (error) {
+            console.error("Error loading attachment:", error);
+        }
+    }
+
+    onClickClose(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        this.state.showModal = false;
+        this.state.fileContent = "";
+    }
+}
+
+// Register the field widget
+registry.category("fields").add("view_file_toggle", ViewFileToggleField);
