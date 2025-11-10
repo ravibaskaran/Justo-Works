@@ -1,104 +1,173 @@
-/*
-* @Author: D.Jane
-* @Email: jane.odoo.sp@gmail.com
-*/
-odoo.define('itsys_real_estate.place_autocomplete_multi', function(require){
+/** @odoo-module **/
 
-    var basic_fields = require('web.basic_fields');
-    var registry = require('web.field_registry');
-    var MapWidget = require('itsys_real_estate.map_widget_multi');
+/**
+ * @Author: D.Jane
+ * @Email: jane.odoo.sp@gmail.com
+ *
+ * Google Places Autocomplete with Multi-Marker Map for Odoo 18
+ * Displays autocomplete with map showing multiple location markers
+ */
 
+import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { MapWidgetMulti } from "./map_widget_multi";
 
-    var place_autocomplete_multi = basic_fields.FieldText.extend({
-        init: function(parent, name, record, options){
+export class PlaceAutocompleteMultiField extends Component {
+    static template = "itsys_real_estate.PlaceAutocompleteMultiField";
+    static components = { MapWidgetMulti };
+    static props = {
+        ...standardFieldProps,
+    };
 
+    setup() {
+        this.inputRef = useRef("input");
 
-            this._super.apply(this, arguments);
-            if (parent.state.data.latlng_ids.data.length>0){
-                this.lat = parent.state.data.latlng_ids.data[0].data.lat;
-                this.lng = parent.state.data.latlng_ids.data[0].data.lng;
-            console.log(parent.state.data.latlng_ids.data[0].data.lat)
-            console.log(parent.state.data.latlng_ids.data[0].data.lng)
+        // Get initial coordinates from latlng_ids if available
+        const latlngData = this.props.record.data.latlng_ids?.records || [];
+        const defaultLat = latlngData.length > 0 ? latlngData[0].data.lat : 30.04300466950456;
+        const defaultLng = latlngData.length > 0 ? latlngData[0].data.lng : 31.235621482518354;
+
+        this.state = useState({
+            lat: defaultLat,
+            lng: defaultLng,
+            latlngList: latlngData,
+            isMapVisible: false,
+        });
+
+        this.autocomplete = null;
+        this.checkInterval = null;
+
+        onMounted(() => {
+            this.initAutocomplete();
+        });
+
+        onWillUnmount(() => {
+            if (this.checkInterval) {
+                clearInterval(this.checkInterval);
             }
-            else {
-                this.lat = 30.04300466950456;
-                this.lng = 31.235621482518354;
-            }
-        },
-        start: function(){
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                self.t = setInterval(function () {
-                    if (typeof google != 'undefined') {
-                        self.on_ready();
-                    }
-                }, 1000);
-            });
-        },
-        on_ready: function(){
-            var self = this;
+        });
+    }
 
-            if(self.t){
-                clearInterval(self.t);
-            }
-
-            if (!self.$input) {
-                return;
-            }
-
-            var map_widget = new MapWidget(self);
-            map_widget.insertAfter(self.$input);
-
-            // init gmap marker position
-            var geocoder = new google.maps.Geocoder;
-            geocoder.geocode({'address': self.$input.val()}, function (results, status) {
-                if (status === 'OK') {
-                    self.lat = results[0].geometry.location.lat();
-                    self.lng = results[0].geometry.location.lng();
-                    map_widget.lat = self.lat;
-                    map_widget.lng = self.lng;
+    /**
+     * Initialize Google Places Autocomplete
+     */
+    initAutocomplete() {
+        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+            this.onReady();
+        } else {
+            this.checkInterval = setInterval(() => {
+                if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                    this.onReady();
                 }
-            });
+            }, 1000);
+        }
+    }
 
-            var autocomplete = new google.maps.places.Autocomplete((self.$input[0]), {types: ['geocode']});
+    /**
+     * Setup autocomplete after Google API is loaded
+     */
+    onReady() {
+        if (this.checkInterval) {
+            clearInterval(this.checkInterval);
+            this.checkInterval = null;
+        }
 
-            autocomplete.addListener('place_changed', function (){
-                var place = autocomplete.getPlace();
+        const input = this.inputRef.el;
+        if (!input) {
+            return;
+        }
 
-                if(!place.geometry || !place.geometry.location){
-                    return;
-                }
-
-                var location = place.geometry.location;
-                self.lat = location.lat();
-                self.lng = location.lng();
-                // update gmap
-                map_widget.update_marker(self.lat, self.lng);
-            });
-
-        },
-        update_place: function (lat, lng) {
-            var self = this;
-
-            if (lat === this.lat && lng === this.lng) {
-                return;
-            }
-
-            this.lat = lat;
-            this.lng = lng;
-
-            var geocoder = new google.maps.Geocoder;
-            var latLng = new google.maps.LatLng(lat, lng);
-            geocoder.geocode({'location': latLng}, function (results, status) {
-                if (status === 'OK') {
-                    if (self.$input) {
-                        self.$input.val(results[0].formatted_address);
-                        self._doAction();
-                    }
+        // Initialize geocoder for current address
+        const currentAddress = this.props.record.data[this.props.name] || '';
+        if (currentAddress) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: currentAddress }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    this.state.lat = results[0].geometry.location.lat();
+                    this.state.lng = results[0].geometry.location.lng();
                 }
             });
         }
-    });
 
-    registry.add('place_autocomplete_multi', place_autocomplete_multi);
-});
+        // Initialize autocomplete
+        this.autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['geocode']
+        });
+
+        // Listen for place selection
+        this.autocomplete.addListener('place_changed', () => {
+            const place = this.autocomplete.getPlace();
+
+            if (!place.geometry || !place.geometry.location) {
+                return;
+            }
+
+            const location = place.geometry.location;
+            this.state.lat = location.lat();
+            this.state.lng = location.lng();
+
+            // Update field value
+            this.updateFieldValue(place.formatted_address || input.value);
+        });
+    }
+
+    /**
+     * Handle input change
+     */
+    onInputChange(ev) {
+        const value = ev.target.value;
+        this.updateFieldValue(value);
+    }
+
+    /**
+     * Update field value in the record
+     */
+    updateFieldValue(value) {
+        this.props.record.update({
+            [this.props.name]: value,
+        });
+    }
+
+    /**
+     * Update place from map coordinates (reverse geocoding)
+     */
+    onUpdatePlace(lat, lng) {
+        if (lat === this.state.lat && lng === this.state.lng) {
+            return;
+        }
+
+        this.state.lat = lat;
+        this.state.lng = lng;
+
+        const geocoder = new google.maps.Geocoder();
+        const latLng = new google.maps.LatLng(lat, lng);
+
+        geocoder.geocode({ location: latLng }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                const address = results[0].formatted_address;
+                this.updateFieldValue(address);
+
+                const input = this.inputRef.el;
+                if (input) {
+                    input.value = address;
+                }
+            }
+        });
+    }
+
+    /**
+     * Toggle map visibility
+     */
+    toggleMap() {
+        this.state.isMapVisible = !this.state.isMapVisible;
+    }
+
+    get fieldValue() {
+        return this.props.record.data[this.props.name] || '';
+    }
+}
+
+PlaceAutocompleteMultiField.displayName = "Place Autocomplete Multi";
+
+registry.category("fields").add("place_autocomplete_multi", PlaceAutocompleteMultiField);

@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 {
     'name':'Real Estate.',
-    'version':'1.0',
+    'version':'18.0.1.0.0',
     'category':'Real Estate',
     'sequence':14,
-    'summary':'',
-    'description':""" Real Estate Management
+    'summary':'Real Estate Management System for Odoo 18',
+    'description':""" Real Estate Management (Migrated to Odoo 18)
       - Properties Hierarchy
-      - Google Maps Integration
+      - Google Maps Integration (OWL Components)
       - Units Reservation
-      - Ownership Contracts Managament
+      - Ownership Contracts Management
       - Easy Tenant Management
       - Invoicing Management & Accounting Integration
       - Property Refund
       - Email Notifications
       - Integration with Odoo Website
       - Comprehensive Reporting
+      - Migrated to OWL framework and Odoo 18
       """,
     'author':'Fatma Yousef',
     'depends':['base','account','sale_management','analytic'],
@@ -96,16 +97,26 @@
         'web.assets_qweb': [
             'itsys_real_estate/static/src/xml/*.xml',
         ],
-        'web.assets_common': [
+        'web.assets_backend': [
+            # Google Maps initialization service
             'itsys_real_estate/static/src/js/init.js',
+
+            # Map widgets (OWL Components)
             'itsys_real_estate/static/src/js/map_widget.js',
             'itsys_real_estate/static/src/js/map_widget_multi.js',
+
+            # Autocomplete fields (OWL Components)
             'itsys_real_estate/static/src/js/place_autocomplete.js',
             'itsys_real_estate/static/src/js/place_autocomplete_multi.js',
+
+            # Utility fields
             'itsys_real_estate/static/src/js/view_file_toggle.js',
+            'itsys_real_estate/static/src/js/swipe_images_backend.js',
+
+            # Python eval (needs review)
             'itsys_real_estate/static/src/js/pyeval.js',
-        ],
-        'web.assets_backend': [
+
+            # Styles
             'itsys_real_estate/static/src/css/view_file_toggle.css',
         ],
     }
