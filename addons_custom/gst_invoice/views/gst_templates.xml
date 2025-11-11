@@ -3,10 +3,8 @@
 <!-- See LICENSE file for full copyright and licensing details. -->
 <!-- "License URL : <https://store.webkul.com/license.html/>" -->
 <odoo>
-    <template id="assets_backend" name="mob assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <!-- <script type="text/javascript" src="/gst_invoice/static/src/js/gst_dashboard.js"></script> -->
-            <link rel="stylesheet" type="text/scss" href="/gst_invoice/static/src/scss/gst_dashboard.scss"/>
-        </xpath>
+    <!-- OWL Template for GST Dashboard Graph Component -->
+    <template id="GstDashboardGraphTemplate" name="GST Dashboard Graph">
+        <svg t-ref="svg" class="gst_dashboard_graph"></svg>
     </template>
 </odoo>

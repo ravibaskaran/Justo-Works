@@ -1,23 +1,48 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "jupiter_accounts",
+    'name': "Jupiter Accounts (Odoo 18)",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Jupiter Accounts - Account Move, Payment, and Incentive Management (Migrated to Odoo 18)""",
 
     'description': """
-        Long description of module's purpose
+        Jupiter Accounts Module
+
+        Features:
+        - Account move customizations
+        - Payment processing and tracking
+        - Incentive voucher management
+        - Incentive generation workflow
+        - Booking integration
+        - Project-account linking
+        - Region management
+        - Partner extensions
+        - Asset management
+        - Account head configurations
+        - Journal customizations
+        - Opening balance updater
+
+        Migrated to Odoo 18:
+        - Version updated to 18.0.1.0.0
+        - Python models reviewed for compatibility
+
+        REQUIRES TESTING:
+        - Account move workflows
+        - Payment processing
+        - Incentive calculations
+        - Booking integrations
+        - Project transactions
+        - Opening balance updates
+        - Asset depreciation
+        - Journal entries
+        - All model methods and computed fields
     """,
 
-    'author': "My Company",
+    'author': "Justo Works",
     'website': "http://www.yourcompany.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Accounting',
+    'version': '18.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'purchase_extension', 'itsys_real_estate', 'project_transactions', 'real_estate_extension',

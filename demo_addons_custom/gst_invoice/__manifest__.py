@@ -14,10 +14,10 @@
 # If not, see <https://store.webkul.com/license.html/>
 #################################################################################
 {
-  "name"                 :  "GST - Returns and Invoices",
-  "summary"              :  """Odoo GST - Returns and Invoices helps to file the monthly return that summarizes all outward supplies by registered taxpayers""",
+  "name"                 :  "GST - Returns and Invoices (Odoo 18)",
+  "summary"              :  """Odoo GST - Returns and Invoices helps to file the monthly return that summarizes all outward supplies by registered taxpayers (Migrated to Odoo 18)""",
   "category"             :  "Accounting",
-  "version"              :  "2.0.0",
+  "version"              :  "18.0.2.0.0",
   "sequence"             :  1,
   "author"               :  "Webkul Software Pvt. Ltd.",
   "license"              :  "Other proprietary",
@@ -53,7 +53,7 @@ Goods and Services Tax in Odoo""",
                              'views/gst_view.xml',
                              'views/gstr2_view.xml',
                              'views/res_partner_views.xml',
-                             # 'views/gst_templates.xml',
+                             'views/gst_templates.xml',
                              'views/gst_dashboard_view.xml',
                              'views/account_fiscalyear_view.xml',
                              'views/ir_attachment_view.xml',
@@ -77,6 +77,37 @@ Goods and Services Tax in Odoo""",
     'assets': {
         'web.assets_backend': [
             'gst_invoice/static/src/scss/gst_dashboard.scss',
+            'gst_invoice/static/src/js/gst_dashboard.js',
         ],
-    }
+        'web.assets_qweb': [
+            'gst_invoice/views/gst_templates.xml',
+        ],
+    },
+  "description"          :  """GST - Returns and Invoices
+
+Migrated to Odoo 18:
+- Version updated to 18.0.2.0.0
+- Dashboard JS widget migrated to OWL Component
+- NVD3 chart integration preserved
+
+REQUIRES TESTING:
+- GST calculations and tax computations
+- GSTR1/GSTR2 report generation
+- Dashboard charts (line and bar)
+- Invoice workflows
+- Wizard functionality
+- Controller endpoints
+
+Original Features:
+GST
+One Nation One Tax
+Tax
+Odoo Tax
+Odoo GST
+Returns and Invoices
+Goods and Services Tax
+Tax module
+Tax App
+GST module
+Goods and Services Tax in Odoo""",}
 }
