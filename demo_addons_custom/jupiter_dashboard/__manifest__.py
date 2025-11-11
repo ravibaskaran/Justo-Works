@@ -12,7 +12,7 @@
     'author': "ks-subinraj",
     'website': " ",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '18.0.0.1',
     'depends': ['base'],
 
     'data': [
@@ -21,12 +21,10 @@
     ],
 
     'assets': {
-        'web.assets_qweb': [
-            'jupiter_dashboard/static/src/xml/template.xml',
-        ],
         'web.assets_backend': [
             'jupiter_dashboard/static/src/js/apexcharts.js',
             'jupiter_dashboard/static/src/js/dashboard.js',
+            'jupiter_dashboard/static/src/xml/template.xml',
         ],
     }
 }
