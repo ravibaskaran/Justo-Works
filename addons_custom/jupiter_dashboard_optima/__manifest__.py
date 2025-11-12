@@ -3,26 +3,40 @@
     'name': "jupiter_dashboard_optima",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Ultimate analytics dashboard with comprehensive business intelligence""",
 
     'description': """
-        Long description of module's purpose
+        Jupiter Dashboard Optima - Ultimate Analytics Dashboard
+
+        Features:
+        - Comprehensive business intelligence dashboard
+        - Advanced analytics and reporting
+        - Real-time metrics and KPIs
+        - Interactive data visualizations
+        - Multi-dimensional analysis
+
+        MIGRATION STATUS:
+        - Manifest updated to 18.0.0.1
+        - JavaScript migration PENDING (4326 lines!)
+
+        REQUIRES MIGRATION:
+        - dashboard.js: 4326 lines (EXTREMELY COMPLEX)
+        - Estimated effort: 12-16 hours
+        - Requires systematic chunked migration approach
+
+        Dependencies:
+        - Depends on jupiter_dashboard_tres
+        - Both modules need OWL migration together
     """,
 
     'author': "My Company",
     'website': "http://www.yourcompany.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Productivity',
+    'version': '18.0.0.1',
 
-    # any module necessary for this one to work correctly
     'depends': ['base', 'base_setup', 'jupiter_dashboard_tres'],
 
-    # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'security/security.xml',
@@ -30,11 +44,9 @@
         'views/settings.xml',
     ],
     'assets': {
-        'web.assets_qweb': [
-            'jupiter_dashboard_optima/static/src/xml/template.xml',
-        ],
         'web.assets_backend': [
             'jupiter_dashboard_optima/static/src/js/dashboard.js',
+            'jupiter_dashboard_optima/static/src/xml/template.xml',
         ],
     }
 }
