@@ -3,26 +3,26 @@
     'name': "jupiter_dashboard_tres",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Comprehensive analytics dashboard with region, cluster, and project insights""",
 
     'description': """
-        Long description of module's purpose
+        Jupiter Dashboard III - Advanced analytics dashboard featuring:
+        - Regional, cluster, and project-level analytics
+        - Booking and registration tracking
+        - CP (Channel Partner) performance metrics
+        - Manpower productivity analysis
+        - Walk-in conversion tracking
+        - Budget vs Actual comparison
     """,
 
     'author': "My Company",
     'website': "http://www.yourcompany.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Productivity',
+    'version': '18.0.0.1',
 
-    # any module necessary for this one to work correctly
     'depends': ['base', 'base_setup'],
 
-    # always loaded
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
@@ -31,15 +31,13 @@
         'views/settings.xml',
     ],
     'assets': {
-        'web.assets_qweb': [
-            'jupiter_dashboard_tres/static/src/xml/template.xml',
-        ],
         'web.assets_backend': [
             'jupiter_dashboard_tres/static/src/js/highcharts.js',
             # 'jupiter_dashboard_tres/static/src/js/exporting.js',
             # 'jupiter_dashboard_tres/static/src/js/export-data.js',
             # 'jupiter_dashboard_tres/static/src/js/accessibility.js',
             'jupiter_dashboard_tres/static/src/js/dashboard.js',
+            'jupiter_dashboard_tres/static/src/xml/template.xml',
         ],
     }
 }
